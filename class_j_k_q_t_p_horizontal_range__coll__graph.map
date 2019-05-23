@@ -1,0 +1,20 @@
+<map id="JKQTPHorizontalRange" name="JKQTPHorizontalRange">
+<area shape="rect" id="node1" title="simply marks a range (and possibly a centerline) in a plot. This may be used to display e...." alt="" coords="1673,472,1871,501"/>
+<area shape="rect" id="node2" href="$class_j_k_q_t_p_graph.html" title="this virtual base class of the (data&#45;column based) graphs, which are part of a JKQTPlotter plot and w..." alt="" coords="1453,419,1571,448"/>
+<area shape="rect" id="node3" href="$class_j_k_q_t_p_plot_element.html" title="this virtual base class of every element, which is part of a JKQTPlotter plot and may appear in its k..." alt="" coords="1177,419,1337,448"/>
+<area shape="rect" id="node4" title=" " alt="" coords="75,397,160,427"/>
+<area shape="rect" id="node5" href="$class_j_k_q_t_base_plotter.html" title="base class for 2D plotter classes (used by the plotter widget JKQTPlotter)This class implements basic..." alt="" coords="831,175,979,204"/>
+<area shape="rect" id="node6" href="$class_j_k_q_t_math_text.html" title="this class parses a LaTeX string and can then draw the contained text/equation onto a QPainter" alt="" coords="485,269,613,299"/>
+<area shape="rect" id="node9" href="$class_j_k_q_t_p_coordinate_axis.html" title="this virtual class is the base for any type of coordinate axis, to be drawn by JKQTBasePlotter...." alt="" coords="1164,245,1351,275"/>
+<area shape="rect" id="node11" href="$class_j_k_q_t_p_graphs_model.html" title="data model with all plots ina JKQTBasePlotter (+ allows to switch them visible/invisible)This class i..." alt="" coords="1172,91,1343,120"/>
+<area shape="rect" id="node7" href="$class_j_k_q_t_math_text_1_1_m_tnode.html" title="subclass representing one node in the syntax tree" alt="" coords="805,265,1004,295"/>
+<area shape="rect" id="node8" href="$class_j_k_q_t_p_horizontal_axis.html" title="implements a horizontal axis, based on JKQTPCoordinateAxis (for most of documentation: see JKQTPCoord..." alt="" coords="1421,199,1603,228"/>
+<area shape="rect" id="node15" href="$class_j_k_q_t_p_vertical_axis.html" title="implements a vertical axis, based on JKQTPCoordinateAxis (for most of documentation: see JKQTPCoordin..." alt="" coords="1433,283,1591,312"/>
+<area shape="rect" id="node10" href="$class_j_k_q_t_p_coordinate_axis_style.html" title="Support Class for JKQTPCoordinateAxis, which summarizes all proeprties that define the visual styling..." alt="" coords="5,225,229,255"/>
+<area shape="rect" id="node13" href="$class_j_k_q_t_base_plotter_style.html" title="Support Class for JKQTBasePlotter, which summarizes all proeprties that define the visual styling of ..." alt="" coords="456,44,641,73"/>
+<area shape="rect" id="node12" title=" " alt="" coords="813,53,997,83"/>
+<area shape="rect" id="node14" href="$class_j_k_q_t_p_key_style.html" title="Support Class for JKQTBasePlotter, which summarizes all proeprties that define the visual styling of ..." alt="" coords="51,5,184,35"/>
+<area shape="rect" id="node16" href="$class_j_k_q_t_p_datastore.html" title="This class manages chunks of memory that are used for column data in JKQTBasePlotter descendents." alt="" coords="475,97,622,127"/>
+<area shape="rect" id="node17" href="$class_j_k_q_t_p_graph_line_style_mixin.html" title="This Mix&#45;In class provides setter/getter methods, storage and other facilities for the graph line sty..." alt="" coords="1400,472,1624,501"/>
+<area shape="rect" id="node18" href="$class_j_k_q_t_p_graph_fill_style_mixin.html" title="This Mix&#45;In class provides setter/getter methods, storage and other facilities for the graph filling ..." alt="" coords="1407,525,1617,555"/>
+</map>

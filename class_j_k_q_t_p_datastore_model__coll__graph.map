@@ -1,0 +1,5 @@
+<map id="JKQTPDatastoreModel" name="JKQTPDatastoreModel">
+<area shape="rect" id="node1" title="QAbstractTableModel descendent that allows to view data in a JKQTPDatastore." alt="" coords="97,100,287,129"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,189,35"/>
+<area shape="rect" id="node3" href="$class_j_k_q_t_p_datastore.html" title="This class manages chunks of memory that are used for column data in JKQTBasePlotter descendents." alt="" coords="213,5,360,35"/>
+</map>

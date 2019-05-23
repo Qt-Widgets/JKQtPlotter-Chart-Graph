@@ -1,0 +1,28 @@
+var group__jkqtptools__string =
+[
+    [ "jkqtp_booltostr", "group__jkqtptools__string.html#ga8531b7489914b4b03f1994c6995d2e26", null ],
+    [ "jkqtp_bytestostr", "group__jkqtptools__string.html#ga6b92ff5bee36641d73ab225b95da4b65", null ],
+    [ "jkqtp_chartostr", "group__jkqtptools__string.html#ga27483cee5511d1a4e92e25f8a96874d1", null ],
+    [ "jkqtp_floattohtmlstr", "group__jkqtptools__string.html#ga2c7ba32eebd4b1a27be756987f095f16", null ],
+    [ "jkqtp_floattolatexstr", "group__jkqtptools__string.html#ga7c267b0758726673a136e2b1168b8e3f", null ],
+    [ "jkqtp_floattostr", "group__jkqtptools__string.html#ga64250e066e850d760a1a5eb931618b07", null ],
+    [ "jkqtp_floattounitstr", "group__jkqtptools__string.html#ga3352749dd0e5dd86236e2e5d89660603", null ],
+    [ "jkqtp_floattounitstr", "group__jkqtptools__string.html#gaad25b26cefc6c2cda1741d25deb461e4", null ],
+    [ "jkqtp_format", "group__jkqtptools__string.html#ga0e62fa792a3340f99f238a8cedf25fc5", null ],
+    [ "jkqtp_inttohex", "group__jkqtptools__string.html#ga9be01a3f9bdadbffe1e3f1b16619d22b", null ],
+    [ "jkqtp_inttostr", "group__jkqtptools__string.html#ga89377751615be152a5792634bfe46f68", null ],
+    [ "jkqtp_QBrushStyle2String", "group__jkqtptools__string.html#ga744a8ae62da3998a9048490b27e77bad", null ],
+    [ "jkqtp_QColor2String", "group__jkqtptools__string.html#gaad82f11e85d5079eea62e96418ef666c", null ],
+    [ "jkqtp_QPenStyle2String", "group__jkqtptools__string.html#ga59a9a8c0aadc09b9cd8d6190bde42a14", null ],
+    [ "jkqtp_rgbtostring", "group__jkqtptools__string.html#gab3c93eea5f8edaa743980da84fab87a2", null ],
+    [ "jkqtp_String2QBrushStyle", "group__jkqtptools__string.html#ga6bb96fe8a7c47af061e451a79853fb68", null ],
+    [ "jkqtp_String2QColor", "group__jkqtptools__string.html#ga0280e26395ca021d21416a23261836cb", null ],
+    [ "jkqtp_String2QPenStyle", "group__jkqtptools__string.html#ga67b75611e2ad5bc2211367e51a58e0bd", null ],
+    [ "jkqtp_strtobool", "group__jkqtptools__string.html#gaaba5aedcc3631ef2a1046fbd86c09ad2", null ],
+    [ "jkqtp_to_valid_variable_name", "group__jkqtptools__string.html#gab204b77e42b5d6c9d6791d2a714b058d", null ],
+    [ "jkqtp_tolower", "group__jkqtptools__string.html#ga5b4bfb529ddfdac05f38e2eaa30f8d13", null ],
+    [ "jkqtp_toupper", "group__jkqtptools__string.html#gacef66ef9b1939623c94e8de60d8ae609", null ],
+    [ "jkqtp_uinttostr", "group__jkqtptools__string.html#gac005a657a939c59fcd57f7214db892f2", null ],
+    [ "JKQTPCDoubleToQString", "group__jkqtptools__string.html#ga819536d8ee41b8cf9e758d06f19603b9", null ],
+    [ "JKQTPDoubleToQString", "group__jkqtptools__string.html#gae5fbb0a7df6e25108d6c661e292f2d8c", null ]
+];

@@ -1,0 +1,24 @@
+<map id="JKQTPGeoPie" name="JKQTPGeoPie">
+<area shape="rect" id="node1" title="This JKQTPPlotObject is used to draw a pie." alt="" coords="2577,324,2700,354"/>
+<area shape="rect" id="node2" href="$class_j_k_q_t_p_geo_ellipse.html" title="This JKQTPPlotObject is used to draw an ellipse." alt="" coords="2381,324,2528,354"/>
+<area shape="rect" id="node3" href="$class_j_k_q_t_p_geo_rectangle.html" title="This JKQTPPlotObject is used to draw a rectangle." alt="" coords="2157,324,2332,354"/>
+<area shape="rect" id="node4" href="$class_j_k_q_t_p_geo_base_filled.html" title="This JKQTPPlotObject is used as base class for geometric drawing elements that only consist of lines ..." alt="" coords="1933,324,2108,354"/>
+<area shape="rect" id="node5" href="$class_j_k_q_t_p_geo_base_line.html" title="This JKQTPPlotObject is used as base class for geometric drawing elements that only consist of lines ..." alt="" coords="1694,292,1863,322"/>
+<area shape="rect" id="node6" href="$class_j_k_q_t_p_plot_object.html" title="this is the virtual base class of all JKQTPPlotElement&#39;s in a JKQTPlotter plot that represent geometr..." alt="" coords="1438,376,1586,406"/>
+<area shape="rect" id="node7" href="$class_j_k_q_t_p_plot_element.html" title="this virtual base class of every element, which is part of a JKQTPlotter plot and may appear in its k..." alt="" coords="1177,411,1337,440"/>
+<area shape="rect" id="node8" title=" " alt="" coords="75,299,160,328"/>
+<area shape="rect" id="node9" href="$class_j_k_q_t_base_plotter.html" title="base class for 2D plotter classes (used by the plotter widget JKQTPlotter)This class implements basic..." alt="" coords="831,274,979,303"/>
+<area shape="rect" id="node10" href="$class_j_k_q_t_math_text.html" title="this class parses a LaTeX string and can then draw the contained text/equation onto a QPainter" alt="" coords="485,343,613,372"/>
+<area shape="rect" id="node13" href="$class_j_k_q_t_p_coordinate_axis.html" title="this virtual class is the base for any type of coordinate axis, to be drawn by JKQTBasePlotter...." alt="" coords="1164,160,1351,190"/>
+<area shape="rect" id="node15" href="$class_j_k_q_t_p_graphs_model.html" title="data model with all plots ina JKQTBasePlotter (+ allows to switch them visible/invisible)This class i..." alt="" coords="1172,358,1343,387"/>
+<area shape="rect" id="node11" href="$class_j_k_q_t_math_text_1_1_m_tnode.html" title="subclass representing one node in the syntax tree" alt="" coords="805,374,1004,403"/>
+<area shape="rect" id="node12" href="$class_j_k_q_t_p_horizontal_axis.html" title="implements a horizontal axis, based on JKQTPCoordinateAxis (for most of documentation: see JKQTPCoord..." alt="" coords="1421,292,1603,322"/>
+<area shape="rect" id="node19" href="$class_j_k_q_t_p_vertical_axis.html" title="implements a vertical axis, based on JKQTPCoordinateAxis (for most of documentation: see JKQTPCoordin..." alt="" coords="1433,174,1591,203"/>
+<area shape="rect" id="node14" href="$class_j_k_q_t_p_coordinate_axis_style.html" title="Support Class for JKQTPCoordinateAxis, which summarizes all proeprties that define the visual styling..." alt="" coords="5,20,229,50"/>
+<area shape="rect" id="node17" href="$class_j_k_q_t_base_plotter_style.html" title="Support Class for JKQTBasePlotter, which summarizes all proeprties that define the visual styling of ..." alt="" coords="456,107,641,136"/>
+<area shape="rect" id="node16" title=" " alt="" coords="813,442,997,471"/>
+<area shape="rect" id="node18" href="$class_j_k_q_t_p_key_style.html" title="Support Class for JKQTBasePlotter, which summarizes all proeprties that define the visual styling of ..." alt="" coords="51,115,184,144"/>
+<area shape="rect" id="node20" href="$class_j_k_q_t_p_datastore.html" title="This class manages chunks of memory that are used for column data in JKQTBasePlotter descendents." alt="" coords="475,222,622,251"/>
+<area shape="rect" id="node21" href="$class_j_k_q_t_p_graph_line_style_mixin.html" title="This Mix&#45;In class provides setter/getter methods, storage and other facilities for the graph line sty..." alt="" coords="1400,239,1624,268"/>
+<area shape="rect" id="node22" href="$class_j_k_q_t_p_graph_fill_style_mixin.html" title="This Mix&#45;In class provides setter/getter methods, storage and other facilities for the graph filling ..." alt="" coords="1673,346,1884,375"/>
+</map>

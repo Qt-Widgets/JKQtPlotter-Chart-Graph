@@ -1,0 +1,16 @@
+<map id="JKQTPVerticalIndependentAxis" name="JKQTPVerticalIndependentAxis">
+<area shape="rect" id="node1" title="implements a position&#45;indipendent vertical axis, based on JKQTPCoordinateAxis (for most of documentat..." alt="" coords="805,34,1061,63"/>
+<area shape="rect" id="node2" href="$class_j_k_q_t_p_vertical_axis.html" title="implements a vertical axis, based on JKQTPCoordinateAxis (for most of documentation: see JKQTPCoordin..." alt="" coords="469,34,628,63"/>
+<area shape="rect" id="node6" href="$class_j_k_q_t_base_plotter.html" title="base class for 2D plotter classes (used by the plotter widget JKQTPlotter)This class implements basic..." alt="" coords="859,435,1007,464"/>
+<area shape="rect" id="node3" href="$class_j_k_q_t_p_coordinate_axis.html" title="this virtual class is the base for any type of coordinate axis, to be drawn by JKQTBasePlotter...." alt="" coords="1221,324,1408,354"/>
+<area shape="rect" id="node9" href="$class_j_k_q_t_p_horizontal_axis.html" title="implements a horizontal axis, based on JKQTPCoordinateAxis (for most of documentation: see JKQTPCoord..." alt="" coords="1457,378,1639,407"/>
+<area shape="rect" id="node4" title=" " alt="" coords="75,236,160,266"/>
+<area shape="rect" id="node7" href="$class_j_k_q_t_math_text.html" title="this class parses a LaTeX string and can then draw the contained text/equation onto a QPainter" alt="" coords="485,236,613,266"/>
+<area shape="rect" id="node5" href="$class_j_k_q_t_p_coordinate_axis_style.html" title="Support Class for JKQTPCoordinateAxis, which summarizes all proeprties that define the visual styling..." alt="" coords="5,388,229,418"/>
+<area shape="rect" id="node12" href="$class_j_k_q_t_base_plotter_style.html" title="Support Class for JKQTBasePlotter, which summarizes all proeprties that define the visual styling of ..." alt="" coords="456,488,641,518"/>
+<area shape="rect" id="node10" href="$class_j_k_q_t_p_graphs_model.html" title="data model with all plots ina JKQTBasePlotter (+ allows to switch them visible/invisible)This class i..." alt="" coords="1229,491,1400,520"/>
+<area shape="rect" id="node8" href="$class_j_k_q_t_math_text_1_1_m_tnode.html" title="subclass representing one node in the syntax tree" alt="" coords="834,212,1033,242"/>
+<area shape="rect" id="node11" title=" " alt="" coords="841,535,1025,564"/>
+<area shape="rect" id="node13" href="$class_j_k_q_t_p_key_style.html" title="Support Class for JKQTBasePlotter, which summarizes all proeprties that define the visual styling of ..." alt="" coords="51,488,184,518"/>
+<area shape="rect" id="node14" href="$class_j_k_q_t_p_datastore.html" title="This class manages chunks of memory that are used for column data in JKQTBasePlotter descendents." alt="" coords="475,435,622,464"/>
+</map>

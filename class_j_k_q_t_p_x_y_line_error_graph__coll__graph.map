@@ -1,0 +1,26 @@
+<map id="JKQTPXYLineErrorGraph" name="JKQTPXYLineErrorGraph">
+<area shape="rect" id="node1" title="This implements xy line plots with x and y error indicators." alt="" coords="2167,586,2376,615"/>
+<area shape="rect" id="node2" href="$class_j_k_q_t_p_x_y_line_graph.html" title="This implements xy line plots. This also alows to draw symbols at the data points." alt="" coords="1940,543,2108,573"/>
+<area shape="rect" id="node3" href="$class_j_k_q_t_p_x_y_graph.html" title="This virtual JKQTPGraph descendent may be used as base for all graphs that use at least two columns t..." alt="" coords="1687,463,1825,493"/>
+<area shape="rect" id="node4" href="$class_j_k_q_t_p_graph.html" title="this virtual base class of the (data&#45;column based) graphs, which are part of a JKQTPlotter plot and w..." alt="" coords="1432,463,1549,493"/>
+<area shape="rect" id="node5" href="$class_j_k_q_t_p_plot_element.html" title="this virtual base class of every element, which is part of a JKQTPlotter plot and may appear in its k..." alt="" coords="1177,463,1337,493"/>
+<area shape="rect" id="node6" title=" " alt="" coords="75,273,160,302"/>
+<area shape="rect" id="node7" href="$class_j_k_q_t_base_plotter.html" title="base class for 2D plotter classes (used by the plotter widget JKQTPlotter)This class implements basic..." alt="" coords="831,278,979,307"/>
+<area shape="rect" id="node8" href="$class_j_k_q_t_math_text.html" title="this class parses a LaTeX string and can then draw the contained text/equation onto a QPainter" alt="" coords="485,353,613,382"/>
+<area shape="rect" id="node11" href="$class_j_k_q_t_p_coordinate_axis.html" title="this virtual class is the base for any type of coordinate axis, to be drawn by JKQTBasePlotter...." alt="" coords="1164,174,1351,203"/>
+<area shape="rect" id="node13" href="$class_j_k_q_t_p_graphs_model.html" title="data model with all plots ina JKQTBasePlotter (+ allows to switch them visible/invisible)This class i..." alt="" coords="1172,314,1343,343"/>
+<area shape="rect" id="node9" href="$class_j_k_q_t_math_text_1_1_m_tnode.html" title="subclass representing one node in the syntax tree" alt="" coords="805,437,1004,466"/>
+<area shape="rect" id="node10" href="$class_j_k_q_t_p_horizontal_axis.html" title="implements a horizontal axis, based on JKQTPCoordinateAxis (for most of documentation: see JKQTPCoord..." alt="" coords="1400,333,1581,362"/>
+<area shape="rect" id="node17" href="$class_j_k_q_t_p_vertical_axis.html" title="implements a vertical axis, based on JKQTPCoordinateAxis (for most of documentation: see JKQTPCoordin..." alt="" coords="1411,207,1570,237"/>
+<area shape="rect" id="node12" href="$class_j_k_q_t_p_coordinate_axis_style.html" title="Support Class for JKQTPCoordinateAxis, which summarizes all proeprties that define the visual styling..." alt="" coords="5,21,229,50"/>
+<area shape="rect" id="node15" href="$class_j_k_q_t_base_plotter_style.html" title="Support Class for JKQTBasePlotter, which summarizes all proeprties that define the visual styling of ..." alt="" coords="456,107,641,137"/>
+<area shape="rect" id="node14" title=" " alt="" coords="813,383,997,413"/>
+<area shape="rect" id="node16" href="$class_j_k_q_t_p_key_style.html" title="Support Class for JKQTBasePlotter, which summarizes all proeprties that define the visual styling of ..." alt="" coords="51,115,184,145"/>
+<area shape="rect" id="node18" href="$class_j_k_q_t_p_datastore.html" title="This class manages chunks of memory that are used for column data in JKQTBasePlotter descendents." alt="" coords="475,285,622,314"/>
+<area shape="rect" id="node19" href="$class_j_k_q_t_p_graph_line_style_mixin.html" title="This Mix&#45;In class provides setter/getter methods, storage and other facilities for the graph line sty..." alt="" coords="1644,517,1868,546"/>
+<area shape="rect" id="node20" href="$class_j_k_q_t_p_graph_symbol_style_mixin.html" title="This Mix&#45;In class provides setter/getter methods, storage and other facilities for the graph symbols ..." alt="" coords="1631,570,1881,599"/>
+<area shape="rect" id="node21" href="$class_j_k_q_t_p_x_y_graph_errors.html" title="This class is the base class for graphs that only display error indicators in x&#45; and y&#45;direction." alt="" coords="1931,665,2117,694"/>
+<area shape="rect" id="node22" href="$class_j_k_q_t_p_x_graph_error_data.html" title="This class adds data fields for error indicators in x direction." alt="" coords="1653,623,1859,653"/>
+<area shape="rect" id="node23" href="$class_j_k_q_t_p_y_graph_error_data.html" title="This class adds data fields for error indicators in y direction." alt="" coords="1655,677,1857,706"/>
+<area shape="rect" id="node24" href="$class_j_k_q_t_p_graph_error_style_mixin.html" title="This mix&#45;in class assembles all styling properties applicable to error indicators." alt="" coords="1639,730,1873,759"/>
+</map>

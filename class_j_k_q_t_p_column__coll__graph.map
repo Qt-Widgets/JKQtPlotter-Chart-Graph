@@ -1,0 +1,4 @@
+<map id="JKQTPColumn" name="JKQTPColumn">
+<area shape="rect" id="node1" title="stores information about one data column. See JKQTPDatastore for more information." alt="" coords="15,100,143,129"/>
+<area shape="rect" id="node2" href="$class_j_k_q_t_p_datastore.html" title="This class manages chunks of memory that are used for column data in JKQTBasePlotter descendents." alt="" coords="5,5,152,35"/>
+</map>

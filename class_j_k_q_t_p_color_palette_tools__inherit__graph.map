@@ -1,0 +1,5 @@
+<map id="JKQTPColorPaletteTools" name="JKQTPColorPaletteTools">
+<area shape="rect" id="node1" title="if a class is derived from this class, it may use color bars" alt="" coords="29,5,228,35"/>
+<area shape="rect" id="node2" href="$class_j_k_q_t_p_x_y_parametrized_scatter_graph.html" title="This implements xy scatter plots (like JKQTPXYLineGraph), but the color and size of the symbols may b..." alt="" coords="5,83,252,129"/>
+<area shape="rect" id="node3" href="$class_j_k_q_t_p_x_y_parametrized_error_scatter_graph.html" title="This implements xy scatter plots (like JKQTPXYLineGraph), but the color and size of the symbols may b..." alt="" coords="13,177,245,224"/>
+</map>
