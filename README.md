@@ -21,6 +21,8 @@ This software is licensed under the term of the [GNU Lesser General Public Licen
   - external or internal datasets
   - complete with GUI (table view)
   - export capabilities (e.g. to CSV, SYLK, ...)
+  - C++ standard iterator interface
+  - statistics library (basic statistics, boxplots, histograms, kernel density estimates, regression analysis, polynomial fitting)
 - large variety of graphs that can be added to a plot, e.g.:
   - scatter-plots (also parametrized color/size/symbol by a third data-column)
   - line graphs, step graphs, impulses
@@ -34,7 +36,8 @@ This software is licensed under the term of the [GNU Lesser General Public Licen
   - contour plots
   - geometric forms/annotations
   - can be easily extended by deriving a new graph from JKQTPPlotElement or JKQTPPlotObject
-- optional: OpenCV interface
+- optional: OpenCV, CImg interfaces
+- CMake-based build system
 - extensive set of [Examples/Tutorials](./examples/README.md)
 - extensive doxygen-generated [Documentation](http://jkriege2.github.io/JKQtPlotter/index.html)
 
@@ -57,10 +60,17 @@ The [Screenshots-page](./screenshots/) contains several screenshots, partly take
 
 
 ## Building
-Building instructions can be found here:
-- include necessary files into QMake project: [`./lib/*.pri`](./lib/README.md)
-- [build a static library](./staticlib): [`./staticlib/*.pro`](./staticlib/README.md)
-- [build a shared library (DLL, SO, ...)](./sharedlib): [`./sharedlib/*.pro`](./sharedlib/README.md)
+
+JKQTPlotter contains two different build systems: A modern [CMake](https://cmake.org/)-based build and an older QMake-based build (which works out of the box with Qt 5.x). Both systems are explained in detail in http://jkriege2.github.io/JKQtPlotter/page_buildinstructions.html.
+
+
+With [CMake](https://cmake.org/) you can easily build JKQTPlotter and all its examples, by calling something like:
+```
+    $ mkdir build; cd build
+    $ cmake .. -G "<cmake_generator>" "-DCMAKE_PREFIX_PATH=<path_to_your_qt_sources>"
+    $ cmake --build . --config "Debug"
+```
+
 
 
 ## Continuous Integration Status

@@ -2,106 +2,105 @@
 #DEFINES += NO_XITS_FONTS
 
 
-include($$PWD/common.pri)
+
+isEmpty(JKQTP_PLOTTER_PRI_INCLUDED) {
+    JKQTP_PLOTTER_PRI_INCLUDED = 1
+
+    INCLUDEPATH += $PWD
 
 
-HEADERS += \
-           $$PWD/jkqtfastplotter/jkqtfastplotter.h \
-           $$PWD/jkqtmathtext/jkqtmathtext.h \
-           $$PWD/jkqtplotter/jkqtpbaseelements.h \
-           $$PWD/jkqtplotter/jkqtpbaseplotter.h \
-           $$PWD/jkqtplotter/jkqtpdatastorage.h \
-           $$PWD/jkqtplotter/jkqtpelementsoverlay.h \
-           $$PWD/jkqtplotter/jkqtpgraphsscatter.h \
-           $$PWD/jkqtplotter/jkqtpgraphsrange.h \
-           $$PWD/jkqtplotter/jkqtpgraphsspecialline.h \
-           $$PWD/jkqtplotter/jkqtpgraphsbarchart.h \
-           $$PWD/jkqtplotter/jkqtpgraphsbase.h \
-           $$PWD/jkqtplotter/jkqtpgraphsbaseerrors.h \
-           $$PWD/jkqtplotter/jkqtpgraphsbasestylingmixins.h \
-           $$PWD/jkqtplotter/jkqtpgraphsboxplot.h \
-           $$PWD/jkqtplotter/jkqtpgraphsboxplotstylingmixins.h \
-           $$PWD/jkqtplotter/jkqtpgraphsevaluatedfunction.h \
-           $$PWD/jkqtplotter/jkqtpgraphsfilledcurve.h \
-           $$PWD/jkqtplotter/jkqtpgraphsgeometric.h \
-           $$PWD/jkqtplotter/jkqtpgraphsimage.h \
-           $$PWD/jkqtplotter/jkqtpgraphsimpulses.h \
-           $$PWD/jkqtplotter/jkqtpgraphsparsedfunction.h \
-           $$PWD/jkqtplotter/jkqtpgraphspeakstream.h \
-           $$PWD/jkqtplotter/jkqtpgraphssinglecolumnsymbols.h \
-           $$PWD/jkqtplotter/jkqtpgraphsimageoverlays.h \
-           $$PWD/jkqtplotter/jkqtpgraphscontour.h \
-           $$PWD/jkqtplotter/jkqtpgraphsimagergb.h \
-           $$PWD/jkqtplotter/jkqtplotter.h \
-           $$PWD/jkqtplotter/jkqtplotterstyle.h \
-           $$PWD/jkqtplotter/jkqtpbaseplotterstyle.h \ 
-           $$PWD/jkqtplotter/jkqtpcoordinateaxes.h \
-           $$PWD/jkqtplotter/jkqtpcoordinateaxesstyle.h \
-           $$PWD/jkqtplottergui/jkqtpcomboboxes.h \
-           $$PWD/jkqtplottergui/jkqtpenhancedspinboxes.h \
-           $$PWD/jkqtplottergui/jkqtpenhancedtableview.h \
-           $$PWD/jkqtplottergui/jkqtpgraphsmodel.h \
-           $$PWD/jkqtplottergui/jkvanishqtoolbar.h \
-           $$PWD/jkqtplottertools/jkqtpdrawingtools.h \
-           $$PWD/jkqtplottertools/jkqtpenhancedpainter.h \
-           $$PWD/jkqtplottertools/jkqtphighrestimer.h \
-           $$PWD/jkqtplottertools/jkqtpimagetools.h \
-           $$PWD/jkqtplottertools/jkqtpmathparser.h \
-           $$PWD/jkqtplottertools/jkqttools.h \
-    $$PWD/jkqtplotter/jkqtpkeystyle.h
+    HEADERS += \
+               $$PWD/jkqtplotter/jkqtptools.h \
+               $$PWD/jkqtplotter/jkqtpbaseelements.h \
+               $$PWD/jkqtplotter/jkqtpbaseplotter.h \
+               $$PWD/jkqtplotter/jkqtpdatastorage.h \
+               $$PWD/jkqtplotter/jkqtpgraphsbase.h \
+               $$PWD/jkqtplotter/jkqtpgraphsbaseerrors.h \
+               $$PWD/jkqtplotter/jkqtpgraphsbasestylingmixins.h \
+               $$PWD/jkqtplotter/jkqtplotter.h \
+               $$PWD/jkqtplotter/jkqtplotterstyle.h \
+               $$PWD/jkqtplotter/jkqtpkeystyle.h \
+               $$PWD/jkqtplotter/jkqtpbaseplotterstyle.h \
+               $$PWD/jkqtplotter/jkqtpcoordinateaxes.h \
+               $$PWD/jkqtplotter/jkqtpcoordinateaxesstyle.h \
+               $$PWD/jkqtplotter/jkqtpimagetools.h \
+               $$PWD/jkqtplotter/jkqtpoverlaysbase.h \
+               $$PWD/jkqtplotter/graphs/jkqtpboxplot.h \
+               $$PWD/jkqtplotter/graphs/jkqtpboxplotstylingmixins.h \
+               $$PWD/jkqtplotter/graphs/jkqtpevaluatedfunction.h \
+               $$PWD/jkqtplotter/graphs/jkqtpfilledcurve.h \
+               $$PWD/jkqtplotter/graphs/jkqtpgeometric.h \
+               $$PWD/jkqtplotter/graphs/jkqtpimage.h \
+               $$PWD/jkqtplotter/graphs/jkqtpimpulses.h \
+               $$PWD/jkqtplotter/graphs/jkqtpparsedfunction.h \
+               $$PWD/jkqtplotter/graphs/jkqtppeakstream.h \
+               $$PWD/jkqtplotter/graphs/jkqtpsinglecolumnsymbols.h \
+               $$PWD/jkqtplotter/graphs/jkqtpimageoverlays.h \
+               $$PWD/jkqtplotter/graphs/jkqtpcontour.h \
+               $$PWD/jkqtplotter/graphs/jkqtpimagergb.h \
+               $$PWD/jkqtplotter/graphs/jkqtpviolinplot.h \
+               $$PWD/jkqtplotter/graphs/jkqtpviolinplotstylingmixins.h \
+               $$PWD/jkqtplotter/graphs/jkqtpstatisticsadaptors.h \
+               $$PWD/jkqtplotter/graphs/jkqtpscatter.h \
+               $$PWD/jkqtplotter/graphs/jkqtprange.h \
+               $$PWD/jkqtplotter/graphs/jkqtpspecialline.h \
+               $$PWD/jkqtplotter/graphs/jkqtpbarchart.h \
+               $$PWD/jkqtplotter/overlays/jkqtpbasicoverlays.h \
+               $$PWD/jkqtplotter/gui/jkqtpcomboboxes.h \
+               $$PWD/jkqtplotter/gui/jkqtpenhancedspinboxes.h \
+               $$PWD/jkqtplotter/gui/jkqtpenhancedtableview.h \
+               $$PWD/jkqtplotter/gui/jkqtpgraphsmodel.h \
+               $$PWD/jkqtplotter/gui/jkvanishqtoolbar.h
 
 
-SOURCES += \
-           $$PWD/jkqtfastplotter/jkqtfastplotter.cpp \
-           $$PWD/jkqtmathtext/jkqtmathtext.cpp \
-           $$PWD/jkqtplotter/jkqtpbaseelements.cpp \
-           $$PWD/jkqtplotter/jkqtpbaseplotter.cpp \
-           $$PWD/jkqtplotter/jkqtpdatastorage.cpp \
-           $$PWD/jkqtplotter/jkqtpelementsoverlay.cpp  \
-           $$PWD/jkqtplotter/jkqtpgraphsscatter.cpp \
-           $$PWD/jkqtplotter/jkqtpgraphsrange.cpp \
-           $$PWD/jkqtplotter/jkqtpgraphsspecialline.cpp \
-           $$PWD/jkqtplotter/jkqtpgraphsbarchart.cpp  \
-           $$PWD/jkqtplotter/jkqtpgraphsbase.cpp \
-           $$PWD/jkqtplotter/jkqtpgraphsbaseerrors.cpp \
-           $$PWD/jkqtplotter/jkqtpgraphsbasestylingmixins.cpp \
-           $$PWD/jkqtplotter/jkqtpgraphsboxplot.cpp  \
-           $$PWD/jkqtplotter/jkqtpgraphsboxplotstylingmixins.cpp  \
-           $$PWD/jkqtplotter/jkqtpgraphsevaluatedfunction.cpp  \
-           $$PWD/jkqtplotter/jkqtpgraphsfilledcurve.cpp  \
-           $$PWD/jkqtplotter/jkqtpgraphsgeometric.cpp  \
-           $$PWD/jkqtplotter/jkqtpgraphsimage.cpp  \
-           $$PWD/jkqtplotter/jkqtpgraphsimpulses.cpp  \
-           $$PWD/jkqtplotter/jkqtpgraphsparsedfunction.cpp  \
-           $$PWD/jkqtplotter/jkqtpgraphspeakstream.cpp  \
-           $$PWD/jkqtplotter/jkqtpgraphssinglecolumnsymbols.cpp  \
-           $$PWD/jkqtplotter/jkqtpgraphsimageoverlays.cpp  \
-           $$PWD/jkqtplotter/jkqtpgraphscontour.cpp  \
-           $$PWD/jkqtplotter/jkqtpgraphsimagergb.cpp  \
-           $$PWD/jkqtplotter/jkqtplotter.cpp \
-           $$PWD/jkqtplotter/jkqtplotterstyle.cpp \
-           $$PWD/jkqtplotter/jkqtpbaseplotterstyle.cpp \ 
-           $$PWD/jkqtplotter/jkqtpcoordinateaxes.cpp \
-           $$PWD/jkqtplotter/jkqtpcoordinateaxesstyle.cpp \
-           $$PWD/jkqtplottergui/jkqtpcomboboxes.cpp \
-           $$PWD/jkqtplottergui/jkqtpenhancedspinboxes.cpp \
-           $$PWD/jkqtplottergui/jkqtpenhancedtableview.cpp \
-           $$PWD/jkqtplottergui/jkqtpgraphsmodel.cpp \
-           $$PWD/jkqtplottergui/jkvanishqtoolbar.cpp \
-           $$PWD/jkqtplottertools/jkqtpdrawingtools.cpp \
-           $$PWD/jkqtplottertools/jkqtpenhancedpainter.cpp \
-           $$PWD/jkqtplottertools/jkqtphighrestimer.cpp \
-           $$PWD/jkqtplottertools/jkqtpimagetools.cpp  \
-           $$PWD/jkqtplottertools/jkqtpmathparser.cpp \
-           $$PWD/jkqtplottertools/jkqttools.cpp \
-    $$PWD/jkqtplotter/jkqtpkeystyle.cpp
+
+    SOURCES += \
+               $$PWD/jkqtplotter/jkqtptools.cpp \
+               $$PWD/jkqtplotter/jkqtpbaseelements.cpp \
+               $$PWD/jkqtplotter/jkqtpbaseplotter.cpp \
+               $$PWD/jkqtplotter/jkqtpdatastorage.cpp \
+               $$PWD/jkqtplotter/jkqtpgraphsbase.cpp \
+               $$PWD/jkqtplotter/jkqtpgraphsbaseerrors.cpp \
+               $$PWD/jkqtplotter/jkqtpgraphsbasestylingmixins.cpp \
+               $$PWD/jkqtplotter/jkqtpimagetools.cpp \
+               $$PWD/jkqtplotter/jkqtplotter.cpp \
+               $$PWD/jkqtplotter/jkqtplotterstyle.cpp \
+               $$PWD/jkqtplotter/jkqtpkeystyle.cpp \
+               $$PWD/jkqtplotter/jkqtpbaseplotterstyle.cpp \
+               $$PWD/jkqtplotter/jkqtpcoordinateaxes.cpp \
+               $$PWD/jkqtplotter/jkqtpcoordinateaxesstyle.cpp \
+               $$PWD/jkqtplotter/jkqtpoverlaysbase.cpp \
+               $$PWD/jkqtplotter/graphs/jkqtpboxplot.cpp  \
+               $$PWD/jkqtplotter/graphs/jkqtpboxplotstylingmixins.cpp  \
+               $$PWD/jkqtplotter/graphs/jkqtpevaluatedfunction.cpp  \
+               $$PWD/jkqtplotter/graphs/jkqtpfilledcurve.cpp  \
+               $$PWD/jkqtplotter/graphs/jkqtpgeometric.cpp  \
+               $$PWD/jkqtplotter/graphs/jkqtpimage.cpp  \
+               $$PWD/jkqtplotter/graphs/jkqtpimpulses.cpp  \
+               $$PWD/jkqtplotter/graphs/jkqtpparsedfunction.cpp  \
+               $$PWD/jkqtplotter/graphs/jkqtppeakstream.cpp  \
+               $$PWD/jkqtplotter/graphs/jkqtpsinglecolumnsymbols.cpp  \
+               $$PWD/jkqtplotter/graphs/jkqtpimageoverlays.cpp  \
+               $$PWD/jkqtplotter/graphs/jkqtpcontour.cpp  \
+               $$PWD/jkqtplotter/graphs/jkqtpimagergb.cpp \
+               $$PWD/jkqtplotter/graphs/jkqtpviolinplot.cpp \
+               $$PWD/jkqtplotter/graphs/jkqtpviolinplotstylingmixins.cpp \
+               $$PWD/jkqtplotter/graphs/jkqtpstatisticsadaptors.cpp  \
+               $$PWD/jkqtplotter/graphs/jkqtpscatter.cpp \
+               $$PWD/jkqtplotter/graphs/jkqtprange.cpp \
+               $$PWD/jkqtplotter/graphs/jkqtpspecialline.cpp \
+               $$PWD/jkqtplotter/graphs/jkqtpbarchart.cpp  \
+               $$PWD/jkqtplotter/overlays/jkqtpbasicoverlays.cpp  \
+               $$PWD/jkqtplotter/gui/jkqtpcomboboxes.cpp \
+               $$PWD/jkqtplotter/gui/jkqtpenhancedspinboxes.cpp \
+               $$PWD/jkqtplotter/gui/jkqtpenhancedtableview.cpp \
+               $$PWD/jkqtplotter/gui/jkqtpgraphsmodel.cpp \
+               $$PWD/jkqtplotter/gui/jkvanishqtoolbar.cpp
 
 
-RESOURCES += $$PWD/jkqtplotterressources/jkqtpbaseplotter.qrc \
-             $$PWD/jkqtplotterressources/jkqtpstyles.qrc
+    RESOURCES += $$PWD/jkqtplotter/resources/jkqtpbaseplotter.qrc \
+                 $$PWD/jkqtplotter/resources/jkqtpstyles.qrc
 
-QT += xml svg opengl
+    QT += xml svg opengl
 
-include($$PWD/jkqtplotterressources/math_fonts/xits.pri)
-DEFINES += AUTOLOAD_XITS_FONTS
-DEFINES += USE_XITS_FONTS
+}

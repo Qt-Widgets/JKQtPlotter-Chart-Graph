@@ -1,7 +1,7 @@
 #include "jkqtpbaseplotterstyle.h"
 #include <QPalette>
 #include <QApplication>
-#include "jkqtcommon/jkqtptools.h"
+#include "jkqtplotter/jkqtptools.h"
 
 JKQTBasePlotterStyle::JKQTBasePlotterStyle():
     debugShowRegionBoxes(false),
@@ -34,6 +34,7 @@ JKQTBasePlotterStyle::JKQTBasePlotterStyle():
     graphFillColorDerivationMode(JKQTPFFCMLighterColor),
     graphErrorColorDerivationMode(JKQTPFFCMDarkerColor),
     graphErrorFillColorDerivationMode(JKQTPFFCMEvenLighterColor),
+    defaultGraphColors(), defaultGraphPenStyles(), defaultGraphSymbols(), defaultGraphFillStyles(),
     keyStyle(*this),
     xAxisStyle(*this),
     yAxisStyle(*this),
@@ -82,7 +83,7 @@ void JKQTBasePlotterStyle::loadSettings(const QSettings &settings, const QString
     defaultTextColor=jkqtp_String2QColor(settings.value(group+"text_default_color", jkqtp_QColor2String(defaultStyle.defaultTextColor)).toString());
     defaultFontSize=settings.value(group+"text_default_size", defaultStyle.defaultFontSize).toDouble();
     defaultFontName=settings.value(group+"text_default_font_name", defaultStyle.defaultFontName).toString();
-    defaultPalette=String2JKQTPMathImageColorPalette(settings.value(group+"graph_default_palette", JKQTPMathImageColorPalette2String(defaultStyle.defaultPalette)).toString());
+    defaultPalette=JKQTPImageTools::String2JKQTPMathImageColorPalette(settings.value(group+"graph_default_palette", JKQTPImageTools::JKQTPMathImageColorPalette2String(defaultStyle.defaultPalette)).toString());
     defaultGraphWidth=settings.value(group+"graph_default_linewidth", defaultStyle.debugRegionLineWidth).toDouble();
     defaultGraphSymbolSize=settings.value(group+"graph_default_symbolsize", defaultStyle.defaultGraphSymbolSize).toDouble();
     defaultGraphSymbolLineWidth=settings.value(group+"graph_default_symbol_linewidtht", defaultStyle.defaultGraphSymbolLineWidth).toDouble();
@@ -102,8 +103,8 @@ void JKQTBasePlotterStyle::loadSettings(const QSettings &settings, const QString
             QString kk=k;
             kk.remove(0, start.size());
             QString num="";
-            while (kk.front().isDigit()) {
-                num+=kk.front();
+            while (kk.at(0).isDigit()) {
+                num+=kk.at(0);
                 kk.remove(0, 1);
             }
             bool ok=false;
@@ -181,7 +182,7 @@ void JKQTBasePlotterStyle::saveSettings(QSettings &settings, const QString &grou
     settings.setValue(group+"graph_default_linewidth", defaultGraphWidth);
     settings.setValue(group+"graph_default_symbolsize", defaultGraphSymbolSize);
     settings.setValue(group+"graph_default_symbol_linewidtht", defaultGraphSymbolLineWidth);
-    settings.setValue(group+"graph_default_palette", JKQTPMathImageColorPalette2String(defaultPalette));
+    settings.setValue(group+"graph_default_palette", JKQTPImageTools::JKQTPMathImageColorPalette2String(defaultPalette));
     settings.setValue(group+"graph_default_fill_color_mode", JKQTPColorDerivationMode2String(graphFillColorDerivationMode));
     settings.setValue(group+"graph_default_error_color_mode", JKQTPColorDerivationMode2String(graphErrorColorDerivationMode));
     settings.setValue(group+"graph_default_error_fill_color_mode", JKQTPColorDerivationMode2String(graphErrorFillColorDerivationMode));

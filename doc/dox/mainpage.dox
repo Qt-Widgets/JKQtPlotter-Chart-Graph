@@ -28,6 +28,8 @@
   - external or internal datasets
   - complete with GUI (table view)
   - built-in export capabilities for datatables (e.g. to CSV, SYLK, ...)
+  - C++ standard iterator interface
+  - \ref jkqtptools_math_statistics (basic statistics, boxplots, histograms, kernel density estimates, regression analysis, polynomial fitting)
 - <b>\ref jkqtplotter_elements "large variety of graphs that can be added to a plot", e.g.:</b>
   - \ref jkqtplotter_linesymbolgraphs_simple "scatter-plots" (also \ref jkqtplotter_linesymbolgraphs_param "parametrized color/size/symbol by a third data-column")
   - \ref jkqtplotter_linesymbolgraphs "line graphs, step graphs", \ref jkqtplotter_barssticks "impulses"
@@ -41,7 +43,9 @@
   - \ref jkqtplotter_imagelots_contour "contour plots"
   - \ref jkqtplotter_geoplots "geometric forms/annotations"
   - can be easily extended by deriving a new graph from JKQTPPlotElement or JKQTPPlotObject
-- <b>\ref jkqtpopencvinterface  "optional: OpenCV interface"</b>
+- <b>OPTIONAL: Interfaces to external libraries</b>
+  - \ref jkqtpinterfaceopencv  "OpenCV interface"
+  - \ref jkqtpinterfacecimg  "CImg interface"
 - <b>integrated LaTeX parser/renderer JKQTMathText :</b>
   - pure C++ 
   - no dependencies in particular no installed LaTeX required
@@ -51,6 +55,7 @@
   - is optimized for fast plotting, but is not as feature-rich as JKQTPlotter
   - may be used independently of JKQTPlotter
   - for more details, see: \ref jkqtfastplotter
+- CMake-based build system, see: \ref page_buildinstructions_CMAKE
 - \ref exampleTutorialProjects "extensive set of Examples and Tutorials"
 - extensive doxygen-generated <a href="http://jkriege2.github.io/JKQtPlotter/index.html">Online-Documentation (http://jkriege2.github.io/JKQtPlotter/index.html)</a>
 - source code hosted&developed on GitHub <a href="https://github.com/jkriege2/JKQtPlotter">https://github.com/jkriege2/JKQtPlotter</a> (including continuous integration builds: <a href="https://ci.appveyor.com/project/jkriege2/jkqtplotter/branch/master">https://ci.appveyor.com/project/jkriege2/jkqtplotter/branch/master</a>)

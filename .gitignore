@@ -93,3 +93,5 @@ moc_predefs.h
 *.prl
 Sicherungskopie_*
 /examples/simpletest_rgbimageplot_opencv/opencv
+/build
+/*.10-pre1

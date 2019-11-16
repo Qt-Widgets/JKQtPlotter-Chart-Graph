@@ -20,8 +20,8 @@
 #ifndef JKQTPSTYLE_H
 #define JKQTPSTYLE_H
 
-#include "jkqtcommon/jkqtptools.h"
-#include "jkqtcommon/jkqtp_imexport.h"
+#include "jkqtplotter/jkqtptools.h"
+#include "jkqtplotter/jkqtplotter_imexport.h"
 #include <QColor>
 #include <QString>
 #include <QSettings>
@@ -33,7 +33,7 @@ class JKQTBasePlotterStyle; // forward
  *
  *  \see JKQTBasePlotter, JKQTBasePlotterStyle, \ref jkqtpplotter_styling
  */
-class JKQTP_LIB_EXPORT JKQTPKeyStyle  {
+class JKQTPLOTTER_LIB_EXPORT JKQTPKeyStyle  {
         Q_GADGET
     public:
         JKQTPKeyStyle();

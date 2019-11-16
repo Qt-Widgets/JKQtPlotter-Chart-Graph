@@ -23,8 +23,8 @@
 #include <QSettings>
 #include <QString>
 #include <QColor>
-#include "jkqtcommon/jkqtptools.h"
-#include "jkqtcommon/jkqtp_imexport.h"
+#include "jkqtplotter/jkqtptools.h"
+#include "jkqtplotter/jkqtplotter_imexport.h"
 
 class JKQTBasePlotterStyle; // forward
 
@@ -34,7 +34,7 @@ class JKQTBasePlotterStyle; // forward
  * \see JKQTPCoordinateAxis, \ref jkqtpplotter_styling
  *
  */
-class JKQTP_LIB_EXPORT JKQTPCoordinateAxisStyle {
+class JKQTPLOTTER_LIB_EXPORT JKQTPCoordinateAxisStyle {
         Q_GADGET
     public:
         JKQTPCoordinateAxisStyle();

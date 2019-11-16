@@ -24,8 +24,8 @@
 #include <stdlib.h>
 #include <QDebug>
 #include <iostream>
-#include "jkqtcommon/jkqtptools.h"
-#include "jkqtplotter/jkqtpgraphsimage.h"
+#include "jkqtplotter/jkqtptools.h"
+#include "jkqtplotter/graphs/jkqtpimage.h"
 #include "jkqtplotter/jkqtpbaseelements.h"
 #include "jkqtplotter/jkqtplotter.h"
 #include "jkqtpgraphsbase.h"
@@ -93,7 +93,7 @@ QPen JKQTPGraphErrorStyleMixin::getErrorLinePenForRects(JKQTPEnhancedPainter &pa
     return p;
 }
 
-QBrush JKQTPGraphErrorStyleMixin::getErrorFillBrush(JKQTPEnhancedPainter &/*painter*/, JKQTBasePlotter */*parent*/) const
+QBrush JKQTPGraphErrorStyleMixin::getErrorFillBrush(JKQTPEnhancedPainter &/*painter*/, JKQTBasePlotter * /*parent*/) const
 {
     return m_errorFillBrush;
 }

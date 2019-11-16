@@ -22,9 +22,9 @@
 #include <QPainter>
 #include <QPen>
 #include <QBrush>
-#include "jkqtcommon/jkqtptools.h"
-#include "jkqtcommon/jkqtp_imexport.h"
-#include "jkqtplottertools/jkqtpdrawingtools.h"
+#include "jkqtplotter/jkqtptools.h"
+#include "jkqtplotter/jkqtplotter_imexport.h"
+#include "jkqtcommon/jkqtpdrawingtools.h"
 
 
 #ifndef jkqtpgraphsbasestylingmixins_H
@@ -45,7 +45,7 @@ class JKQTPlotter; // forward
       - line color, when graph is highlighted
     .
  */
-class JKQTP_LIB_EXPORT JKQTPGraphLineStyleMixin {
+class JKQTPLOTTER_LIB_EXPORT JKQTPGraphLineStyleMixin {
         Q_GADGET
     public:
         /** \brief class constructor */
@@ -161,7 +161,7 @@ class JKQTP_LIB_EXPORT JKQTPGraphLineStyleMixin {
       - symbol (line) width
     .
  */
-class JKQTP_LIB_EXPORT JKQTPGraphSymbolStyleMixin {
+class JKQTPLOTTER_LIB_EXPORT JKQTPGraphSymbolStyleMixin {
         Q_GADGET
     public:
         /** \brief class constructor */
@@ -243,7 +243,6 @@ class JKQTP_LIB_EXPORT JKQTPGraphSymbolStyleMixin {
             \param x x-coordinate of the symbol center
             \param y y-coordinate of the symbol center
             \param type type of the symbol
-            \param symbolSize size of the symbol
          */
         void plotStyledSymbol(JKQTBasePlotter* parent, JKQTPEnhancedPainter& painter, double x, double y, JKQTPGraphSymbols type) const;
         /*! \brief plot a symbol at location x,y (in painter coordinates), using the current style
@@ -277,7 +276,7 @@ class JKQTP_LIB_EXPORT JKQTPGraphSymbolStyleMixin {
       - fill texture/gradient/matrix (if required by fill style)
     .
  */
-class JKQTP_LIB_EXPORT JKQTPGraphFillStyleMixin {
+class JKQTPLOTTER_LIB_EXPORT JKQTPGraphFillStyleMixin {
         Q_GADGET
     public:
         /** \brief class constructor */
@@ -344,7 +343,7 @@ class JKQTP_LIB_EXPORT JKQTPGraphFillStyleMixin {
       - text color
     .
  */
-class JKQTP_LIB_EXPORT JKQTPGraphTextStyleMixin {
+class JKQTPLOTTER_LIB_EXPORT JKQTPGraphTextStyleMixin {
         Q_GADGET
     public:
         /** \brief class constructor */

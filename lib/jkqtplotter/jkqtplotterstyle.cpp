@@ -1,7 +1,8 @@
 #include "jkqtplotterstyle.h"
 #include <QApplication>
-#include "jkqtplottertools/jkqttools.h"
-#include "jkqtcommon/jkqtptools.h"
+#include <QDebug>
+#include "jkqtcommon/jkqttools.h"
+#include "jkqtplotter/jkqtptools.h"
 
 JKQTPlotterStyle::JKQTPlotterStyle():
     maxTooltipDistance(16),
@@ -21,13 +22,17 @@ JKQTPlotterStyle::JKQTPlotterStyle():
     displayMousePosition(true),
     toolbarEnabled(true),
     toolbarAlwaysOn(false),
-    usePaletteColors(true)
+    usePaletteColors(true),
+    registeredMouseDragActionModes(),
+    registeredMouseWheelActions(),
+    registeredMouseDoubleClickActions()
 {
     // default user-actions:
     registeredMouseDragActionModes[qMakePair<Qt::MouseButton, Qt::KeyboardModifiers>(Qt::LeftButton, Qt::NoModifier)]=JKQTPMouseDragActions::jkqtpmdaZoomByRectangle;
     registeredMouseDragActionModes[qMakePair<Qt::MouseButton, Qt::KeyboardModifiers>(Qt::LeftButton, Qt::ControlModifier)]=JKQTPMouseDragActions::jkqtpmdaPanPlotOnMove;
     registeredMouseDoubleClickActions[qMakePair<Qt::MouseButton, Qt::KeyboardModifiers>(Qt::LeftButton, Qt::NoModifier)]=JKQTPMouseDoubleClickActions::jkqtpdcaClickMovesViewport;
     registeredMouseWheelActions[Qt::NoModifier]=JKQTPMouseWheelActions::jkqtpmwaZoomByWheel;
+    //qDebug()<<"JKQTPlotterStyle(): registeredMouseWheelActions="<<registeredMouseWheelActions;
 }
 
 void JKQTPlotterStyle::loadSettings(const QSettings &settings, const QString &group, const JKQTPlotterStyle &defaultStyle)
@@ -79,8 +84,8 @@ void JKQTPlotterStyle::loadSettings(const QSettings &settings, const QString &gr
             QString kk=k;
             kk.remove(0, start.size());
             QString num="";
-            while (kk.front().isDigit()) {
-                num+=kk.front();
+            while (kk.at(0).isDigit()) {
+                num+=kk.at(0);
                 kk.remove(0, 1);
             }
             bool ok=false;

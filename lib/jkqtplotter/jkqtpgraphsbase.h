@@ -23,9 +23,9 @@
 #include <QPair>
 #include "jkqtplotter/jkqtpbaseelements.h"
 #include "jkqtplotter/jkqtpbaseplotter.h"
-#include "jkqtcommon/jkqtptools.h"
-#include "jkqtcommon/jkqtp_imexport.h"
-#include "jkqtplottertools/jkqtpimagetools.h"
+#include "jkqtplotter/jkqtptools.h"
+#include "jkqtplotter/jkqtplotter_imexport.h"
+#include "jkqtplotter/jkqtpimagetools.h"
 
 #ifndef JKQTPGRAPHSBASE_H
 #define JKQTPGRAPHSBASE_H
@@ -59,7 +59,7 @@ class JKQTPGraphErrorStyleMixin;
  *
  * \see \ref jkqtplotter_graphsgroup_classstructure
  */
-class JKQTP_LIB_EXPORT JKQTPPlotElement: public QObject {
+class JKQTPLOTTER_LIB_EXPORT JKQTPPlotElement: public QObject {
         Q_OBJECT
     public:
 
@@ -244,6 +244,11 @@ class JKQTP_LIB_EXPORT JKQTPPlotElement: public QObject {
             return QPolygonF(transform(x));
         }
 
+        /** \brief transform all x-coordinates in a vector \a x */
+        QVector<double> transformX(const QVector<double>& x) const;
+        /** \brief transform all y-coordinates in a vector \a x */
+        QVector<double> transformY(const QVector<double>& x) const;
+
 
         /** \brief clear the internal datastore for hitTest()
          *
@@ -372,7 +377,7 @@ class JKQTP_LIB_EXPORT JKQTPPlotElement: public QObject {
  *
  * \see \ref jkqtplotter_graphsgroup_classstructure
  */
-class JKQTP_LIB_EXPORT JKQTPGraph: public JKQTPPlotElement {
+class JKQTPLOTTER_LIB_EXPORT JKQTPGraph: public JKQTPPlotElement {
         Q_OBJECT
     public:
         /** \brief class constructor */
@@ -431,7 +436,7 @@ class JKQTP_LIB_EXPORT JKQTPGraph: public JKQTPPlotElement {
  * \see \ref jkqtplotter_graphsgroup_classstructure
  *
  */
-class JKQTP_LIB_EXPORT JKQTPPlotObject: public JKQTPPlotElement {
+class JKQTPLOTTER_LIB_EXPORT JKQTPPlotObject: public JKQTPPlotElement {
         Q_OBJECT
     public:
         /** \brief class constructor */
@@ -467,7 +472,7 @@ class JKQTP_LIB_EXPORT JKQTPPlotObject: public JKQTPPlotElement {
     .
 
  */
-class JKQTP_LIB_EXPORT JKQTPXYGraph: public JKQTPGraph {
+class JKQTPLOTTER_LIB_EXPORT JKQTPXYGraph: public JKQTPGraph {
         Q_OBJECT
     public:
         /** \brief specifies how to sort the data in a JKQTPXYGraph before drawing
@@ -588,7 +593,7 @@ class JKQTP_LIB_EXPORT JKQTPXYGraph: public JKQTPGraph {
     \see \ref jkqtplotter_graphsgroup_classstructure
 
  */
-class JKQTP_LIB_EXPORT JKQTPSingleColumnGraph: public JKQTPGraph {
+class JKQTPLOTTER_LIB_EXPORT JKQTPSingleColumnGraph: public JKQTPGraph {
         Q_OBJECT
     public:
         /** \brief specifies how to sort the data for a JKQTPSingleColumnGraph before drawing

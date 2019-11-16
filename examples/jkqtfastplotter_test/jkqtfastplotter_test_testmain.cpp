@@ -23,7 +23,7 @@ TestMain::TestMain(QWidget *parent) :
     y3=(double*)calloc(N1, sizeof(double));
 
 
-    QGridLayout* gl=new QGridLayout(this);
+    QGridLayout* gl=new QGridLayout();
     setLayout(gl);
     QTabWidget* t=new QTabWidget(this);
     gl->addWidget(t,0,0);
@@ -65,7 +65,7 @@ TestMain::TestMain(QWidget *parent) :
     JKQTFPLinePlot* p3=new JKQTFPLinePlot(pl1, N1, x, y3, QColor("darkgreen"));
     JKQTFPLinePlot* pv=new JKQTFPLinePlot(pl1, &xx, &yy, QColor("black"), Qt::SolidLine, 3);
 
-    img=QImage("lena.png");
+    img=QImage(":/lena.png");
     JKQTFPQImagePlot* p4=new JKQTFPQImagePlot(pl2, &img, 0, 10, 0, 10);
 
     for (int x=0; x<IMAGE_N; x++) {

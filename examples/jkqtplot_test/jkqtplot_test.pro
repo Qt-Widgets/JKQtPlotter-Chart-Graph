@@ -49,6 +49,7 @@ RESOURCES += jkqtplot_test.qrc
 
 
 win32-msvc*: DEFINES += _USE_MATH_DEFINES
+win32-msvc*: DEFINES += NOMINMAX
 
 TARGET = jkqtplot_test
 
@@ -63,9 +64,9 @@ DEPENDPATH += $$PWD
 #$$PWD/../../lib
 INCLUDEPATH += ../../lib
 CONFIG (debug, debug|release) {
-    LIBS += -L../../staticlib/jkqtplotterlib/debug -ljkqtplotterlib_debug
+    LIBS += -L../../qmake/staticlib/jkqtplotterlib/debug -ljkqtplotterlib_debug
 } else {
-    LIBS += -L../../staticlib/jkqtplotterlib/release -ljkqtplotterlib
+    LIBS += -L../../qmake/staticlib/jkqtplotterlib/release -ljkqtplotterlib
 }
 message("LIBS = $$LIBS")
 

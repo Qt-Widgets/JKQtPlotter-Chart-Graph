@@ -20,11 +20,14 @@
 #ifndef JKQTBASEPLOTTERSTYLE_H
 #define JKQTBASEPLOTTERSTYLE_H
 
-#include "jkqtcommon/jkqtptools.h"
+#include "jkqtplotter/jkqtptools.h"
+#include "jkqtplotter/jkqtpimagetools.h"
 #include "jkqtplotter/jkqtpcoordinateaxesstyle.h"
 #include "jkqtplotter/jkqtpkeystyle.h"
-#include "jkqtplottertools/jkqtpimagetools.h"
-#include "jkqtcommon/jkqtp_imexport.h"
+#include "jkqtplotter/jkqtpimagetools.h"
+#include "jkqtplotter/jkqtplotter_imexport.h"
+#include "jkqtcommon/jkqtpdrawingtools.h"
+#include "jkqtcommon/jkqtpbasicimagetools.h"
 #include <QColor>
 #include <QPainter>
 #include <QString>
@@ -39,7 +42,7 @@
  *
  *  \see JKQTBasePlotter, \ref jkqtpplotter_styling
  */
-class JKQTP_LIB_EXPORT JKQTBasePlotterStyle {
+class JKQTPLOTTER_LIB_EXPORT JKQTBasePlotterStyle {
         Q_GADGET
     public:
         JKQTBasePlotterStyle();
@@ -186,13 +189,13 @@ class JKQTP_LIB_EXPORT JKQTBasePlotterStyle {
  *
  * \see JKQTPGetSystemDefaultStyle(), JKQTPSetSystemDefaultStyle(), JKQTPSetSystemDefaultBaseStyle(), \ref jkqtpplotter_styling
  */
-JKQTP_LIB_EXPORT JKQTBasePlotterStyle& JKQTPGetSystemDefaultBaseStyle();
+JKQTPLOTTER_LIB_EXPORT JKQTBasePlotterStyle& JKQTPGetSystemDefaultBaseStyle();
 
 /** \brief replaces the system-wide default JKQTPlotterStyle with the given \a newStyle
  *  \ingroup jkqtpplotter_styling
  *
  * \see JKQTPGetSystemDefaultStyle(), JKQTPSetSystemDefaultStyle(), JKQTPGetSystemDefaultBaseStyle(), \ref jkqtpplotter_styling
  */
-JKQTP_LIB_EXPORT void JKQTPSetSystemDefaultBaseStyle(JKQTBasePlotterStyle& newStyle);
+JKQTPLOTTER_LIB_EXPORT void JKQTPSetSystemDefaultBaseStyle(JKQTBasePlotterStyle& newStyle);
 
 #endif // JKQTBASEPLOTTERSTYLE_H

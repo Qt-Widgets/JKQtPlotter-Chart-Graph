@@ -17,14 +17,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "jkqtcommon/jkqtptools.h"
+#include "jkqtplotter/jkqtptools.h"
 #include "jkqtplotter/jkqtpdatastorage.h"
 #include "jkqtplotter/jkqtpbaseplotterstyle.h"
 #include "jkqtmathtext/jkqtmathtext.h"
 #include "jkqtplotter/jkqtpbaseelements.h"
-#include "jkqtplotter/jkqtpelementsoverlay.h"
-#include "jkqtplottertools/jkqtpenhancedpainter.h"
-#include "jkqtplottergui/jkqtpenhancedspinboxes.h"
+#include "jkqtplotter/overlays/jkqtpbasicoverlays.h"
+#include "jkqtcommon/jkqtpenhancedpainter.h"
+#include "jkqtplotter/gui/jkqtpenhancedspinboxes.h"
 
 #include <QObject>
 #include <QAction>
@@ -45,7 +45,7 @@
 #include <vector>
 #include <cmath>
 #include <iostream>
- #include "jkqtcommon/jkqtp_imexport.h"
+ #include "jkqtplotter/jkqtplotter_imexport.h"
 
 
 #ifndef JKQTPBASEPLOTTER_H
@@ -58,11 +58,11 @@ class JKQTPPlotElement; // forward
 
 /** \brief initialized Qt-ressources necessary for JKQTBasePlotter
  * \ingroup jkqtpplottersupprt */
-JKQTP_LIB_EXPORT void initJKQTBasePlotterResources();
+JKQTPLOTTER_LIB_EXPORT void initJKQTBasePlotterResources();
 
 /** \brief virtual base-class for exporter classes that can be used to save data inot a file
  * \ingroup jkqtpplottersupprt */
-class JKQTP_LIB_EXPORT JKQTPSaveDataAdapter {
+class JKQTPLOTTER_LIB_EXPORT JKQTPSaveDataAdapter {
     public:
         virtual ~JKQTPSaveDataAdapter() ;
         virtual QString getFilter() const=0;
@@ -72,7 +72,7 @@ class JKQTP_LIB_EXPORT JKQTPSaveDataAdapter {
 /** \brief Service from this class to implement a special QPaintDevice as a plugin, that can be registered to JKQTBasePlotter/JKQTPlotter
  *         and then be used to export graphics, use registerPaintDeviceAdapter() to register such a plass
  * \ingroup jkqtpplottersupprt */
-class JKQTP_LIB_EXPORT JKQTPPaintDeviceAdapter {
+class JKQTPLOTTER_LIB_EXPORT JKQTPPaintDeviceAdapter {
     public:
         virtual ~JKQTPPaintDeviceAdapter()  {}
         virtual QString getFilter() const=0;
@@ -196,7 +196,7 @@ class JKQTP_LIB_EXPORT JKQTPPaintDeviceAdapter {
  * accomodate the size of the key. If you select an \b inside key position the key will be plotted OVER the graph, i.e. the margins won't be changed
  * Note that the margin change is internal and not visible in the class interface!
  *
- * There is also a possibility to determine the size of the key automatically, so all text fits in. This is activted by the property keyAutosize ( \copybrief keyAutosize ). If this
+ * There is also a possibility to determine the size of the key automatically, so all text fits in. This is activted by the property keyAutosize ( \copybrief JKQTPKeyStyle::autosize ). If this
  * is \c true the function getKeyExtent() has to check the width of every key item and take it into account when calculating the width and height of the
  * key content. By default this feature is switched ON.
  *
@@ -326,7 +326,7 @@ class JKQTP_LIB_EXPORT JKQTPPaintDeviceAdapter {
  * These methods MAY (strictly optional and turned off by default) be called by saveSettings() and loadSettings(), if the property userSettigsFilename ( \copybrief userSettigsFilename )is
  * set (not-empty). In this case the suer settings are stored/loaded also everytime they are changed by the user or programmatically.
  */
-class JKQTP_LIB_EXPORT JKQTBasePlotter: public QObject {
+class JKQTPLOTTER_LIB_EXPORT JKQTBasePlotter: public QObject {
         Q_OBJECT
     public:
         typedef QMap<QString, QList<QPointer<QAction> > > AdditionalActionsMap;
@@ -565,7 +565,7 @@ class JKQTP_LIB_EXPORT JKQTBasePlotter: public QObject {
          *
          * \see getPlotStyle()
          */
-        class JKQTP_LIB_EXPORT JKQTPPen {
+        class JKQTPLOTTER_LIB_EXPORT JKQTPPen {
             protected:
                 QColor m_color;
                 QColor m_fillColor;
@@ -766,9 +766,9 @@ class JKQTP_LIB_EXPORT JKQTBasePlotter: public QObject {
         /*! \copydoc JKQTBasePlotterStyle::plotFrameRounding */
         double getPlotFrameRounding() const;
 
-        /*! \copydoc plotLabelFontSize */ 
+        /*! \copydoc JKQTBasePlotterStyle::plotLabelFontSize */
         double getPlotLabelFontSize() const;
-        /*! \copydoc plotLabelFontName */
+        /*! \copydoc JKQTBasePlotterStyle::plotLabelFontName */
         QString getplotLabelFontName() const;
 
         /*! \copydoc plotLabel */ 
@@ -789,7 +789,7 @@ class JKQTP_LIB_EXPORT JKQTBasePlotter: public QObject {
 
         /** \brief set the x- and y-positions of this JKQTPlotter in the grid-printing grid
          *
-         * \see setGridPrinting(), addGridPrintingPlotter(), clearGridPrintingPlotters(), setGridPrintingCurrentX(), setGridPrintingCurrentY() \ref JKQTPBASELOTTER_SYNCMULTIPLOT
+         * \see setGridPrinting(), addGridPrintingPlotter(), clearGridPrintingPlotters(), setGridPrintingCurrentX(), setGridPrintingCurrentY()
          */
         void setGridPrintingCurrentPos(size_t x, size_t y);
 
@@ -948,135 +948,6 @@ class JKQTP_LIB_EXPORT JKQTBasePlotter: public QObject {
             }
         }
 
-        /** \brief add a new graph, returns it's position in the graphs list.
-         *
-         * \param xColumn      the column which contains the x-values of the datapoints
-         * \param yColumn      the column which contains the y-values of the datapoints
-         * \param title        a title for this specific graph which can be displayed in the key
-         * \param graphStyle   the way how to plot the graph
-         *
-         * Both point to columns in the datastore explained in the JKQTBasePlotter class. The plotWidth, color, pen style ...
-         * will be extracted from the automatic plot style creation mechanism implemented in JKQTBasePlotter::getNextStyle().
-         * If you want to change them either use another overloaded version of addGraph(), or use getGraph() and setGraph():
-         * \code
-         * size_t i=addGraph(0,1,"graph1");
-         * JKQTPPlotElement gr=getGraph(i);
-         * gr.color=QColor("red");
-         * setGraph(i, gr);
-         * \endcode
-         */
-        size_t addGraph(size_t xColumn, size_t yColumn, const QString& title, JKQTPGraphPlotstyle graphStyle=JKQTPLines);
-
-        /** \brief add a new graph, returns it's position in the graphs list.
-         *
-         * \param xColumn      the column which contains the x-values of the datapoints
-         * \param yColumn      the column which contains the y-values of the datapoints
-         * \param title        a title for this specific graph which can be displayed in the key
-         * \param graphStyle   the way how to plot the graph
-         * \param symbol       a symbol to use for the datapoints in some plot styles
-         * \param color        the color of the graph
-         * \param width        width (in pixel) of the graph
-         * \param penstyle     the drawing style (solid, dashed ...) of the graph lines.
-         *
-         * Both point to columns in the datastore explained in the JKQTBasePlotter class.
-         * The symbolSize is set to 10 and no error information is expected.
-         */
-        size_t addGraph(size_t xColumn, size_t yColumn, const QString& title, JKQTPGraphPlotstyle graphStyle, QColor color, JKQTPGraphSymbols symbol=JKQTPCross, Qt::PenStyle penstyle=Qt::SolidLine, double width=2);
-
-        /** \brief add a new graph with x-error information, returns it's position in the graphs list.
-         *
-         *
-         * \param xColumn      the column which contains the x-values of the datapoints
-         * \param yColumn      the column which contains the y-values of the datapoints
-         * \param xErrorColumn the column which contains the x-value errors of the datapoints
-         * \param title        a title for this specific graph which can be displayed in the key
-         * \param graphStyle   the way how to plot the graph
-         * \param errorStyle   the drawing style (bars, lines ...) of the errors.
-         *
-         * Both point to columns in the datastore explained in the JKQTBasePlotter class.
-         * The symbolSize is set to 10 and no error information is expected.
-         */
-        size_t addGraphWithXError(size_t xColumn, size_t yColumn, size_t xErrorColumn, const QString& title, JKQTPGraphPlotstyle graphStyle=JKQTPPoints, JKQTPErrorPlotstyle errorStyle=JKQTPErrorBars);
-
-        /** \brief add a new graph with x-error information, returns it's position in the graphs list.
-         *
-         *
-         * \param xColumn      the column which contains the x-values of the datapoints
-         * \param yColumn      the column which contains the y-values of the datapoints
-         * \param yErrorColumn the column which contains the y-value errors of the datapoints
-         * \param title        a title for this specific graph which can be displayed in the key
-         * \param graphStyle   the way how to plot the graph
-         * \param errorStyle   the drawing style (bars, lines ...) of the errors.
-         *
-         * Both point to columns in the datastore explained in the JKQTBasePlotter class.
-         * The symbolSize is set to 10 and no error information is expected.
-         */
-        size_t addGraphWithYError(size_t xColumn, size_t yColumn, size_t yErrorColumn, const QString& title, JKQTPGraphPlotstyle graphStyle=JKQTPPoints, JKQTPErrorPlotstyle errorStyle=JKQTPErrorBars);
-
-        /** \brief add a new graph with x-error information, returns it's position in the graphs list.
-         *
-         *
-         * \param xColumn      the column which contains the x-values of the datapoints
-         * \param yColumn      the column which contains the y-values of the datapoints
-         * \param xErrorColumn the column which contains the x-value errors of the datapoints
-         * \param yErrorColumn the column which contains the y-value errors of the datapoints
-         * \param title        a title for this specific graph which can be displayed in the key
-         * \param graphStyle   the way how to plot the graph
-         *
-         * Both point to columns in the datastore explained in the JKQTBasePlotter class.
-         * The symbolSize is set to 10 and no error information is expected. The errorStyle is set to JKQTPErrorBars
-         * for both directions.
-         */
-        size_t addGraphWithXYError(size_t xColumn, size_t yColumn, size_t xErrorColumn, size_t yErrorColumn, const QString& title, JKQTPGraphPlotstyle graphStyle=JKQTPPoints);
-
-        /** \brief add a boxplot graph to the plot
-         *
-         * \param title title of the plot
-         * \param posColumn column containing the positions
-         * \param medianColumn column containing the median values
-         * \param minColumn column containing the minimum values
-         * \param maxColumn column containing the maximum values
-         * \param percentile25Column column containing the 25% percentiles
-         * \param percentile75Column column containing the 75% percentiles
-         * \param meanColumn column containing the mean value (this column is optional. If you don't want a mean symbol, set this to -1
-         */
-        size_t addHorizontalBoxplot(QString title, int posColumn, int medianColumn, int minColumn, int maxColumn, int percentile25Column, int percentile75Column, int meanColumn=-1);
-
-        /** \brief add a boxplot graph to the plot
-         *
-         * \param title title of the plot
-         * \param posColumn column containing the positions
-         * \param medianColumn column containing the median values
-         * \param minColumn column containing the minimum values
-         * \param maxColumn column containing the maximum values
-         * \param percentile25Column column containing the 25% percentiles
-         * \param percentile75Column column containing the 75% percentiles
-         * \param meanColumn column containing the mean value (this column is optional. If you don't want a mean symbol, set this to -1
-         */
-        size_t addVerticalBoxplot(QString title, int posColumn, int medianColumn, int minColumn, int maxColumn, int percentile25Column, int percentile75Column, int meanColumn=-1);
-
-        /** \brief add one bargraph for each of the given set of \f$ f(x) \f$ -values which all use one column of x-values
-         *
-         *  \param xColumn column with the x-values, which are common to all bargraphs
-         *  \param yColumns columns for the y-values
-         *  \param titles titles of the plot
-         *
-         * Here is an example output:
-         *   \image html plot_bargraphhorplot.png
-         */
-        void addHorizontalBargraph(size_t xColumn, QVector<size_t> yColumns, QStringList titles);
-
-        /** \brief add a bargraph for the given set of \f$ f(x) \f$ -values for one column of x-values
-         *
-         *  \param xColumns columns with the x-values
-         *  \param yColumn column for the y-values, which are common to all bargraphs
-         *  \param titles titles of the plot
-         *
-         * Here is an example output:
-         *   \image html plot_bargraphhorplot.png
-         */
-        void addVerticalBargraph(QVector<size_t> xColumns, size_t yColumn, QStringList titles);
-
         /** \brief get the maximum and minimum x-value over all graphs in the plot
          *  \param[out] minx smallest x value
          *  \param[out] maxx largest x value
@@ -1212,7 +1083,7 @@ class JKQTP_LIB_EXPORT JKQTBasePlotter: public QObject {
         /** \brief internal tool class for text sizes
          *   \ingroup jkqtpplottersupprt
          *  \internal */
-        struct JKQTP_LIB_EXPORT textSizeData {
+        struct JKQTPLOTTER_LIB_EXPORT textSizeData {
             explicit textSizeData();
             double ascent, descent, width, strikeoutPos;
         };
@@ -1220,7 +1091,7 @@ class JKQTP_LIB_EXPORT JKQTBasePlotter: public QObject {
         /** \brief internal tool class for text-sizess in a plot key
          *  \ingroup jkqtpplottersupprt
          *  \internal */
-        struct JKQTP_LIB_EXPORT textSizeKey {
+        struct JKQTPLOTTER_LIB_EXPORT textSizeKey {
             explicit textSizeKey(const QFont& f, const QString& text, QPaintDevice *pd);
             explicit textSizeKey(const QString& fontName, double fontSize, const QString& text, QPaintDevice *pd);
             QString text;
@@ -1433,6 +1304,43 @@ class JKQTP_LIB_EXPORT JKQTBasePlotter: public QObject {
 
         /** \brief sets whether to plot grid lines or not */
         void setGrid(bool val);
+
+        /** \brief sets the color of all Major grid lines
+         * */
+        void setGridColor(QColor color);
+
+        /** \brief sets the color of all minor grid lines
+         * */
+        void setMinorGridColor(QColor color);
+
+        /** \brief sets the width of all Major grid lines
+         * */
+        void setGridWidth(double __value);
+
+        /** \brief sets the width of all minor grid lines
+         * */
+        void setMinorGridWidth(double __value);
+
+        /** \brief sets the style of all Major grid lines
+         * */
+        void setGridStyle(Qt::PenStyle __value);
+
+        /** \brief sets the style of all minor grid lines
+         * */
+        void setMinorGridStyle(Qt::PenStyle __value);
+
+
+        /** \brief switches the visibility of the zero-axes associated with the x- and y-axis
+         *
+         * \param showX indicates whether to show the zero-axis associated with the x-axis (i.e. x==0 or the vertical zero-axis)
+         * \param showY indicates whether to show the zero-axis associated with the y-axis (i.e. y==0 or the horizontal zero-axis)
+         * */
+        void setShowZeroAxes(bool showX, bool showY);
+        /** \brief switches the visibility of the zero-axes associated with the x- and y-axis
+         *
+         * \param showXY indicates whether to show the zero-axis associated with the x- and y-axis
+         * */
+        void setShowZeroAxes(bool showXY);
 
         /** \brief save the current plot as a pixel image image (PNG ...), if filename is empty a file selection dialog is displayed */
         void saveAsPixelImage(const QString& filename=QString(""), bool displayPreview=true, const QByteArray &outputFormat=QByteArray());
@@ -1701,7 +1609,7 @@ class JKQTP_LIB_EXPORT JKQTBasePlotter: public QObject {
         /*! \copydoc JKQTBasePlotterStyle::defaultTextColor */
         void setDefaultTextColor(QColor __value) ;
         /*! \copydoc JKQTBasePlotterStyle::defaultFontSize */
-        void setDefaultTextSize(float __value) ;
+        void setDefaultTextSize(double __value) ;
         /*! \copydoc JKQTBasePlotterStyle::defaultFontName */
         void setDefaultTextFontName(const QString& __value) ;
         /** \brief sets the current directory in which to open SaveAs ... dialogs */
@@ -1964,9 +1872,9 @@ class JKQTP_LIB_EXPORT JKQTBasePlotter: public QObject {
         /** \brief list that manages all the additional graphs for \ref JKQTBASEPLOTTER_SYNCMULTIPLOT_GRIDPRINT "grid printing" mode */
         QList<JKQTPGridPrintingItem> gridPrintingList;
         /** \brief this list contains all the rows of the current \ref JKQTBASEPLOTTER_SYNCMULTIPLOT_GRIDPRINT "grid printing" and stores its heights */
-        QList<int> gridPrintingRows;
+        QList<size_t> gridPrintingRows;
         /** \brief this list contains all the columns of the current \ref JKQTBASEPLOTTER_SYNCMULTIPLOT_GRIDPRINT "grid printing" and stores its widths */
-        QList<int> gridPrintingColumns;
+        QList<size_t> gridPrintingColumns;
         /** \brief size of all plots in \ref JKQTBASEPLOTTER_SYNCMULTIPLOT_GRIDPRINT "grid printing" mode, filled by gridPrintingCalc() */
         QSizeF gridPrintingSize;
 
