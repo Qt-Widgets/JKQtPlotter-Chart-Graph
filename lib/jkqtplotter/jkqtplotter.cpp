@@ -342,23 +342,23 @@ JKQTPUserActionMarkerType JKQTPlotter::getUserActionMarkerType() const
 
 void JKQTPlotter::registerMouseWheelAction(Qt::KeyboardModifiers modifier, JKQTPMouseWheelActions action)
 {
-    qDebug()<<"registerMouseWheelAction("<<modifier<<","<<action<<"): "<<plotterStyle.registeredMouseWheelActions;
+    //qDebug()<<"registerMouseWheelAction("<<modifier<<","<<action<<"): "<<plotterStyle.registeredMouseWheelActions;
     plotterStyle.registeredMouseWheelActions[modifier]=action;
-    qDebug()<<"registerMouseWheelAction("<<modifier<<","<<action<<"): "<<plotterStyle.registeredMouseWheelActions;
+    //qDebug()<<"registerMouseWheelAction("<<modifier<<","<<action<<"): "<<plotterStyle.registeredMouseWheelActions;
 }
 
 void JKQTPlotter::deregisterMouseWheelAction(Qt::KeyboardModifiers modifier)
 {
-    qDebug()<<"deregisterMouseWheelAction("<<modifier<<"): "<<plotterStyle.registeredMouseWheelActions;
+    //qDebug()<<"deregisterMouseWheelAction("<<modifier<<"): "<<plotterStyle.registeredMouseWheelActions;
     plotterStyle.registeredMouseWheelActions.remove(modifier);
-    qDebug()<<"deregisterMouseWheelAction("<<modifier<<"): "<<plotterStyle.registeredMouseWheelActions;
+    //qDebug()<<"deregisterMouseWheelAction("<<modifier<<"): "<<plotterStyle.registeredMouseWheelActions;
 }
 
 void JKQTPlotter::clearAllMouseWheelActions()
 {
-    qDebug()<<"clearAllMouseWheelActions(): "<<plotterStyle.registeredMouseWheelActions;
+    //qDebug()<<"clearAllMouseWheelActions(): "<<plotterStyle.registeredMouseWheelActions;
     plotterStyle.registeredMouseWheelActions.clear();
-    qDebug()<<"clearAllMouseWheelActions(): "<<plotterStyle.registeredMouseWheelActions;
+    //qDebug()<<"clearAllMouseWheelActions(): "<<plotterStyle.registeredMouseWheelActions;
 }
 
 
@@ -516,7 +516,7 @@ void JKQTPlotter::paintUserAction() {
                     painter.drawLine(QPointF(x2,y1), QPointF(x2,y2));
                     painter.drawLine(QPointF(x1,y1), QPointF(x2,y2));
                     const double dxy=sqrt(jkqtp_sqr(mouseDragRectXEnd-mouseDragRectXStart)+jkqtp_sqr(mouseDragRectYEnd-mouseDragRectYStart));
-                    const double alpha=atan2((mouseDragRectYEnd-mouseDragRectYStart), (mouseDragRectXEnd-mouseDragRectXStart))/M_PI*180.0;
+                    const double alpha=atan2((mouseDragRectYEnd-mouseDragRectYStart), (mouseDragRectXEnd-mouseDragRectXStart))/JKQTPSTATISTICS_PI*180.0;
                     const double dx=fabs(mouseDragRectXEnd-mouseDragRectXStart);
                     const double dy=fabs(mouseDragRectYEnd-mouseDragRectYStart);
 

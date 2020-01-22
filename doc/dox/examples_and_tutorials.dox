@@ -78,7 +78,7 @@ All test-projects are Qt-projects that use qmake to build. You can load them int
 <tr><td> \image html dateaxes_timeaxis_small.png
     <td> \subpage JKQTPlotterDateTimeAxes
     <td> `JKQTPXYLineGraph` and `JKQTPFilledVerticalRangeGraph` <br> C++ vector of data <br> date/time axes <br> plot min/max range graph <br> internal LaTeX parser <br> data from CSV files 
-<tr><td> \image html advplotstyling_small.png
+<tr><td> \image html advancedlineandfillstyling_small.png
     <td> \subpage JKQTPlotterAdvancedLineAndFillStyling
     <td> `JKQTPXYLineGraph`, `JKQTPSpecialLineHorizontalGraph` and `JKQTPBarVerticalGraph` <br> C++ vector of data <br> advanced line styling and filling
 <tr><td> \image html test_styledboxplot_small.png
@@ -120,10 +120,10 @@ All test-projects are Qt-projects that use qmake to build. You can load them int
     <td> \subpage JKQTPlotterImagePlotRGBOpenCV
     <td> `JKQTPColumnRGBMathImage` <br> image data copied from OpenCV cv::Mat-structure into three columns of the internal datastore <br> inverted coordinate axes
 <tr><td> \image html imageplot_cimg_small.png
-    <td> \subpage JKQTPlotterImagePlotcimg
+    <td> \subpage JKQTPlotterImagePlotCImg
     <td> `JKQTPColumnMathImage` <br> image data copied from CImg datastructure into a single column of the internal datastore 
 <tr><td> \image html rgbimageplot_cimg_small.png
-    <td> \subpage JKQTPlotterImagePlotRGBcimg
+    <td> \subpage JKQTPlotterImagePlotRGBCImg
     <td> `JKQTPColumnRGBMathImage` <br> image data copied from CImg datastructure into three columns of the internal datastore <br> inverted coordinate axes
 <tr><td> \image html contourplot_small.png
     <td> \subpage JKQTPlotterContourPlot
@@ -155,7 +155,7 @@ All test-projects are Qt-projects that use qmake to build. You can load them int
 <tr><td> \image html test_styling_small.png
     <td> \subpage JKQTPlotterStyling
     <td> Modifying different Aspects of the Styling of JKQTPlotter
-<tr><td> \image html imageplot_userpal_small.png
+<tr><td> \image html imageplot_userpal_program_small.png
     <td> \subpage JKQTPlotterImagePlotUserPalette
     <td> `JKQTPColumnMathImage` <br> user-defines palettes <br> palettes from files
 </table>

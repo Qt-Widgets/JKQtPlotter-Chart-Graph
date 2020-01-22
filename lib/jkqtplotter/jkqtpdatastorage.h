@@ -108,7 +108,7 @@ enum class JKQTPDatastoreItemFormat {
   *           QVector<double> X, Y;
   *           const int Ndata=100;
   *           for (int i=0; i<Ndata; i++) {
-  *            *   const double x=double(i)/double(Ndata)*8.0*M_PI;
+  *            *   const double x=double(i)/double(Ndata)*8.0*JKQTPSTATISTICS_PI;
   *               X<<x;
   *              Y<<sin(x);
   *          }
@@ -790,7 +790,7 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPDatastore{
          *    QVector<double> X, Y;
          *    const int Ndata=100;
          *    for (int i=0; i<Ndata; i++) {
-         *        const double x=double(i)/double(Ndata)*8.0*M_PI;
+         *        const double x=double(i)/double(Ndata)*8.0*JKQTPSTATISTICS_PI;
          *        X<<x;
          *        Y<<sin(x);
          *    }
@@ -804,7 +804,7 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPDatastore{
          */
         template <typename TIterator>
         size_t addCopiedColumn(TIterator first, TIterator last, const QString& name=QString("")) {
-            const size_t N=static_cast<size_t>(abs(std::distance(first,last)));
+            const size_t N=static_cast<size_t>(std::abs(std::distance(first,last)));
             double* d=static_cast<double*>(malloc(static_cast<size_t>(N)*sizeof(double)));
             if (N>0) {
                 size_t r=0;
@@ -828,7 +828,7 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPDatastore{
          *    QVector<double> X, Y;
          *    const int Ndata=100;
          *    for (int i=0; i<Ndata; i++) {
-         *        const double x=double(i)/double(Ndata)*8.0*M_PI;
+         *        const double x=double(i)/double(Ndata)*8.0*JKQTPSTATISTICS_PI;
          *        X<<x;
          *        Y<<sin(x);
          *    }
@@ -1121,7 +1121,7 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPDatastore{
          */
        template <typename TIterator>
         std::pair<size_t, size_t> addCopiedMap(TIterator first, TIterator last, const QString& nameKey=QString("map_key"), const QString& nameValue=QString("map_value")) {
-            const size_t N=static_cast<size_t>(abs(std::distance(first,last)));
+            const size_t N=static_cast<size_t>(std::abs(std::distance(first,last)));
             double* xvals=static_cast<double*>(malloc(N*sizeof(double)));
             double* yvals=static_cast<double*>(malloc(N*sizeof(double)));
             size_t i=0;

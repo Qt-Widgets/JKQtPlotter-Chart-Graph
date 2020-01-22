@@ -20,27 +20,13 @@
 
 
 #define COMPILING_THIS_JKMATHPARSER
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include "jkqtcommon/jkqtpmathparser.h" // class's header file
 #include <iostream>
 #include <float.h>
 #include <ctime>
 #include "jkqtcommon/jkqtpstringtools.h"
-
-/* This just distinguishes between the different path formats on Windows and Unix:
- *   - on Windows you use a backslash '\' do separate directories
- *   - in Unix you use a slash '/' to separate directories
- */
-#ifdef __WINDOWS__
-  /** \brief a separator between two directories in a path between \c " quotes */
-  #define JKQTPPATHSEPARATOR_STRING "\\"
-  /** \brief a separator between two directories in a path between \c ' quotes */
-  #define JKQTPPATHSEPARATOR_CHAR '\\'
-#else
-  /** \brief a separator between two directories in a path between \c " quotes */
-  #define JKQTPPATHSEPARATOR_STRING "/"
-  /** \brief a separator between two directories in a path between \c ' quotes */
-  #define JKQTPPATHSEPARATOR_CHAR '/'
-#endif
 
 
 /******************************************************************************************
@@ -77,68 +63,6 @@ namespace { // anonymous namespace to limit availability to this module (CPP-fil
       if (n!=1) p->jkmpError("booltostr accepts 1 argument");
       if (params[0].type!=JKQTPMathParser::jkmpBool) p->jkmpError("floattostr needs bool argument");
       r.str=(r.boolean)?"true":"false";
-      return r;
-    }
-
-
-    JKQTPMathParser::jkmpResult fToSystemPathSeparator(JKQTPMathParser::jkmpResult* params, unsigned char n, JKQTPMathParser* p){
-      JKQTPMathParser::jkmpResult r;
-      r.type=JKQTPMathParser::jkmpString;
-      if (n!=1) p->jkmpError("tosystempathseparator accepts 1 argument");
-      if (params[0].type!=JKQTPMathParser::jkmpString) p->jkmpError("tosystempathseparator needs string argument");
-      r.str="";
-      for (size_t i=0; i<params[0].str.size(); i++) {
-          char ch=params[0].str[i];
-          if (ch=='/' || ch=='\\') ch=JKQTPPATHSEPARATOR_CHAR;
-          r.str+=ch;
-      }
-
-      return r;
-    }
-
-
-    JKQTPMathParser::jkmpResult fSetDefault(JKQTPMathParser::jkmpResult* params, unsigned char n, JKQTPMathParser* p){
-      JKQTPMathParser::jkmpResult r;
-      r.type=JKQTPMathParser::jkmpString;
-      if (n!=2) p->jkmpError("setdefault accepts 2 argument");
-      if (params[0].type!=JKQTPMathParser::jkmpString) p->jkmpError("setdefault needs a string as first argument");
-      r=params[1];
-      if (p->variableExists(params[0].str)) {
-        r=p->getVariable(params[0].str);
-      }
-
-      return r;
-    }
-
-
-    JKQTPMathParser::jkmpResult fStrDate(JKQTPMathParser::jkmpResult* params, unsigned char n, JKQTPMathParser* p){
-        JKQTPMathParser::jkmpResult r;
-        r.type=JKQTPMathParser::jkmpString;
-        std::string f="%Y-%m-%d";
-        if (n>1) p->jkmpError("strdate accepts 0 or 1 argumentment");
-        if (n>0 && params[0].type!=JKQTPMathParser::jkmpString) p->jkmpError("strdate needs a string as first argument");
-        if (n>0) f=params[0].str;
-        char re[1024];
-        time_t rawtime;
-        struct tm* timeinfo;
-        time(&rawtime);
-        timeinfo=localtime(&rawtime);
-        strftime(re, 1024, f.c_str(), timeinfo);
-        r.str=re;
-
-        return r;
-    }
-
-    JKQTPMathParser::jkmpResult fCMDParam(JKQTPMathParser::jkmpResult* params, unsigned char n, JKQTPMathParser* p){
-      JKQTPMathParser::jkmpResult r;
-      r.type=JKQTPMathParser::jkmpString;
-      std::string def="";
-      if (n<1 || n>2) p->jkmpError("cmdparam(name, default) accepts 1 or 2 argument");
-      if (params[0].type!=JKQTPMathParser::jkmpString) p->jkmpError("cmdparam needs a string as first argument");
-      if (n>1 && params[1].type!=JKQTPMathParser::jkmpString) p->jkmpError("cmdparam needs a string as second argument");
-      if (n>1) def=params[1].str;
-
-      r.str=p->getArgCVParam(params[0].str, def);
       return r;
     }
 
@@ -403,7 +327,11 @@ namespace { // anonymous namespace to limit availability to this module (CPP-fil
       r.type=JKQTPMathParser::jkmpDouble;
       if (n!=1) p->jkmpError("j0 accepts 1 argument");
       if (params[0].type!=JKQTPMathParser::jkmpDouble) p->jkmpError("j0 needs double argument");
-      r.num=j0(params[0].num);
+#if Q_CC_MSVC
+	  r.num = _j0(params[0].num);
+#else
+	  r.num = j0(params[0].num);
+#endif
       return r;
     }
 
@@ -412,7 +340,11 @@ namespace { // anonymous namespace to limit availability to this module (CPP-fil
       r.type=JKQTPMathParser::jkmpDouble;
       if (n!=1) p->jkmpError("j1 accepts 1 argument");
       if (params[0].type!=JKQTPMathParser::jkmpDouble) p->jkmpError("j1 needs double argument");
-      r.num=j1(params[0].num);
+#if Q_CC_MSVC
+	  r.num=_j1(params[0].num);
+#else
+	  r.num=j1(params[0].num);
+#endif
       return r;
     }
 
@@ -421,7 +353,11 @@ namespace { // anonymous namespace to limit availability to this module (CPP-fil
       r.type=JKQTPMathParser::jkmpDouble;
       if (n!=1) p->jkmpError("y0 accepts 1 argument");
       if (params[0].type!=JKQTPMathParser::jkmpDouble) p->jkmpError("y0 needs double argument");
-      r.num=y0(params[0].num);
+#if Q_CC_MSVC
+	  r.num=_y0(params[0].num);
+#else
+	  r.num=y0(params[0].num);
+#endif
       return r;
     }
 
@@ -430,7 +366,11 @@ namespace { // anonymous namespace to limit availability to this module (CPP-fil
       r.type=JKQTPMathParser::jkmpDouble;
       if (n!=1) p->jkmpError("y1 accepts 1 argument");
       if (params[0].type!=JKQTPMathParser::jkmpDouble) p->jkmpError("y1 needs double argument");
-      r.num=y1(params[0].num);
+#if Q_CC_MSVC
+	  r.num=_y1(params[0].num);
+#else
+	  r.num=y1(params[0].num);
+#endif
       return r;
     }
 
@@ -439,7 +379,11 @@ namespace { // anonymous namespace to limit availability to this module (CPP-fil
       r.type=JKQTPMathParser::jkmpDouble;
       if (n!=2) p->jkmpError("yn accepts 2 argument");
       if ((params[0].type!=JKQTPMathParser::jkmpDouble)||(params[1].type!=JKQTPMathParser::jkmpDouble)) p->jkmpError("yn needs double argument");
-      r.num=yn(static_cast<int>(params[0].num), params[1].num);
+#if Q_CC_MSVC
+	  r.num=_yn(static_cast<int>(params[0].num), params[1].num);
+#else
+	  r.num=yn(static_cast<int>(params[0].num), params[1].num);
+#endif
       return r;
     }
 
@@ -448,7 +392,11 @@ namespace { // anonymous namespace to limit availability to this module (CPP-fil
       r.type=JKQTPMathParser::jkmpDouble;
       if (n!=2) p->jkmpError("jn accepts 2 argument");
       if ((params[0].type!=JKQTPMathParser::jkmpDouble)||(params[1].type!=JKQTPMathParser::jkmpDouble)) p->jkmpError("jn needs double argument");
-      r.num=jn(static_cast<int>(params[0].num), params[1].num);
+#if Q_CC_MSVC
+      r.num=_jn(static_cast<int>(params[0].num), params[1].num);
+#else
+	  r.num=jn(static_cast<int>(params[0].num), params[1].num);
+#endif
       return r;
     }
 
@@ -777,11 +725,6 @@ void JKQTPMathParser::addStandardFunctions(){
     addFunction("tanc", fTanc);
     addFunction("sigmoid", fSigmoid);
     addFunction("sign", fSign);
-    addFunction("tosystempathseparator", fToSystemPathSeparator);
-    addFunction("setdefault", fSetDefault);
-    addFunction("strdate", fStrDate);
-    addFunction("cmdparam", fCMDParam);
-    addFunction("argv", fCMDParam);
 }
 
 // class destructor

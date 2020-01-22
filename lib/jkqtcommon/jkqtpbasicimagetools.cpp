@@ -58,7 +58,6 @@ QMap<int, JKQTPImageTools::LUTData > JKQTPImageTools::getDefaultLUTs() {
                 double v=l/static_cast<double>(JKQTPImageTools::LUTSIZE);
                 plut[l]=qRgb(static_cast<int>(255.0*v), 0, 0);
             }
-            plut[JKQTPImageTools::LUTSIZE+1]=plut[JKQTPImageTools::LUTSIZE];
         }
     }
 
@@ -74,7 +73,6 @@ QMap<int, JKQTPImageTools::LUTData > JKQTPImageTools::getDefaultLUTs() {
                 double v=l/static_cast<double>(JKQTPImageTools::LUTSIZE);
                 plut[l]=qRgb(0, static_cast<int>(255.0*v), 0);
             }
-            plut[JKQTPImageTools::LUTSIZE+1]=plut[JKQTPImageTools::LUTSIZE];
         }
     }
 
@@ -90,7 +88,6 @@ QMap<int, JKQTPImageTools::LUTData > JKQTPImageTools::getDefaultLUTs() {
                 double v=l/static_cast<double>(JKQTPImageTools::LUTSIZE);
                 plut[l]=qRgb(0, 0, static_cast<int>(255.0*v));
             }
-            plut[JKQTPImageTools::LUTSIZE+1]=plut[JKQTPImageTools::LUTSIZE];
         }
     }
 
@@ -108,7 +105,6 @@ QMap<int, JKQTPImageTools::LUTData > JKQTPImageTools::getDefaultLUTs() {
                              static_cast<int>(255.0*v),
                              static_cast<int>(255.0*v));
             }
-            plut[JKQTPImageTools::LUTSIZE+1]=plut[JKQTPImageTools::LUTSIZE];
         }
     }
 
@@ -125,7 +121,6 @@ QMap<int, JKQTPImageTools::LUTData > JKQTPImageTools::getDefaultLUTs() {
                 plut[l]=qRgba(255,255,255,
                               static_cast<int>(255.0*v));
             }
-            plut[JKQTPImageTools::LUTSIZE+1]=plut[JKQTPImageTools::LUTSIZE];
         }
     }
 
@@ -142,7 +137,6 @@ QMap<int, JKQTPImageTools::LUTData > JKQTPImageTools::getDefaultLUTs() {
                 plut[l]=qRgba(255,255,255,
                               static_cast<int>(255.0*v));
             }
-            plut[JKQTPImageTools::LUTSIZE+1]=plut[JKQTPImageTools::LUTSIZE];
         }
     }
 
@@ -158,7 +152,6 @@ QMap<int, JKQTPImageTools::LUTData > JKQTPImageTools::getDefaultLUTs() {
                 double v=l/static_cast<double>(JKQTPImageTools::LUTSIZE);
                 plut[l]=qRgb(static_cast<int>(255.0*(1.0-v)), 0, 0);
             }
-            plut[JKQTPImageTools::LUTSIZE+1]=plut[JKQTPImageTools::LUTSIZE];
         }
     }
 
@@ -174,7 +167,6 @@ QMap<int, JKQTPImageTools::LUTData > JKQTPImageTools::getDefaultLUTs() {
                 double v=l/static_cast<double>(JKQTPImageTools::LUTSIZE);
                 plut[l]=qRgb(0, static_cast<int>(255.0*(1.0-v)), 0);
             }
-            plut[JKQTPImageTools::LUTSIZE+1]=plut[JKQTPImageTools::LUTSIZE];
         }
     }
 
@@ -190,7 +182,6 @@ QMap<int, JKQTPImageTools::LUTData > JKQTPImageTools::getDefaultLUTs() {
                 double v=l/static_cast<double>(JKQTPImageTools::LUTSIZE);
                 plut[l]=qRgb(0, 0, static_cast<int>(255.0*(1.0-v)));
             }
-            plut[JKQTPImageTools::LUTSIZE+1]=plut[JKQTPImageTools::LUTSIZE];
         }
     }
 
@@ -208,7 +199,6 @@ QMap<int, JKQTPImageTools::LUTData > JKQTPImageTools::getDefaultLUTs() {
                              static_cast<int>(255.0*v),
                              static_cast<int>(255.0*v));
             }
-            plut[JKQTPImageTools::LUTSIZE+1]=plut[JKQTPImageTools::LUTSIZE];
         }
     }
 
@@ -293,7 +283,7 @@ QMap<int, JKQTPImageTools::LUTData > JKQTPImageTools::getDefaultLUTs() {
                 else if (r < 0.0)
                     r = 0.0;
 
-                double g = 255.0 * std::sin(M_PI*v);
+                double g = 255.0 * std::sin(JKQTPSTATISTICS_PI*v);
 
                 double b = 255.0 - 765.0 * v;
                 if (b < 0.0)
@@ -318,7 +308,7 @@ QMap<int, JKQTPImageTools::LUTData > JKQTPImageTools::getDefaultLUTs() {
                 else if (r < 0.0)
                     r = 0.0;
 
-                double g = 255.0 * std::sin(M_PI*v);
+                double g = 255.0 * std::sin(JKQTPSTATISTICS_PI*v);
 
                 double b = 255.0 - 765.0 * v;
                 if (b < 0.0)
@@ -396,9 +386,9 @@ QMap<int, JKQTPImageTools::LUTData > JKQTPImageTools::getDefaultLUTs() {
                 if (r > 255.0)
                     r = 255.0;
 
-                double g = 255.0*sin(M_PI*v);
+                double g = 255.0*sin(JKQTPSTATISTICS_PI*v);
 
-                double b = 255.0*cos(0.5*M_PI*v);
+                double b = 255.0*cos(0.5*JKQTPSTATISTICS_PI*v);
 
                 plut[l]=qRgb(static_cast<int>(r), static_cast<int>(g), static_cast<int>(b));
             }
@@ -419,9 +409,9 @@ QMap<int, JKQTPImageTools::LUTData > JKQTPImageTools::getDefaultLUTs() {
                 if (r > 255.0)
                     r = 255.0;
 
-                double g = 255.0*sin(M_PI*v);
+                double g = 255.0*sin(JKQTPSTATISTICS_PI*v);
 
-                double b = 255.0*cos(0.5*M_PI*v);
+                double b = 255.0*cos(0.5*JKQTPSTATISTICS_PI*v);
 
                 plut[l]=qRgb(static_cast<int>(r), static_cast<int>(g), static_cast<int>(b));
             }
@@ -601,11 +591,11 @@ QMap<int, JKQTPImageTools::LUTData > JKQTPImageTools::getDefaultLUTs() {
                 if (r < 0.0) r = 0.0;
                 if (r > 1.0) r = 1.0;
 
-                double g = sin(M_PI/2.0*v);
+                double g = sin(JKQTPSTATISTICS_PI/2.0*v);
                 if (g < 0.0) g = 0.0;
                 if (g > 1.0) g = 1.0;
 
-                double b = cos(M_PI/2.0*v);
+                double b = cos(JKQTPSTATISTICS_PI/2.0*v);
                 if (b < 0.0) b = 0.0;
                 if (b > 1.0) b = 1.0;
 
@@ -628,11 +618,11 @@ QMap<int, JKQTPImageTools::LUTData > JKQTPImageTools::getDefaultLUTs() {
                 if (r < 0.0) r = 0.0;
                 if (r > 1.0) r = 1.0;
 
-                double g = sin(M_PI/2.0*v);
+                double g = sin(JKQTPSTATISTICS_PI/2.0*v);
                 if (g < 0.0) g = 0.0;
                 if (g > 1.0) g = 1.0;
 
-                double b = cos(M_PI/2.0*v);
+                double b = cos(JKQTPSTATISTICS_PI/2.0*v);
                 if (b < 0.0) b = 0.0;
                 if (b > 1.0) b = 1.0;
 
@@ -703,7 +693,7 @@ QMap<int, JKQTPImageTools::LUTData > JKQTPImageTools::getDefaultLUTs() {
         if (plut!=nullptr) {
             for (int l=0; l<=JKQTPImageTools::LUTSIZE; l++) {
                 double v=l/static_cast<double>(JKQTPImageTools::LUTSIZE);
-                double r = (v < 0.5) ? 128.0*sin(M_PI*(2.0*v-0.5))+128.0 : 255.0;
+                double r = (v < 0.5) ? 128.0*sin(JKQTPSTATISTICS_PI*(2.0*v-0.5))+128.0 : 255.0;
                 if (r > 255.0)
                     r = 255.0;
 
@@ -725,7 +715,7 @@ QMap<int, JKQTPImageTools::LUTData > JKQTPImageTools::getDefaultLUTs() {
         if (plut!=nullptr) {
             for (int l=0; l<=JKQTPImageTools::LUTSIZE; l++) {
                 double v=(JKQTPImageTools::LUTSIZE-l)/static_cast<double>(JKQTPImageTools::LUTSIZE);
-                double r = (v < 0.5) ? 128.0*sin(M_PI*(2.0*v-0.5))+128.0 : 255.0;
+                double r = (v < 0.5) ? 128.0*sin(JKQTPSTATISTICS_PI*(2.0*v-0.5))+128.0 : 255.0;
                 if (r > 255.0)
                     r = 255.0;
 
@@ -789,7 +779,7 @@ QMap<int, JKQTPImageTools::LUTData > JKQTPImageTools::getDefaultLUTs() {
                 double v=(l)/static_cast<double>(JKQTPImageTools::LUTSIZE);
                 double r = 255.0*qBound(0.0,sqrt(v),1.0);
                 double g = 255.0*qBound(0.0,v*v*v,1.0);
-                double b = 255.0*qBound(0.0,sin(2.0*M_PI*v),1.0);
+                double b = 255.0*qBound(0.0,sin(2.0*JKQTPSTATISTICS_PI*v),1.0);
 
                 plut[l]=qRgb(static_cast<int>(r), static_cast<int>(g), static_cast<int>(b));
             }
@@ -2495,22 +2485,22 @@ bool JKQTPBuildColorPaletteLUTLinSegLessThan(const JKQTPColorPaletteSingleColorL
 }
 
 JKQTPImageTools::LUTType JKQTPBuildColorPaletteLUTLinInterpolate(QList<QPair<double, QRgb> > items, int lut_size) {
-    qSort(items.begin(), items.end(), JKQTPBuildColorPaletteLUTLessThan);
+    std::sort(items.begin(), items.end(), JKQTPBuildColorPaletteLUTLessThan);
     return JKQTPBuildColorPaletteLUTLinInterpolateSorted(items, lut_size);
 }
 
 
 
 JKQTPImageTools::LUTType JKQTPBuildColorPaletteLUT(QList<QPair<double, QRgb> > items, int lut_size)  {
-    qSort(items.begin(), items.end(), JKQTPBuildColorPaletteLUTLessThan);
+    std::sort(items.begin(), items.end(), JKQTPBuildColorPaletteLUTLessThan);
     return JKQTPBuildColorPaletteLUTSorted(items, lut_size);
 }
 
 JKQTPImageTools::LUTType JKQTPBuildColorPaletteLUTLinSegments( QList<JKQTPColorPaletteSingleColorLinSegment> itemsR,  QList<JKQTPColorPaletteSingleColorLinSegment> itemsG,  QList<JKQTPColorPaletteSingleColorLinSegment> itemsB, int lut_size)
 {
-    qSort(itemsR.begin(), itemsR.end(), JKQTPBuildColorPaletteLUTLinSegLessThan);
-    qSort(itemsG.begin(), itemsG.end(), JKQTPBuildColorPaletteLUTLinSegLessThan);
-    qSort(itemsB.begin(), itemsB.end(), JKQTPBuildColorPaletteLUTLinSegLessThan);
+    std::sort(itemsR.begin(), itemsR.end(), JKQTPBuildColorPaletteLUTLinSegLessThan);
+    std::sort(itemsG.begin(), itemsG.end(), JKQTPBuildColorPaletteLUTLinSegLessThan);
+    std::sort(itemsB.begin(), itemsB.end(), JKQTPBuildColorPaletteLUTLinSegLessThan);
     return JKQTPBuildColorPaletteLUTLinSegmentsSorted(itemsR, itemsG, itemsB, lut_size);
 }
 

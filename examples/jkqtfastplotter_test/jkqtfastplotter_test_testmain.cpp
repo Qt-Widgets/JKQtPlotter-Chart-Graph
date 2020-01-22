@@ -54,7 +54,7 @@ TestMain::TestMain(QWidget *parent) :
     for (int i=0; i<N1; i++) {
         x[i]=(i+1)*XMAX/(double)N1;
         xx.push_back(x[i]);
-        yy.push_back(sin(0.5*M_PI*x[i])+2.0);
+        yy.push_back(sin(0.5*JKQTPSTATISTICS_PI*x[i])+2.0);
         std::cout<<xx[i]<<", "<<yy[i]<<std::endl;
         y1[i]=i*XMAX/(double)N1;
         y2[i]=log(x[i]);
@@ -120,8 +120,8 @@ TestMain::TestMain(QWidget *parent) :
     gl->addWidget(p21, 0, 0, 1, 3);
     for (int x=0; x<IMAGE_N; x++) {
         for (int y=0; y<IMAGE_N; y++) {
-            imageRed[y*IMAGE_N+x]=(fabs(x)+fabs(y))/2.0;
-            imageGreen[y*IMAGE_N+x]=(fabs(double(IMAGE_N)-x)+fabs(y))/2.0;
+            imageRed[y*IMAGE_N+x]=static_cast<double>(std::abs(x)+std::abs(y))/2.0;
+            imageGreen[y*IMAGE_N+x]=(fabs(double(IMAGE_N)-x)+static_cast<double>(std::abs(y)))/2.0;
             imageBlue[y*IMAGE_N+x]=sqrt(x*x+y*y);
         }
     }
