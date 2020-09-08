@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2008-2019 Jan W. Krieger (<jan@jkrieger.de>)
+    Copyright (c) 2008-2020 Jan W. Krieger (<jan@jkrieger.de>)
 
     
 
@@ -28,6 +28,7 @@
 #include <QFontDatabase>
 #include <typeinfo>
 #include <QApplication>
+#include <QPainterPath>
 
 const double JKQTMathText::ABS_MIN_LINEWIDTH=0.02;
 
@@ -915,7 +916,7 @@ double JKQTMathText::MTfracNode::draw(QPainter& painter, double x, double y, JKQ
         double ybrace=y-ascent1-bw/2.0;
 
         {
-            painter.save(); auto __finalpaint=JKQTPFinally([&painter]() {painter.restore();});
+            painter.save(); auto __finalpaintinner=JKQTPFinally([&painter]() {painter.restore();});
             painter.translate(x+xw/2.0+(width1)/2.0, ybrace);
             painter.rotate(180);
             QPainterPath path=makeHBracePath(0,0, width, bw);
@@ -3257,7 +3258,7 @@ JKQTMathText::JKQTMathText(QObject* parent):
     QObject(parent)
 {
     //std::chrono::high_resolution_clock::time_point t0=std::chrono::high_resolution_clock::now();
-    Q_INIT_RESOURCE(xits);
+    initJKQTMathTextResources();
     //qDebug()<<"init_resoucre: "<<std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now()-t0).count()/1000.0<<"ms"; t0=std::chrono::high_resolution_clock::now();
     QFontDatabase fontdb;
     //qDebug()<<"init_fontDB: "<<std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now()-t0).count()/1000.0<<"ms"; t0=std::chrono::high_resolution_clock::now();
@@ -4983,7 +4984,13 @@ QString JKQTMathText::MTplainTextNode::textTransform(const QString &_text, JKQTM
 
 void initJKQTMathTextResources()
 {
-    Q_INIT_RESOURCE(xits);
+    static bool initialized=false;
+    if (!initialized) {
+#ifdef JKQTMATHTEXT_COMPILED_WITH_XITS
+        Q_INIT_RESOURCE(xits);
+#endif
+        initialized=true;
+    }
 }
 
 JKQTMathText::MTnodeSize::MTnodeSize():

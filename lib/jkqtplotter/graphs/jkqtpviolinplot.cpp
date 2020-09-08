@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2008-2019 Jan W. Krieger (<jan@jkrieger.de>)
+    Copyright (c) 2008-2020 Jan W. Krieger (<jan@jkrieger.de>)
 
     
 
@@ -40,7 +40,7 @@
 
 
 JKQTPViolinplotVerticalElement::JKQTPViolinplotVerticalElement(JKQTBasePlotter* parent):
-    JKQTPPlotObject(parent)
+    JKQTPPlotObject(DrawAsGraphicElement, parent)
 {
     pos=JKQTP_NAN;
     median=JKQTP_NAN;

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2008-2019 Jan W. Krieger (<jan@jkrieger.de>, <j.krieger@dkfz.de>) (DKFZ) & IWR, University of Heidelberg
+    Copyright (c) 2008-2020 Jan W. Krieger (<jan@jkrieger.de>) (DKFZ) & IWR, University of Heidelberg
 
     
 
@@ -29,7 +29,7 @@
 #include <QAction>
 #include <QApplication>
 #include <QClipboard>
-
+#include <QPainterPath>
 
 /**
  * \brief saves the given property (for which also a default_property exists) into the given settings object
@@ -456,7 +456,7 @@ void JKQTFastPlotter::plotSystem(QPainter& painter) {
         painter.drawText(QPointF(internalPlotBorderLeft+plotWidth-fmLabels.width(xAxisLabel), internalPlotBorderTop+plotHeight+fmTicks.height()+fmTicks.width("x")/2.0+fmLabels.ascent()+tickLength), xAxisLabel);
     }
     if (yAxisLabelVisible) {
-        painter.save(); auto __finalpaint=JKQTPFinally([&painter]() {painter.restore();});
+        painter.save(); auto __finalpaintinner=JKQTPFinally([&painter]() {painter.restore();});
         painter.translate(fmLabels.ascent(), internalPlotBorderTop+fmLabels.width(yAxisLabel));
         painter.rotate(-90);
         painter.drawText(QPointF(0, 0), yAxisLabel);
@@ -1447,7 +1447,11 @@ void JKQTFPQScaleBarXPlot::drawGraph(QPainter& painter) {
         painter.drawLine(QLineF(xx1, yy1, xx2, yy2));
         painter.setFont(font);
         QFontMetrics fm=painter.fontMetrics();
+#if QT_VERSION >= QT_VERSION_CHECK(5,11,0)
+        painter.drawText(static_cast<int>(xx1+(xx2-xx1)/2-fm.horizontalAdvance(s)/2), static_cast<int>(yy1+3*lineWidth+fm.ascent()), s);
+#else
         painter.drawText(static_cast<int>(xx1+(xx2-xx1)/2-fm.width(s)/2), static_cast<int>(yy1+3*lineWidth+fm.ascent()), s);
+#endif
     } else if (position==JKQTFPQScaleBarXPlot::TopLeft) {
         yy1=parent->getInternalPlotBorderTop()+yDistance;
         yy2=yy1;
@@ -1458,7 +1462,11 @@ void JKQTFPQScaleBarXPlot::drawGraph(QPainter& painter) {
         painter.drawLine(QLineF(xx1, yy1, xx2, yy2));
         painter.setFont(font);
         QFontMetrics fm=painter.fontMetrics();
+#if QT_VERSION >= QT_VERSION_CHECK(5,11,0)
+        painter.drawText(static_cast<int>(xx1+(xx2-xx1)/2-fm.horizontalAdvance(s)/2), static_cast<int>(yy1+3*lineWidth+fm.ascent()), s);
+#else
         painter.drawText(static_cast<int>(xx1+(xx2-xx1)/2-fm.width(s)/2), static_cast<int>(yy1+3*lineWidth+fm.ascent()), s);
+#endif
     } else if (position==JKQTFPQScaleBarXPlot::BottomLeft) {
         yy1=parent->getInternalPlotBorderTop()+parent->getPlotHeight()-yDistance;
         yy2=yy1;
@@ -1469,7 +1477,11 @@ void JKQTFPQScaleBarXPlot::drawGraph(QPainter& painter) {
         painter.drawLine(QLineF(xx1, yy1, xx2, yy2));
         painter.setFont(font);
         QFontMetrics fm=painter.fontMetrics();
+#if QT_VERSION >= QT_VERSION_CHECK(5,11,0)
+        painter.drawText(static_cast<int>(xx1+(xx2-xx1)/2-fm.horizontalAdvance(s)/2), static_cast<int>(yy1-3*lineWidth-fm.descent()), s);
+#else
         painter.drawText(static_cast<int>(xx1+(xx2-xx1)/2-fm.width(s)/2), static_cast<int>(yy1-3*lineWidth-fm.descent()), s);
+#endif
     } else if (position==JKQTFPQScaleBarXPlot::BottomRight) {
         yy1=parent->getInternalPlotBorderTop()+parent->getPlotHeight()-yDistance;
         yy2=yy1;
@@ -1480,7 +1492,11 @@ void JKQTFPQScaleBarXPlot::drawGraph(QPainter& painter) {
         painter.drawLine(QLineF(xx1, yy1, xx2, yy2));
         painter.setFont(font);
         QFontMetrics fm=painter.fontMetrics();
+#if QT_VERSION >= QT_VERSION_CHECK(5,11,0)
+        painter.drawText(static_cast<int>(xx1+(xx2-xx1)/2-fm.horizontalAdvance(s)/2), static_cast<int>(yy1-3*lineWidth-fm.descent()), s);
+#else
         painter.drawText(static_cast<int>(xx1+(xx2-xx1)/2-fm.width(s)/2), static_cast<int>(yy1-3*lineWidth-fm.descent()), s);
+#endif
     }
 
 

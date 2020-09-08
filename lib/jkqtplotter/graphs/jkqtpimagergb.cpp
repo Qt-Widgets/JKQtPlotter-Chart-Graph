@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2008-2019 Jan W. Krieger
+    Copyright (c) 2008-2020 Jan W. Krieger
 
     
 
@@ -449,7 +449,7 @@ void JKQTPRGBMathImage::drawOutside(JKQTPEnhancedPainter& painter, QRect /*leftS
 
 
                 QRectF cb(tX, tY, gbarWidth, parent->pt2px(painter, colorBarWidth));
-                QMatrix mt;
+                QTransform mt;
                 mt.rotate(90);
                 painter.drawImage(cb, l[li].paletteImage.transformed(mt));
                 QPen p=painter.pen();

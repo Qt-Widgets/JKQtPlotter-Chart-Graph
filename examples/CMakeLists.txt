@@ -12,6 +12,7 @@ add_subdirectory(jkqtmathtext_test)
 
 add_subdirectory(jkqtplot_test)
 
+add_subdirectory(geo_arrows)
 add_subdirectory(advplotstyling)
 add_subdirectory(barchart)
 add_subdirectory(boxplot)
@@ -28,6 +29,7 @@ add_subdirectory(errorbarstyles)
 add_subdirectory(filledgraphs)
 add_subdirectory(functionplot)
 add_subdirectory(geometric)
+add_subdirectory(geo_simple)
 add_subdirectory(imageplot)
 add_subdirectory(imageplot_userpal)
 add_subdirectory(imageplot_modifier)
@@ -56,5 +58,6 @@ add_subdirectory(symbols_and_styles)
 add_subdirectory(ui)
 add_subdirectory(user_interaction)
 add_subdirectory(violinplot)
+add_subdirectory(evalcurve)
 
 

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2008-2019 Jan W. Krieger (<jan@jkrieger.de>)
+    Copyright (c) 2008-2020 Jan W. Krieger (<jan@jkrieger.de>)
 
 
 
@@ -20,6 +20,7 @@
 #include "jkqtplotter/jkqtpcoordinateaxes.h"
 #include "jkqtplotter/jkqtpbaseplotter.h"
 #include "jkqtcommon/jkqtpdrawingtools.h"
+#include "jkqtcommon/jkqtpgeometrytools.h"
 #include <QDebug>
 #include <QDateTime>
 #include <cfloat>
@@ -573,7 +574,12 @@ void JKQTPCoordinateAxis::calcPlotScaling(bool force) {
 }
 
 bool JKQTPCoordinateAxis::isLogAxis() const {
-    return logAxis || (axisStyle.tickMode==JKQTPLTMPower);
+    return logAxis;// || (axisStyle.tickMode==JKQTPLTMPower);
+}
+
+bool JKQTPCoordinateAxis::isLinearAxis() const
+{
+    return !logAxis;
 }
 
 const JKQTPCoordinateAxisStyle &JKQTPCoordinateAxis::getCurrentAxisStyle() const
@@ -676,8 +682,8 @@ void JKQTPCoordinateAxis::setLogAxis(bool __value)
     this->logAxis = __value;
     this->paramsChanged=true;
     if (this->isLogAxis()) {
-        if (axismin<0) axismin=pow(10.0, floor(log(axismax-axismin)/log(10.0)-1.0));
-        if (axismax<0) axismax=pow(10.0, floor(log(axismax-axismin)/log(10.0)+1.0));
+        if (axismin<0) axismin=pow(10.0, floor(log(axismax-axismin)/JKQTPSTATISTICS_LN10-1.0));
+        if (axismax<0) axismax=pow(10.0, floor(log(axismax-axismin)/JKQTPSTATISTICS_LN10+1.0));
     }
     redrawPlot();
 }
@@ -1515,7 +1521,7 @@ void JKQTPVerticalAxis::drawAxes(JKQTPEnhancedPainter& painter) {
 
 
         QRectF rect(0,0, getParentPlotWidth(), ascent+descent);//plotBorderLeft-30);
-        painter.save(); auto __finalpaint=JKQTPFinally([&painter]() {painter.restore();});
+        painter.save(); auto __finalpaintiner=JKQTPFinally([&painter]() {painter.restore();});
         painter.translate(QPointF(left-parent->pt2px(painter, axisStyle.tickOutsideLength+axisStyle.tickLabelDistance+axisStyle.labelDistance)-descent-labelMax.width()-labelMax.height(), bottom));
         painter.rotate(-90);
         //JKQTPEnhancedPainter::RenderHints h=painter.renderHints();
@@ -1533,7 +1539,7 @@ void JKQTPVerticalAxis::drawAxes(JKQTPEnhancedPainter& painter) {
                 break;
         }
         if (getParent()->getCurrentPlotterStyle().debugShowRegionBoxes) {
-            painter.save(); auto __finalpaint=JKQTPFinally([&painter]() {painter.restore();});
+            painter.save(); auto __finalpaintinnerif=JKQTPFinally([&painter]() {painter.restore();});
             QPen p("magenta");
             QColor col=p.color(); col.setAlphaF(0.8); p.setColor(col);
             p.setWidthF(getParent()->getCurrentPlotterStyle().debugRegionLineWidth/2.0);
@@ -1555,7 +1561,7 @@ void JKQTPVerticalAxis::drawAxes(JKQTPEnhancedPainter& painter) {
 
 
         QRectF rect(0,0, getParentPlotWidth(), getParentMathText()->getSize(painter).height());//plotBorderLeft-30);
-        painter.save(); auto __finalpaint=JKQTPFinally([&painter]() {painter.restore();});
+        painter.save(); auto __finalpaintinner=JKQTPFinally([&painter]() {painter.restore();});
         painter.translate(QPointF(right+parent->pt2px(painter, axisStyle.tickOutsideLength+axisStyle.tickLabelDistance+axisStyle.labelDistance)+labelMax.width(), bottom));
         painter.rotate(-90);
         //JKQTPEnhancedPainter::RenderHints h=painter.renderHints();
@@ -1573,7 +1579,7 @@ void JKQTPVerticalAxis::drawAxes(JKQTPEnhancedPainter& painter) {
                 break;
         }
         if (getParent()->getCurrentPlotterStyle().debugShowRegionBoxes) {
-            painter.save(); auto __finalpaint=JKQTPFinally([&painter]() {painter.restore();});
+            painter.save(); auto __finalpaintinnerif=JKQTPFinally([&painter]() {painter.restore();});
             QPen p("magenta");
             QColor col=p.color(); col.setAlphaF(0.8); p.setColor(col);
             p.setWidthF(getParent()->getCurrentPlotterStyle().debugRegionLineWidth/2.0);
@@ -1588,7 +1594,7 @@ void JKQTPVerticalAxis::drawAxes(JKQTPEnhancedPainter& painter) {
 
 
     if (getParent()->getCurrentPlotterStyle().debugShowRegionBoxes) {
-        painter.save(); auto __finalpaint=JKQTPFinally([&painter]() {painter.restore();});
+        painter.save(); auto __finalpaintif=JKQTPFinally([&painter]() {painter.restore();});
         QPen p("cyan");
         p.setWidthF(getParent()->getCurrentPlotterStyle().debugRegionLineWidth);
         QColor col=p.color(); col.setAlphaF(0.8); p.setColor(col);
@@ -1659,15 +1665,25 @@ void JKQTPVerticalIndependentAxis::setOtherAxisInverted(bool __value) {
     redrawPlot();
 }
 
-double JKQTPVerticalIndependentAxis::getParentPlotWidth() const { return axisWidth; }
+double JKQTPVerticalIndependentAxis::getParentPlotWidth() const {
+    return axisWidth;
+}
 
-double JKQTPVerticalIndependentAxis::getParentPlotOffset() const { return axisOffset; }
+double JKQTPVerticalIndependentAxis::getParentPlotOffset() const {
+    return axisOffset;
+}
 
-double JKQTPVerticalIndependentAxis::getParentOtheraxisWidth() const { return otherAxisWidth; }
+double JKQTPVerticalIndependentAxis::getParentOtheraxisWidth() const {
+    return otherAxisWidth;
+}
 
-bool JKQTPVerticalIndependentAxis::getParentOtheraxisInverted() const { return otherAxisInverted; }
+bool JKQTPVerticalIndependentAxis::getParentOtheraxisInverted() const {
+    return otherAxisInverted;
+}
 
-double JKQTPVerticalIndependentAxis::getParentOtheraxisOffset() const { return otherAxisOffset; }
+double JKQTPVerticalIndependentAxis::getParentOtheraxisOffset() const {
+    return otherAxisOffset;
+}
 
 
 
@@ -2102,7 +2118,7 @@ void JKQTPHorizontalAxis::drawAxes(JKQTPEnhancedPainter& painter) {
 
 
         QRectF rect(0,0, getParentPlotWidth(), ascent+descent);//plotBorderLeft-30);
-        painter.save(); auto __finalpaint=JKQTPFinally([&painter]() {painter.restore();});
+        painter.save(); auto __finalpaintinner=JKQTPFinally([&painter]() {painter.restore();});
         painter.translate(QPointF(left, bottom+parent->pt2px(painter, axisStyle.tickOutsideLength+axisStyle.tickLabelDistance+axisStyle.labelDistance)+labelMax.height()));
         //JKQTPEnhancedPainter::RenderHints h=painter.renderHints();
         //painter.drawRect(rect);
@@ -2119,7 +2135,7 @@ void JKQTPHorizontalAxis::drawAxes(JKQTPEnhancedPainter& painter) {
                 break;
         }
         if (getParent()->getCurrentPlotterStyle().debugShowRegionBoxes) {
-            painter.save(); auto __finalpaint=JKQTPFinally([&painter]() {painter.restore();});
+            painter.save(); auto __finalpaintinnerif=JKQTPFinally([&painter]() {painter.restore();});
             QPen p("magenta");
             QColor col=p.color(); col.setAlphaF(0.8); p.setColor(col);
             p.setWidthF(getParent()->getCurrentPlotterStyle().debugRegionLineWidth/2.0);
@@ -2141,7 +2157,7 @@ void JKQTPHorizontalAxis::drawAxes(JKQTPEnhancedPainter& painter) {
 
 
         QRectF rect(0,0, getParentPlotWidth(), getParentMathText()->getSize(painter).height());//plotBorderLeft-30);
-        painter.save(); auto __finalpaint=JKQTPFinally([&painter]() {painter.restore();});
+        painter.save(); auto __finalpaintinner=JKQTPFinally([&painter]() {painter.restore();});
         painter.translate(QPointF(left, top-parent->pt2px(painter, axisStyle.tickOutsideLength+axisStyle.tickLabelDistance+axisStyle.labelDistance)-labelMax.height()-rect.height()));
         //JKQTPEnhancedPainter::RenderHints h=painter.renderHints();
         //painter.drawRect(rect);
@@ -2158,7 +2174,7 @@ void JKQTPHorizontalAxis::drawAxes(JKQTPEnhancedPainter& painter) {
                 break;
         }
         if (getParent()->getCurrentPlotterStyle().debugShowRegionBoxes) {
-            painter.save(); auto __finalpaint=JKQTPFinally([&painter]() {painter.restore();});
+            painter.save(); auto __finalpaintinnerif=JKQTPFinally([&painter]() {painter.restore();});
             QPen p("magenta");
             QColor col=p.color(); col.setAlphaF(0.8); p.setColor(col);
             p.setWidthF(getParent()->getCurrentPlotterStyle().debugRegionLineWidth/2.0);
@@ -2172,7 +2188,7 @@ void JKQTPHorizontalAxis::drawAxes(JKQTPEnhancedPainter& painter) {
     }
 
     if (getParent()->getCurrentPlotterStyle().debugShowRegionBoxes) {
-        painter.save(); auto __finalpaint=JKQTPFinally([&painter]() {painter.restore();});
+        painter.save(); auto __finalpaintif=JKQTPFinally([&painter]() {painter.restore();});
         QPen p("cyan");
         QColor col=p.color(); col.setAlphaF(0.8); p.setColor(col);
         p.setWidthF(getParent()->getCurrentPlotterStyle().debugRegionLineWidth);
@@ -2240,14 +2256,24 @@ void JKQTPHorizontalIndependentAxis::setOtherAxisInverted(bool __value) {
     redrawPlot();
 }
 
-double JKQTPHorizontalIndependentAxis::getParentPlotWidth() const { return axisWidth; }
+double JKQTPHorizontalIndependentAxis::getParentPlotWidth() const {
+    return axisWidth;
+}
 
-double JKQTPHorizontalIndependentAxis::getParentPlotOffset() const { return axisOffset; }
+double JKQTPHorizontalIndependentAxis::getParentPlotOffset() const {
+    return axisOffset;
+}
 
-double JKQTPHorizontalIndependentAxis::getParentOtheraxisWidth() const { return otherAxisWidth; }
+double JKQTPHorizontalIndependentAxis::getParentOtheraxisWidth() const {
+    return otherAxisWidth;
+}
 
-bool JKQTPHorizontalIndependentAxis::getParentOtheraxisInverted() const { return otherAxisInverted; }
+bool JKQTPHorizontalIndependentAxis::getParentOtheraxisInverted() const {
+    return otherAxisInverted;
+}
 
-double JKQTPHorizontalIndependentAxis::getParentOtheraxisOffset() const { return otherAxisOffset; }
+double JKQTPHorizontalIndependentAxis::getParentOtheraxisOffset() const {
+    return otherAxisOffset;
+}
 
 

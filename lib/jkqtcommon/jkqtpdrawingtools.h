@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2008-2019 Jan W. Krieger (<jan@jkrieger.de>, <j.krieger@dkfz.de>)
+    Copyright (c) 2008-2020 Jan W. Krieger (<jan@jkrieger.de>)
 
     
 
@@ -33,7 +33,10 @@
 #include <QColor>
 #include <QVector>
 #include <vector>
+#include <forward_list>
 #include <cmath>
+#include <utility>
+#include <QDebug>
 #include "jkqtcommon/jkqtpmathtools.h"
 #include "jkqtcommon/jkqtpcodestructuring.h"
 
@@ -151,10 +154,81 @@ JKQTCOMMON_LIB_EXPORT JKQTPGraphSymbols String2JKQTPGraphSymbols(const QString& 
 
 
 
-/** \brief rotate a rectangle by  given angle (rotates all points around the center of the rectangle and returns it as a QPolygonF)
+
+/** \brief symbols that can be used to plot a datapoint for a graph
+ * \ingroup jkqtptools_drawing
+ *
+ * \image html geo_arrow_tips.png
+ *
+ * Note that all arrows end at the designated line-end (here indicated by dashed grey lines), even circles and rectangle:
+ *
+ * \image html geo_arrow_tipsatlineend.png
+ *
+ * \see \ref JKQTPlotterGeometricArrows and \ref JKQTPlotterGeometricGraphs
+ */
+enum JKQTPLineDecoratorStyle {
+    JKQTPNoDecorator=0,                /*!< \brief no decorator, i.e. a simple line-end */
+    JKQTPArrow,                        /*!< \brief a simple arrow tip, unfilled \image html JKQTPArrow.png*/
+    JKQTPFilledArrow,                  /*!< \brief a nice filled arrow tip \image html JKQTPFilledArrow.png */
+    JKQTPTriangleDecorator,                /*!< \brief a triangular arrow tip \image html JKQTPTriangleDecorator.png */
+    JKQTPFilledTriangleDecorator,          /*!< \brief a triangular filled arrow tip \image html JKQTPFilledTriangleDecorator.png */
+    JKQTPTriangleDecoratorAndBar,         /*!< \brief a triangular arrow tip, with vertical bar \image html JKQTPTriangleDecoratorAndBar.png */
+    JKQTPFilledTriangleDecoratorAndBar,   /*!< \brief a triangular filled arrow tip, with vertical bar \image html JKQTPFilledTriangleDecoratorAndBar.png */
+    JKQTPDoubleArrow,                  /*!< \brief a nice double-arrow tip  \image html JKQTPDoubleArrow.png*/
+    JKQTPFilledDoubleArrow,            /*!< \brief a nice filled double-arrow tip \image html JKQTPFilledDoubleArrow.png */
+    JKQTPCircleDecorator,              /*!< \brief an open circle tip \image html JKQTPCircleDecorator.png */
+    JKQTPFilledCircleDecorator,        /*!< \brief a filled circle tip \image html JKQTPFilledCircleDecorator.png */
+    JKQTPRectangleDecorator,           /*!< \brief an open rectangle tip \image html JKQTPRectangleDecorator.png */
+    JKQTPFilledRectangleDecorator,     /*!< \brief a filled rectangle tip \image html JKQTPFilledRectangleDecorator.png */
+    JKQTPArrowAndBar,                 /*!< \brief a simple arrow tip, unfilled, with vertical bar \image html JKQTPArrowAndBar.png */
+    JKQTPDoubleArrowAndBar,           /*!< \brief a simple double-arrow tip, unfilled, with vertical bar \image html JKQTPDoubleArrowAndBar.png */
+    JKQTPBarDecorator,            /*!< \brief a full vertical bar \image html JKQTPBarDecorator.png */
+    JKQTPBracketDecorator,             /*!< \brief a vertical bracket decorator \image html JKQTPBracketDecorator.png */
+    JKQTPDiamondDecorator,           /*!< \brief an open diamond tip \image html JKQTPDiamondDecorator.png */
+    JKQTPDiamondDecoratorAndBar,           /*!< \brief an open diamond tip \image html JKQTPDiamondDecoratorAndBar.png */
+    JKQTPFilledDiamondDecorator,     /*!< \brief a filled diamond tip \image html JKQTPFilledDiamondDecorator.png */
+    JKQTPFilledDiamondDecoratorAndBar,     /*!< \brief a filled diamond tip \image html JKQTPFilledDiamondDecoratorAndBar.png */
+    JKQTPHalfBarDecorator,            /*!< \brief a half vertical bar \image html JKQTPHalfBarDecorator.png */
+    JKQTPHarpoonDecorator,            /*!< \brief an harpoon arrow \image html JKQTPHarpoonDecorator.png */
+    JKQTPHarpoonDecoratorAndBar,            /*!< \brief an harpoon arrow, with vertical bar \image html JKQTPHarpoonDecoratorAndBar.png */
+    JKQTPSkewedBarDecorator,            /*!< \brief a skewed vertical bar \image html JKQTPSkewedBarDecorator.png */
+
+    JKQTPLineDecoratorCount, /*!< \brief can be used to iterate over all symbols using: <code>for (int i=0; i<static_cast<int>(JKQTPLineDecoratorCount); i++) { JKQTPLineDecoratorStyle s=static_cast<JKQTPLineDecoratorStyle>(i); ... }</code> */
+    JKQTPMaxLineDecoratorID=JKQTPLineDecoratorCount-1, /*!< \brief points to the last available symbol, can be used to iterate over all symbols: <code>for (int i=0; i<=static_cast<int>(JKQTPMaxLineDecoratorID); i++) { JKQTPLineDecoratorStyle s=static_cast<JKQTPLineDecoratorStyle>(i); ... }</code> */
+    JKQTPDefaultLineDecorator=JKQTPFilledArrow /*!< \brief a default symbol used for plotting */
+};
+
+/** \brief converts a JKQTPLineDecoratorStyle variable into a identifier string
  * \ingroup jkqtptools_drawing
  */
-JKQTCOMMON_LIB_EXPORT QPolygonF jkqtpRotateRect(QRectF r, double angle);
+JKQTCOMMON_LIB_EXPORT QString JKQTPLineDecoratorStyle2String(JKQTPLineDecoratorStyle pos);
+/** \brief converts a JKQTPLineDecoratorStyle variable into a human-readable string
+ * \ingroup jkqtptools_drawing
+ */
+JKQTCOMMON_LIB_EXPORT QString JKQTPLineDecoratorStyle2NameString(JKQTPLineDecoratorStyle pos);
+
+/** \brief converts a String into a JKQTPLineDecoratorStyle
+ * \ingroup jkqtptools_drawing
+ */
+JKQTCOMMON_LIB_EXPORT JKQTPLineDecoratorStyle String2JKQTPLineDecoratorStyle(const QString& pos);
+
+/*! \brief plot the specified symbol at pixel position x,y. Note that this function only draws the decorator, NOT the line pointing to it!
+   \ingroup jkqtptools_drawing
+
+    \tparam TPainter Type of \a painter: A class like JKQTPEnhancedPainter or <a href="http://doc.qt.io/qt-5/qpainter.html">QPainter</a>
+    \param painter the <a href="http://doc.qt.io/qt-5/qpainter.html">QPainter</a> to draw to
+    \param x x-coordinate of the decorator tip
+    \param y y-coordinate of the decorator tip
+    \param angle_rad angle of the line pointing to (x,y), given in radians, 0rad points to the right, >0rad is a counter-clockwise rotation, as calculated by atan2() from dx, dy of a line!
+    \param style type of the decorator to plot, see JKQTPLineDecoratorStyle
+    \param size size of the decorator
+    \param[out] line_start optional output parameter: when drawing the line let it end here, not necessarily at (x,y)
+   */
+template <class TPainter>
+inline void JKQTPPlotLineDecorator(TPainter& painter, double x, double y, double angle_rad, JKQTPLineDecoratorStyle style, double size, QPointF* line_start=nullptr);
+
+/** \brief calculates the tail decorator size from the line width \a line_width, using decoratorSizeFactor and a non-linear scaling function that levels off towards small \a line_width and increases sub-linearly for large ones, so the arrow heads to not grow too much */
+JKQTCOMMON_LIB_EXPORT double JKQTPLineDecoratorStyleCalcDecoratorSize(double line_width, double decoratorSizeFactor);
 
 /*! \brief plot the specified symbol at pixel position x,y
    \ingroup jkqtptools_drawing
@@ -187,25 +261,6 @@ inline void JKQTPPlotSymbol(TPainter& painter, double x, double y, JKQTPGraphSym
 JKQTCOMMON_LIB_EXPORT void JKQTPPlotSymbol(QPaintDevice& paintDevice, double x, double y, JKQTPGraphSymbols symbol, double size, double symbolLineWidth, QColor color, QColor fillColor);
 
 
-/*! \brief draw an ellipse without setting pen or brush, or saving the painter!
-    \ingroup jkqtptools_drawing
-
-    \return a QVector<QPointF> with points that may be used for drawing
-    \param x center of ellipse (x-coordinate)
-    \param y center of ellipse (y-coordinate)
-    \param a half axis in x-direction
-    \param b half axis in y-direction
-    \param angle_start starting angle of ellipse section
-    \param angle_end ending angle of ellipse section
-    \param alpha rotation angle of ellipse
-    \param controlPoints the number of points to use for drawing
-    \param[out] x_start first point of ellipse
-    \param[out] x_end last point of ellipse
-
-    \note all angles are given in degrees [0..360]
-*/
-JKQTCOMMON_LIB_EXPORT QVector<QPointF> JKQTPDrawEllipse(double x, double y, double a, double b, double angle_start=0, double angle_end=360, double alpha=0, int controlPoints=180, QPointF* x_start=nullptr, QPointF* x_end=nullptr);
-
 /*! \brief draw a tooltip, using the current brush and pen of the provided painter
     \ingroup jkqtptools_drawing
 
@@ -214,32 +269,11 @@ JKQTCOMMON_LIB_EXPORT QVector<QPointF> JKQTPDrawEllipse(double x, double y, doub
     \param x x-coordinate of position the tooltip points to
     \param y y-coordinate of position the tooltip points to
     \param rect rectangle of the main tooltip area
+
+    \image html tooltiptool_example.png
 */
 template <class TPainter>
 inline void JKQTPDrawTooltip(TPainter& painter, double x, double y, const QRectF& rect);
-
-
-/** \brief cleans a polygon by uniting all consecutive points that were closer than distanceThreshold are united
- *  \ingroup jkqtptools_drawing
- *
- *  \param poly polygon to clean
- *  \param distanceThreshold if two end-points are closer together as this value, they are united to a single point
- *  \return a cleaned polygon, where all consecutive points that were closer than distanceThreshold are united
- */
-JKQTCOMMON_LIB_EXPORT QPolygonF JKQTPCleanPolygon(const QPolygonF& poly, double distanceThreshold=0.3);
-
-/** \brief takes a list of QLineF objesct \a lines and tries to combine as many of them as possible to QPolygonF objects.
- *         <b>Note: This method implements an incomplete algorithm with \a searchMaxSurroundingElements>0, as solving
- *         the complete problem is very time-consuming (cubic runtime)</b>
- *  \ingroup jkqtptools_drawing
- *
- *  \param lines line segments to unify
- *  \param distanceThreshold if two end-points are closer together as this value, they are united to a single point
- *  \param searchMaxSurroundingElements limits the search for a connected polygon to at most this number of neighbors
- *  \return a vector of QPolygonF objects, which contain longer line-segments formed from \a lines
- */
-JKQTCOMMON_LIB_EXPORT QVector<QPolygonF> JKQTPUnifyLinesToPolygons(const QVector<QLineF>& lines, double distanceThreshold=0.3, int searchMaxSurroundingElements=10);
-
 
 
 
@@ -855,4 +889,194 @@ inline void JKQTPDrawTooltip(TPainter& painter, double x, double y, const QRectF
         painter.drawRect(rect);
     }
 }
+
+template <class TPainter>
+inline void JKQTPPlotLineDecorator(TPainter& painter, double x, double y, double angle_rad, JKQTPLineDecoratorStyle style, double size, QPointF* line_start) {
+    if (line_start) *line_start=QPointF(x,y);
+    static double default_theta_open_tip=60.0/2.0 /180.0*JKQTPSTATISTICS_PI;
+    static double tan__default_theta_open_tip=tan(default_theta_open_tip);
+    static double default_theta_closed_tip=50.0/2.0 /180.0*JKQTPSTATISTICS_PI;
+    static double tan__default_theta_closed_tip=tan(default_theta_closed_tip);
+    QPen pinit=painter.pen();
+    pinit.setCapStyle(Qt::FlatCap);
+    pinit.setJoinStyle(Qt::RoundJoin);
+    QPen p0=pinit;
+    p0.setWidthF(0);
+    {
+        painter.save(); auto __finalpaint=JKQTPFinally([&painter]() {painter.restore();});
+        painter.translate(x,y);
+        painter.rotate(angle_rad/JKQTPSTATISTICS_PI*180.0);
+        painter.setPen(p0);
+
+        switch(style) {
+        case JKQTPArrow:
+        case JKQTPArrowAndBar: {
+            const QPointF poly[3] = {
+                QPointF(size, -tan__default_theta_open_tip*size),
+                QPointF(0,0),
+                QPointF(size, tan__default_theta_open_tip*size)
+            };
+            painter.setPen(pinit);
+            if (style==JKQTPArrowAndBar) painter.drawLine(QPointF(0,-tan__default_theta_open_tip*size), QPointF(0,tan__default_theta_open_tip*size));
+            painter.drawPolyline(poly, 3);
+        } break;
+        case JKQTPHarpoonDecorator:
+        case JKQTPHarpoonDecoratorAndBar: {
+            painter.setPen(pinit);
+            if (style==JKQTPHarpoonDecoratorAndBar) painter.drawLine(QPointF(0,-tan__default_theta_open_tip*size), QPointF(0,tan__default_theta_open_tip*size));
+            painter.drawLine(QPointF(0,0), QPointF(size, tan__default_theta_open_tip*size));
+        } break;
+        case JKQTPDoubleArrow:
+        case JKQTPDoubleArrowAndBar: {
+            const QPointF poly[3] = {
+                QPointF(size, -tan__default_theta_open_tip*size),
+                QPointF(0,0),
+                QPointF(size, tan__default_theta_open_tip*size)
+            };
+            painter.setPen(pinit);
+            if (style==JKQTPDoubleArrowAndBar) painter.drawLine(QPointF(0,-tan__default_theta_open_tip*size), QPointF(0,tan__default_theta_open_tip*size));
+            painter.drawPolyline(poly, 3);
+            painter.translate(4.0*pinit.widthF(),0);
+            painter.drawPolyline(poly, 3);
+            if (line_start) *line_start=QPointF(x,y)+QPointF(4.0*pinit.widthF()*cos(angle_rad),4.0*pinit.widthF()*sin(angle_rad));
+        } break;
+        case JKQTPFilledArrow:
+        case JKQTPFilledDoubleArrow: {
+            const QPointF poly[4] = {
+                QPointF(0,0),
+                QPointF(size, tan__default_theta_closed_tip*size),
+                QPointF(0.75*size,0),
+                QPointF(size, -tan__default_theta_closed_tip*size)
+            };
+            painter.drawPolygon(poly, 4);
+            if (style==JKQTPFilledDoubleArrow) {
+                painter.translate(0.5*size, 0);
+                painter.drawPolygon(poly, 4);
+                if (line_start) *line_start=QPointF(x,y)+QPointF(1.25*size*cos(angle_rad),1.25*size*sin(angle_rad));
+            } else {
+                if (line_start) *line_start=QPointF(x,y)+QPointF(0.75*size*cos(angle_rad),0.75*size*sin(angle_rad));
+            }
+        } break;
+
+        case JKQTPTriangleDecorator:
+        case JKQTPTriangleDecoratorAndBar: {
+            const QPointF poly[3] = {
+                QPointF(size, -tan__default_theta_closed_tip*size),
+                QPointF(0,0),
+                QPointF(size, tan__default_theta_closed_tip*size)
+            };
+            painter.setBrush(Qt::NoBrush);
+            painter.setPen(pinit);
+            painter.drawConvexPolygon(poly, 3);
+            if (style==JKQTPTriangleDecoratorAndBar) painter.drawLine(QPointF(0,-tan__default_theta_closed_tip*size), QPointF(0,tan__default_theta_closed_tip*size));
+            if (line_start) *line_start=QPointF(x,y)+QPointF(size*cos(angle_rad),size*sin(angle_rad));
+        } break;
+
+        case JKQTPFilledTriangleDecorator:
+        case JKQTPFilledTriangleDecoratorAndBar: {
+            const QPointF poly[3] = {
+                QPointF(size, -tan__default_theta_closed_tip*size),
+                QPointF(0,0),
+                QPointF(size, tan__default_theta_closed_tip*size)
+            };
+            painter.setPen(p0);
+            painter.drawConvexPolygon(poly, 3);
+            if (style==JKQTPFilledTriangleDecoratorAndBar) {
+                painter.setPen(pinit);
+                painter.drawLine(QPointF(0,-tan__default_theta_closed_tip*size), QPointF(0,tan__default_theta_closed_tip*size));
+            }
+            if (line_start) *line_start=QPointF(x,y)+QPointF(size*cos(angle_rad),size*sin(angle_rad));
+        } break;
+
+
+        case JKQTPDiamondDecorator:
+        case JKQTPDiamondDecoratorAndBar: {
+            const QPointF poly[4] = {
+                QPointF(0,0),
+                QPointF(size/2.0, -tan__default_theta_closed_tip*size),
+                QPointF(size,0),
+                QPointF(size/2.0, tan__default_theta_closed_tip*size)
+            };
+            painter.setBrush(Qt::NoBrush);
+            painter.setPen(pinit);
+            painter.drawConvexPolygon(poly, 4);
+            if (style==JKQTPDiamondDecoratorAndBar) painter.drawLine(QPointF(0,-tan__default_theta_closed_tip*size), QPointF(0,tan__default_theta_closed_tip*size));
+            if (line_start) *line_start=QPointF(x,y)+QPointF(size*cos(angle_rad),size*sin(angle_rad));
+        } break;
+
+        case JKQTPFilledDiamondDecorator:
+        case JKQTPFilledDiamondDecoratorAndBar: {
+            const QPointF poly[4] = {
+                QPointF(0,0),
+                QPointF(size/2.0, -tan__default_theta_closed_tip*size),
+                QPointF(size,0),
+                QPointF(size/2.0, tan__default_theta_closed_tip*size)
+            };
+            painter.setPen(p0);
+            painter.drawConvexPolygon(poly, 4);
+            if (style==JKQTPFilledDiamondDecoratorAndBar) {
+                painter.setPen(pinit);
+                painter.drawLine(QPointF(0,-tan__default_theta_closed_tip*size), QPointF(0,tan__default_theta_closed_tip*size));
+            }
+            if (line_start) *line_start=QPointF(x,y)+QPointF(size*cos(angle_rad),size*sin(angle_rad));
+        } break;
+
+        case JKQTPCircleDecorator:
+        case JKQTPFilledCircleDecorator: {
+            if (style==JKQTPCircleDecorator) {
+                painter.setBrush(Qt::NoBrush);
+                painter.setPen(pinit);
+            } else {
+                painter.setPen(p0);
+            }
+            painter.drawEllipse(QRectF(0,-size/2.0,size,size));
+            if (line_start) *line_start=QPointF(x,y)+QPointF(size*cos(angle_rad),size*sin(angle_rad));
+        } break;
+
+        case JKQTPRectangleDecorator:
+        case JKQTPFilledRectangleDecorator: {
+            if (style==JKQTPRectangleDecorator) {
+                painter.setBrush(Qt::NoBrush);
+                painter.setPen(pinit);
+            } else {
+                painter.setPen(p0);
+            }
+            painter.drawRect(QRectF(0,-size/2.0,size,size));
+            if (line_start) *line_start=QPointF(x,y)+QPointF(size*cos(angle_rad),size*sin(angle_rad));
+        } break;
+
+        case JKQTPBarDecorator: {
+            painter.setPen(pinit);
+            painter.drawLine(QPointF(0,-tan__default_theta_open_tip*size), QPointF(0,tan__default_theta_open_tip*size));
+        } break;
+
+        case JKQTPHalfBarDecorator: {
+            painter.setPen(pinit);
+            painter.drawLine(QPointF(0,0), QPointF(0,tan__default_theta_open_tip*size));
+        } break;
+
+        case JKQTPSkewedBarDecorator: {
+            painter.setPen(pinit);
+            painter.drawLine(QPointF(0.25*size,-tan__default_theta_open_tip*size), QPointF(-0.25*size,tan__default_theta_open_tip*size));
+        } break;
+
+        case JKQTPBracketDecorator: {
+            const QPointF poly[4] = {
+                QPointF(-size*0.2,-tan__default_theta_open_tip*size),
+                QPointF(0,-tan__default_theta_open_tip*size),
+                QPointF(0,tan__default_theta_open_tip*size),
+                QPointF(-size*0.2, tan__default_theta_open_tip*size)
+            };
+            painter.setPen(pinit);
+            painter.drawPolyline(poly, 4);
+        } break;
+        case JKQTPLineDecoratorCount:
+        case JKQTPNoDecorator:
+            break;
+        }
+
+    }
+}
+
+
 #endif // JKQTPDRAWINGTOOLS_H_INCLUDED

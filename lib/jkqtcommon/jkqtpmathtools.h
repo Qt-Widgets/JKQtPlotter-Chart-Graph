@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2008-2019 Jan W. Krieger (<jan@jkrieger.de>, <j.krieger@dkfz.de>)
+    Copyright (c) 2008-2020 Jan W. Krieger (<jan@jkrieger.de>)
 
     
 
@@ -49,6 +49,17 @@
 
 */
 #define JKQTPSTATISTICS_SQRT_2PI 2.50662827463
+
+
+/*! \brief \f$ \mbox{ln}(10)=2.30258509299404568402... \f$
+    \ingroup jkqtptools_math_basic
+
+*/
+#ifdef M_LN10
+#  define JKQTPSTATISTICS_LN10 M_LN10
+#else
+#  define JKQTPSTATISTICS_LN10 2.30258509299404568402
+#endif
 
 
 /** \brief double-value NotANumber
@@ -279,10 +290,20 @@ inline T jkqtp_sqr(const T& v) {
     \ingroup jkqtptools_math_basic
 
 */
-template <class T>
-inline T jkqtp_pow4(T x) {
+    template <class T>
+    inline T jkqtp_pow4(T x) {
     const T xx=x*x;
     return xx*xx;
+}
+
+/*! \brief 5-th power of a number
+    \ingroup jkqtptools_math_basic
+
+*/
+template <class T>
+inline T jkqtp_pow5(T x) {
+    const T xx=x*x;
+    return xx*xx*x;
 }
 
 /*! \brief cube of a number
@@ -426,7 +447,7 @@ inline bool JKQTPIsOKFloat(T v) {
 /** \brief evaluates a gaussian propability density function
  * \ingroup jkqtptools_math_basic
  *
- * \f[ f(x,\mu, \sigma)=\frac{1}{\sqrt{2\pi\sigma^2}}\cdot\eJKQTPSTATISTICS_PIeft(-\frac{(x-\mu)^2}{2\sigma^2}\right)
+ * \f[ f(x,\mu, \sigma)=\frac{1}{\sqrt{2\pi\sigma^2}}\cdot\exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right) \f]
  */
 inline double jkqtp_gaussdist(double x, double mu=0.0, double sigma=1.0) {
     return exp(-0.5*jkqtp_sqr(x-mu)/jkqtp_sqr(sigma))/sqrt(2.0*JKQTPSTATISTICS_PI*sigma*sigma);

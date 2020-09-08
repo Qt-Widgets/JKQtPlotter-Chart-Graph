@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2008-2019 Jan W. Krieger (<jan@jkrieger.de>)
+    Copyright (c) 2008-2020 Jan W. Krieger (<jan@jkrieger.de>)
 
     
 
@@ -252,11 +252,6 @@ void JKQTPGraphErrorStyleMixin::setErrorFillBrush(const QBrush &b)
 {
     m_errorFillBrush=b;
     m_errorFillColor=b.color();
-}
-
-void JKQTPGraphErrorStyleMixin::setErrorFillTransform(const QMatrix &b)
-{
-    m_errorFillBrush.setMatrix(b);
 }
 
 void JKQTPGraphErrorStyleMixin::setErrorFillTransform(const QTransform &b)

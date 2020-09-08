@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2008-2019 Jan W. Krieger (<jan@jkrieger.de>)
+    Copyright (c) 2008-2020 Jan W. Krieger (<jan@jkrieger.de>)
 
     
 
@@ -146,8 +146,6 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPGraphErrorStyleMixin {
 
         /** \brief sets an error indicator fill brush (overwrites all internal properties!) */
         void setErrorFillBrush(const QBrush& b);
-        /** \brief sets an error indicator fill transformation matrix*/
-        void setErrorFillTransform(const QMatrix& b);
         /** \brief sets an error indicator fill transformation */
         void setErrorFillTransform(const QTransform& b);
 

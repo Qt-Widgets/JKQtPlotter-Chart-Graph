@@ -27,9 +27,14 @@ isEmpty(JKQTP_PLOTTER_PRI_INCLUDED) {
                $$PWD/jkqtplotter/jkqtpoverlaysbase.h \
                $$PWD/jkqtplotter/graphs/jkqtpboxplot.h \
                $$PWD/jkqtplotter/graphs/jkqtpboxplotstylingmixins.h \
+               $$PWD/jkqtplotter/graphs/jkqtpevaluatedfunctionbase.h \
                $$PWD/jkqtplotter/graphs/jkqtpevaluatedfunction.h \
                $$PWD/jkqtplotter/graphs/jkqtpfilledcurve.h \
                $$PWD/jkqtplotter/graphs/jkqtpgeometric.h \
+               $$PWD/jkqtplotter/graphs/jkqtpgeoannotations.h \
+               $$PWD/jkqtplotter/graphs/jkqtpgeobase.h \
+               $$PWD/jkqtplotter/graphs/jkqtpgeolines.h \
+               $$PWD/jkqtplotter/graphs/jkqtpgeoshapes.h \
                $$PWD/jkqtplotter/graphs/jkqtpimage.h \
                $$PWD/jkqtplotter/graphs/jkqtpimpulses.h \
                $$PWD/jkqtplotter/graphs/jkqtpparsedfunction.h \
@@ -45,6 +50,7 @@ isEmpty(JKQTP_PLOTTER_PRI_INCLUDED) {
                $$PWD/jkqtplotter/graphs/jkqtprange.h \
                $$PWD/jkqtplotter/graphs/jkqtpspecialline.h \
                $$PWD/jkqtplotter/graphs/jkqtpbarchart.h \
+               $$PWD/jkqtplotter/graphs/jkqtpevaluatedparametriccurve.h \
                $$PWD/jkqtplotter/overlays/jkqtpbasicoverlays.h \
                $$PWD/jkqtplotter/gui/jkqtpcomboboxes.h \
                $$PWD/jkqtplotter/gui/jkqtpenhancedspinboxes.h \
@@ -72,9 +78,14 @@ isEmpty(JKQTP_PLOTTER_PRI_INCLUDED) {
                $$PWD/jkqtplotter/jkqtpoverlaysbase.cpp \
                $$PWD/jkqtplotter/graphs/jkqtpboxplot.cpp  \
                $$PWD/jkqtplotter/graphs/jkqtpboxplotstylingmixins.cpp  \
+               $$PWD/jkqtplotter/graphs/jkqtpevaluatedfunctionbase.cpp  \
                $$PWD/jkqtplotter/graphs/jkqtpevaluatedfunction.cpp  \
                $$PWD/jkqtplotter/graphs/jkqtpfilledcurve.cpp  \
                $$PWD/jkqtplotter/graphs/jkqtpgeometric.cpp  \
+               $$PWD/jkqtplotter/graphs/jkqtpgeoannotations.cpp \
+               $$PWD/jkqtplotter/graphs/jkqtpgeobase.cpp \
+               $$PWD/jkqtplotter/graphs/jkqtpgeolines.cpp \
+               $$PWD/jkqtplotter/graphs/jkqtpgeoshapes.cpp \
                $$PWD/jkqtplotter/graphs/jkqtpimage.cpp  \
                $$PWD/jkqtplotter/graphs/jkqtpimpulses.cpp  \
                $$PWD/jkqtplotter/graphs/jkqtpparsedfunction.cpp  \
@@ -90,6 +101,7 @@ isEmpty(JKQTP_PLOTTER_PRI_INCLUDED) {
                $$PWD/jkqtplotter/graphs/jkqtprange.cpp \
                $$PWD/jkqtplotter/graphs/jkqtpspecialline.cpp \
                $$PWD/jkqtplotter/graphs/jkqtpbarchart.cpp  \
+               $$PWD/jkqtplotter/graphs/jkqtpevaluatedparametriccurve.cpp  \
                $$PWD/jkqtplotter/overlays/jkqtpbasicoverlays.cpp  \
                $$PWD/jkqtplotter/gui/jkqtpcomboboxes.cpp \
                $$PWD/jkqtplotter/gui/jkqtpenhancedspinboxes.cpp \

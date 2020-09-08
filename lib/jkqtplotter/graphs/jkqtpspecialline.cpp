@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2008-2019 Jan W. Krieger (<jan@jkrieger.de>)
+    Copyright (c) 2008-2020 Jan W. Krieger (<jan@jkrieger.de>)
 
     
 
@@ -307,7 +307,7 @@ void JKQTPSpecialLineHorizontalGraph::draw(JKQTPEnhancedPainter& painter) {
 
     if (m_drawSymbols) {
         painter.save();
-        auto __finalpaint=JKQTPFinally([&painter]() {painter.restore();});
+        auto __finalpaintsym=JKQTPFinally([&painter]() {painter.restore();});
         for (auto& p: ps) {
             plotStyledSymbol(parent, painter, p.x(), p.y());
         }

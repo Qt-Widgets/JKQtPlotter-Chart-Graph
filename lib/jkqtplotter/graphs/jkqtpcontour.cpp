@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2008-2019 Jan W. Krieger & Sebastian Isbaner (contour plot)
+    Copyright (c) 2008-2020 Jan W. Krieger & Sebastian Isbaner (contour plot)
 
     
 
@@ -24,6 +24,7 @@
 #include "jkqtplotter/jkqtptools.h"
 #include "jkqtcommon/jkqtpenhancedpainter.h"
 #include "jkqtplotter/jkqtplotter.h"
+#include "jkqtcommon/jkqtpgeometrytools.h"
 #include <QDebug>
 #include <QImageWriter>
 #include <QFileDialog>

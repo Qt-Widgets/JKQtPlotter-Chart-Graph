@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2008-2019 Jan W. Krieger (<jan@jkrieger.de>)
+    Copyright (c) 2008-2020 Jan W. Krieger (<jan@jkrieger.de>)
 
     
 
@@ -760,7 +760,7 @@ void JKQTPGraphBoxplotStyleMixin::plotVerticalKeyMarker(JKQTBasePlotter *parent,
 
     painter.setPen(p);
     {
-        painter.save(); auto __finalpaint=JKQTPFinally([&painter]() {painter.restore();});
+        painter.save(); auto __finalpaintrect=JKQTPFinally([&painter]() {painter.restore();});
         painter.setBrush(b);
         if (getDrawBox()) painter.drawRect(QRectF(xmi, p75, fabs(xma-xmi), fabs(p75-p25)));
     }

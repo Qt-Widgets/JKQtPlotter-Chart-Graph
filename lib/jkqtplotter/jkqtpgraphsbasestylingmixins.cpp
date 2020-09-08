@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2008-2019 Jan W. Krieger (<jan@jkrieger.de>)
+    Copyright (c) 2008-2020 Jan W. Krieger (<jan@jkrieger.de>)
 
     
 
@@ -364,10 +364,6 @@ void JKQTPGraphFillStyleMixin::setFillBrush(const QBrush &b)
     m_fillColor=b.color();
 }
 
-void JKQTPGraphFillStyleMixin::setFillTransform(const QMatrix &b)
-{
-    m_fillBrush.setMatrix(b);
-}
 
 void JKQTPGraphFillStyleMixin::setFillTransform(const QTransform &b)
 {
@@ -454,3 +450,118 @@ QColor JKQTPGraphTextStyleMixin::getTextColor() const
 {
     return m_textColor;
 }
+
+JKQTPGraphDecoratedLineStyleMixin::JKQTPGraphDecoratedLineStyleMixin():
+    JKQTPGraphLineStyleMixin()
+{
+    m_headDecoratorStyle=JKQTPLineDecoratorStyle::JKQTPDefaultLineDecorator;
+    m_tailDecoratorStyle=JKQTPLineDecoratorStyle::JKQTPNoDecorator;
+    m_tailDecoratorSizeFactor=m_headDecoratorSizeFactor=8.0;
+}
+
+void JKQTPGraphDecoratedLineStyleMixin::initDecoratedLineStyle(JKQTBasePlotter *parent, int &parentPlotStyle)
+{
+    initLineStyle(parent, parentPlotStyle);
+}
+
+JKQTPGraphDecoratedLineStyleMixin::~JKQTPGraphDecoratedLineStyleMixin()
+{
+
+}
+
+void JKQTPGraphDecoratedLineStyleMixin::setHeadDecoratorStyle(const JKQTPLineDecoratorStyle &__value)
+{
+    m_headDecoratorStyle=__value;
+}
+
+JKQTPLineDecoratorStyle JKQTPGraphDecoratedLineStyleMixin::getHeadDecoratorStyle() const
+{
+    return m_headDecoratorStyle;
+}
+
+void JKQTPGraphDecoratedLineStyleMixin::setTailDecoratorStyle(const JKQTPLineDecoratorStyle &__value)
+{
+    m_tailDecoratorStyle=__value;
+}
+
+JKQTPLineDecoratorStyle JKQTPGraphDecoratedLineStyleMixin::getTailDecoratorStyle() const
+{
+    return m_tailDecoratorStyle;
+}
+
+void JKQTPGraphDecoratedLineStyleMixin::setHeadDecoratorSizeFactor(const double &__value)
+{
+    m_headDecoratorSizeFactor=__value;
+}
+
+double JKQTPGraphDecoratedLineStyleMixin::getHeadDecoratorSizeFactor() const
+{
+    return m_headDecoratorSizeFactor;
+}
+
+void JKQTPGraphDecoratedLineStyleMixin::setTailDecoratorSizeFactor(const double &__value)
+{
+    m_tailDecoratorSizeFactor=__value;
+}
+
+double JKQTPGraphDecoratedLineStyleMixin::getTailDecoratorSizeFactor() const
+{
+    return m_tailDecoratorSizeFactor;
+}
+
+double JKQTPGraphDecoratedLineStyleMixin::calcTailDecoratorSize(double line_width) const
+{
+    return JKQTPLineDecoratorStyleCalcDecoratorSize(line_width, m_tailDecoratorSizeFactor);
+}
+
+double JKQTPGraphDecoratedLineStyleMixin::calcHeadDecoratorSize(double line_width) const
+{
+    return JKQTPLineDecoratorStyleCalcDecoratorSize(line_width, m_headDecoratorSizeFactor);
+}
+
+
+
+JKQTPGraphDecoratedHeadLineStyleMixin::JKQTPGraphDecoratedHeadLineStyleMixin():
+    JKQTPGraphLineStyleMixin()
+{
+    m_headDecoratorStyle=JKQTPLineDecoratorStyle::JKQTPDefaultLineDecorator;
+    m_headDecoratorSizeFactor=8.0;
+}
+
+void JKQTPGraphDecoratedHeadLineStyleMixin::initDecoratedHeadLineStyle(JKQTBasePlotter *parent, int &parentPlotStyle)
+{
+    initLineStyle(parent, parentPlotStyle);
+}
+
+JKQTPGraphDecoratedHeadLineStyleMixin::~JKQTPGraphDecoratedHeadLineStyleMixin()
+{
+
+}
+
+void JKQTPGraphDecoratedHeadLineStyleMixin::setHeadDecoratorStyle(const JKQTPLineDecoratorStyle &__value)
+{
+    m_headDecoratorStyle=__value;
+}
+
+JKQTPLineDecoratorStyle JKQTPGraphDecoratedHeadLineStyleMixin::getHeadDecoratorStyle() const
+{
+    return m_headDecoratorStyle;
+}
+
+
+void JKQTPGraphDecoratedHeadLineStyleMixin::setHeadDecoratorSizeFactor(const double &__value)
+{
+    m_headDecoratorSizeFactor=__value;
+}
+
+double JKQTPGraphDecoratedHeadLineStyleMixin::getHeadDecoratorSizeFactor() const
+{
+    return m_headDecoratorSizeFactor;
+}
+
+double JKQTPGraphDecoratedHeadLineStyleMixin::calcHeadDecoratorSize(double line_width) const
+{
+    return JKQTPLineDecoratorStyleCalcDecoratorSize(line_width, m_headDecoratorSizeFactor);
+}
+
+

@@ -1,5 +1,5 @@
 # JKQTPlotter - A Qt Plotting Library
-This is an extensive library of function/data plotter classes for Qt (>= 4.7, tested with Qt up to 5.11).
+This is an extensive library of function/data plotter classes for Qt (>= 5.0, tested with Qt up to 5.12).
 
 This software is licensed under the term of the [GNU Lesser General Public License 2.1 
 (LGPL 2.1)](./LICENSE) or above. 
@@ -7,7 +7,7 @@ This software is licensed under the term of the [GNU Lesser General Public Licen
 [![Lates Release](https://img.shields.io/github/v/release/jkriege2/JKQtPlotter)](https://github.com/jkriege2/JKQtPlotter/releases)
 
 ![Language](https://img.shields.io/github/languages/top/jkriege2/JKQtPlotter)
-[![Qt 4&5](https://img.shields.io/badge/Qt-4%20%26%205-brightgreen)](https://doc.qt.io/qt-5/)
+[![Qt&5](https://img.shields.io/badge/Qt-5-brightgreen)](https://doc.qt.io/qt-5/)
 [![Documentation](https://img.shields.io/badge/documentation-online-blue)](http://jkriege2.github.io/JKQtPlotter/index.html)
 
 [![CI: Windows Build](https://img.shields.io/appveyor/ci/jkriege2/JKQtPlotter/master?label=CI%20Windows%20Build)](https://ci.appveyor.com/project/jkriege2/jkqtplotter/branch/master) 
@@ -23,12 +23,14 @@ This software is licensed under the term of the [GNU Lesser General Public Licen
 [![Open PRs](https://img.shields.io/github/issues-pr/jkriege2/JKQtPlotter)](https://github.com/jkriege2/JKQtPlotter/pulls)
 [![Closed PRs](https://img.shields.io/github/issues-pr-closed/jkriege2/JKQtPlotter)](https://github.com/jkriege2/JKQtPlotter/pulls?q=is%3Apr+is%3Aclosed)
 
+[![Code Quality](https://www.code-inspector.com/project/12216/score/svg) ![Code Grade](https://www.code-inspector.com/project/12216/status/svg)](https://frontend.code-inspector.com/public/project/12216/JKQtPlotter/dashboard)
+
 ![EXAMPLES-Page](./screenshots/examplesbanner.png)
 
 ## Main Features
-- 2D Plotter class (JKQTPlotter)
+- 2D Plotter widget class (JKQTPlotter)
   - high-quality plotting
-  - no other dependencies than Qt >=4.7 (compatible with Qt 5.xx)
+  - no other dependencies than Qt >= 5.0
   - highly customizable axes/grids (linear/log, date/time, custom ticks ...)
   - integrated LaTeX parser (pure C++, no dependencies) to render mathematical equations in axis labels, ticks, ...
   - extensive user-interactions pre-programmed (several zooming modes, selecting regions, custom context menus, switch graph visibility, ...)

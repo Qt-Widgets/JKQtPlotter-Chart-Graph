@@ -18,31 +18,14 @@ The first example shows how to plot a C++ inline function:
 In any such plot function, you can also use parameters, provided via the second parameter. Usually these are "internal parameters", defined by `func2->setParamsV(p0, p1, ...)`:
 ```.cpp
     JKQTPXFunctionLineGraph* func2=new JKQTPXFunctionLineGraph(plot);
-    func2->setPlotFunctionFunctor([](double x, void* params) {
-        QVector<double>* p=static_cast<QVector<double>*>(params);
-        return p->at(0)*sin(2.0*M_PI*x*p->at(1));
-    });
-    // here we set the parameters p0, p1
+    func2->setPlotFunctionFunctor([](double x, const QVector<double>& p) {
+        return p.at(0)*sin(2.0*JKQTPSTATISTICS_PI*x*p.at(1));
+    });    // here we set the parameters p0, p1
     func2->setParamsV(5, 0.2);
     func2->setTitle("C++-inline function with int. params $p_0\\cdot\\sin(x*2.0*\\pi\\cdot p_1)$");
     plot->addGraph(func2);
 ```
 
-... but generally any pointer can be used as parameter (the set by `setParameter(static_cast<void*>(myDataObject))`):
-```.cpp
-    JKQTPXFunctionLineGraph* func3=new JKQTPXFunctionLineGraph(plot);
-    func3->setPlotFunctionFunctor([](double x, void* params) {
-        QMap<QString,double>* p=static_cast<QMap<QString,double>*>(params);
-        return p->value("amplitude")*sin(2.0*M_PI*x*p->value("frequency"));
-    });
-    // here we set the parameters p0, p1
-    QMap<QString,double> params3;
-    params3["amplitude"]=-3;
-    params3["frequency"]=0.3;
-    func3->setParams(&params3);
-    func3->setTitle("C++-inline function with ext. params $p_0\\cdot\\sin(x*2.0*\\pi\\cdot p_1)$");
-    plot->addGraph(func3);
-```
 
 # C++ functors as plot functions
 
@@ -123,5 +106,8 @@ Also see the example [Plotting Parsed Mathematical Functions as Line Graphs](htt
 All examples above use the graph class `JKQTPXFunctionLineGraph`, which plots a function `y=f(x)`. If you want to plot a function `x=f(y)`, you can use the class `JKQTPYFunctionLineGraph` instead. If in the examples above, we exchange all `JKQTPXFunctionLineGraph` for `JKQTPYFunctionLineGraph`, the graphs will be rotated by 90 degree, as all functions are interpreted as `x=f(y)`:
 
 ![functionplot_fy](https://raw.githubusercontent.com/jkriege2/JKQtPlotter/master/screenshots/functionplot_fy.png)
+
+
+This example describes how to draw 1D functions. For an example of how to draw 2D parametric curves `[x,y]=f(t)`, see [examples/evalcurve](https://github.com/jkriege2/JKQtPlotter/tree/master/examples/evalcurve) .
 
 

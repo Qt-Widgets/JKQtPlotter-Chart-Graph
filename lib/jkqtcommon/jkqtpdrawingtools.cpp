@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2008-2019 Jan W. Krieger (<jan@jkrieger.de>)
+Copyright (c) 2008-2020 Jan W. Krieger (<jan@jkrieger.de>)
 
     
 
@@ -241,166 +241,112 @@ JKQTPGraphSymbols String2JKQTPGraphSymbols(const QString& pos)  {
 
 
 
-
-QPolygonF jkqtpRotateRect(QRectF r, double angle) {
-    QPolygonF p;
-    QMatrix m;
-    m.rotate(angle);
-    p.append(m.map(r.bottomLeft()));
-    p.append(m.map(r.bottomRight()));
-    p.append(m.map(r.topRight()));
-    p.append(m.map(r.topLeft()));
-    return p;
-}
-
-
-
-;
-
-
-
-QVector<QPointF> JKQTPDrawEllipse(double x, double y, double a, double b, double angle_start, double angle_end, double alpha, int controlPoints, QPointF* x_start, QPointF* x_end) {
-    QVector<QPointF> result;
-    double start=angle_start*JKQTPSTATISTICS_PI/180.0;
-    double stop=angle_end*JKQTPSTATISTICS_PI/180.0;
-    double step=(stop-start)/static_cast<double>(controlPoints);
-    while (fabs(stop-start)/step<10) step=step/2.0;
-    double sina=sin(1.0*alpha/180.0*JKQTPSTATISTICS_PI);
-    double cosa=cos(1.0*alpha/180.0*JKQTPSTATISTICS_PI);
-    QPointF xp(x+a*cos(start)*cosa-b*sin(start)*sina, y+a*cos(start)*sina+b*sin(start)*cosa);
-    result.append(xp);
-    if (x_start) *x_start = xp;
-    double t=start+step;
-    for (int i=1; i<controlPoints; i++) {
-        double cost=cos(t);
-        double sint=sin(t);
-        xp=QPointF( x+a*cost*cosa-b*sint*sina,  y+a*cost*sina+b*sint*cosa);
-        result.append(xp);
-        //std::cout<<"t="<<t/JKQTPSTATISTICS_PI*180.0<<":  sin(al)="<<sina<<" cos(al)="<<cosa<<" sin(t)="<<sint<<" cos(t)="<<cost<<" a="<<a<<" b="<<b<<": ("<<x+a*cost*cosa-b*sint*sina<<", "<<y+a*cost*sina+b*sint*cosa<<") = ("<<xp.x()<<", "<<xp.y()<<") \n";
-        t=t+step;
-    }
-    if (x_end) *x_end=xp;
-    return result;
-}
-
-
-
-
-
-QVector<QPolygonF> JKQTPUnifyLinesToPolygons(const QVector<QLineF> &lines, double distanceThreshold, int searchMaxSurroundingElements)
-{
-#ifdef JKQTBP_AUTOTIMER
-    JKQTPAutoOutputTimer jkaat(QString("JKQTPUnifyLinesToPolygons(%1, %2, %3)").arg(lines.size()).arg(distanceThreshold).arg(searchMaxSurroundingElements));
-#endif
-    QList<QPolygonF> res;
-    res.reserve(lines.size());
-
-    // first simply convert all lines to polygons
-    for (const QLineF& l: lines) {
-        QPolygonF p;
-        p<<l.p1()<<l.p2();
-        res<<p;
-    }
-    //return res.toVector();
-    // clean the resulting polygon
-    for (QPolygonF& p: res) {
-        p=JKQTPCleanPolygon(p, distanceThreshold);
-    }
-
-    int maxIterations=100;
-    int iter=0;
-    bool found=true;
-    //qDebug()<<"   iter "<<-1<<" -> polygons start "<<res.size();
-    while (found && iter<maxIterations) {
-        found=false;
-        int i=0;
-        while (i<res.size()-1) {
-            int j=i+1;
-            while (j<res.size() && j<i+searchMaxSurroundingElements) {
-                if (jkqtp_distance(res[i].first(),res[j].first())<=distanceThreshold) {
-                    found=true;
-                    for (int k=1; k<res[j].size(); k++) {
-                        res[i].prepend(res[j].at(k));
-                    }
-                    res.removeAt(j);
-                } else if (jkqtp_distance(res[i].first(),res[j].last())<=distanceThreshold) {
-                    found=true;
-                    for (int k=res[j].size()-2; k>=0; k--) {
-                        res[i].prepend(res[j].at(k));
-                    }
-                    res.removeAt(j);
-                } else if (jkqtp_distance(res[i].last(),res[j].first())<=distanceThreshold) {
-                    found=true;
-                    for (int k=1; k<res[j].size(); k++) {
-                        res[i].append(res[j].at(k));
-                    }
-                    res.removeAt(j);
-                } else if (jkqtp_distance(res[i].last(),res[j].last())<=distanceThreshold) {
-                    found=true;
-                    for (int k=res[j].size()-2; k>=0; k--) {
-                        res[i].append(res[j].at(k));
-                    }
-                    res.removeAt(j);
-                } else {
-                    j++;
-                }
-            }
-            res[i]=JKQTPCleanPolygon(res[i], distanceThreshold);
-            i++;
-        }
-        //qDebug()<<"   iter "<<iter<<" -> polygons left "<<res.size();
-        iter++;
-    }
-
-    return res.toVector();
-}
-
-QPolygonF JKQTPCleanPolygon(const QPolygonF &poly, double distanceThreshold)
-{
-    if (poly.size()<=2) return poly;
-    QPolygonF p;
-    QPointF p0=poly[0];
-    p<<p0;
-    QVector<QPointF> inbetween;
-    int i=1;
-    while (i<poly.size()) {
-        if ((jkqtp_distance(poly[i], p0)<=distanceThreshold)) {
-            inbetween<<poly[i];
-        } else {
-            QPointF pmean(0,0);
-            if (inbetween.size()>0) {
-                for (const QPointF& pi: inbetween) {
-                    pmean=QPointF(pmean.x()+pi.x()/static_cast<double>(inbetween.size()), pmean.y()+pi.y()/static_cast<double>(inbetween.size()));
-                }
-            } else {
-                pmean=poly[i];
-            }
-            p<<pmean;
-            p0=pmean;
-            inbetween.clear();
-        }
-        i++;
-    }
-
-    // maybe we have something left to add
-    QPointF pmean(0,0);
-    if (inbetween.size()>0) {
-        for (const QPointF& pi: inbetween) {
-            pmean=QPointF(pmean.x()+pi.x()/static_cast<double>(inbetween.size()), pmean.y()+pi.y()/static_cast<double>(inbetween.size()));
-        }
-    } else {
-        pmean=p0;
-    }
-
-    if (jkqtp_distance(pmean, poly.last())>distanceThreshold) {
-        p<<pmean<<poly.last();
-    } else {
-        if (p.last()!=poly.last()) p<<poly.last();
-    }
-    return p;
-}
-
 void JKQTPPlotSymbol(QPaintDevice &paintDevice, double x, double y, JKQTPGraphSymbols symbol, double size, double symbolLineWidth, QColor color, QColor fillColor) {
     JKQTPEnhancedPainter p(&paintDevice);
     JKQTPPlotSymbol(p, x, y, symbol, size, symbolLineWidth, color, fillColor);
 }
+
+QString JKQTPLineDecoratorStyle2String(JKQTPLineDecoratorStyle pos)
+{
+    switch(pos) {
+    case JKQTPNoDecorator: return "none";
+    case JKQTPArrow: return "arrow";
+    case JKQTPFilledArrow: return "filled_arrow";
+    case JKQTPTriangleDecorator: return "triangle";
+    case JKQTPFilledTriangleDecorator: return "filled_triangle";
+    case JKQTPTriangleDecoratorAndBar: return "triangle_bar";
+    case JKQTPFilledTriangleDecoratorAndBar: return "filled_triangle_bar";
+    case JKQTPDoubleArrow: return "double_arrow";
+    case JKQTPFilledDoubleArrow: return "filled_double_arrow";
+    case JKQTPCircleDecorator: return "circle";
+    case JKQTPFilledCircleDecorator: return "filled_circle";
+    case JKQTPRectangleDecorator: return "rectangle";
+    case JKQTPFilledRectangleDecorator: return "filled_rectangle";
+    case JKQTPArrowAndBar: return "arrow_bar";
+    case JKQTPDoubleArrowAndBar: return "double_arrow_bar";
+    case JKQTPBarDecorator: return "bar";
+    case JKQTPBracketDecorator: return "bracket";
+    case JKQTPHalfBarDecorator: return "half_bar";
+    case JKQTPSkewedBarDecorator: return "skewed_bar";
+    case JKQTPHarpoonDecorator: return "harpoon";
+    case JKQTPHarpoonDecoratorAndBar: return "harpoon_bar";
+    case JKQTPDiamondDecorator: return "diamond";
+    case JKQTPFilledDiamondDecorator: return "filled_diamond";
+    case JKQTPDiamondDecoratorAndBar: return "diamond_bar";
+    case JKQTPFilledDiamondDecoratorAndBar: return "filled_diamond_bar";
+    case JKQTPLineDecoratorCount: JKQTPLineDecoratorStyle2String(JKQTPMaxLineDecoratorID);
+    }
+    return "";
+}
+
+QString JKQTPLineDecoratorStyle2NameString(JKQTPLineDecoratorStyle pos)
+{
+    switch(pos) {
+    case JKQTPNoDecorator: return QObject::tr("no decorator");
+    case JKQTPArrow: return QObject::tr("arrow");
+    case JKQTPFilledArrow: return QObject::tr("filled arrow");
+    case JKQTPTriangleDecorator: return QObject::tr("triangle");
+    case JKQTPFilledTriangleDecorator: return QObject::tr("filled triangle");
+    case JKQTPTriangleDecoratorAndBar: return QObject::tr("triangle, with bar");
+    case JKQTPFilledTriangleDecoratorAndBar: return QObject::tr("filled triangle, with bar");
+    case JKQTPDoubleArrow: return QObject::tr("double arrow");
+    case JKQTPFilledDoubleArrow: return QObject::tr("filled double arrow");
+    case JKQTPCircleDecorator: return QObject::tr("circle");
+    case JKQTPFilledCircleDecorator: return QObject::tr("filled circle");
+    case JKQTPRectangleDecorator: return QObject::tr("rectangle");
+    case JKQTPFilledRectangleDecorator: return QObject::tr("filled rectangle");
+    case JKQTPArrowAndBar: return QObject::tr("arrow, with bar");
+    case JKQTPDoubleArrowAndBar: return QObject::tr("double arrow, with bar");
+    case JKQTPBarDecorator: return QObject::tr("full bar");
+    case JKQTPHalfBarDecorator: return QObject::tr("half bar");
+    case JKQTPSkewedBarDecorator: return QObject::tr("skewed bar");
+    case JKQTPHarpoonDecorator: return QObject::tr("harpoon");
+    case JKQTPHarpoonDecoratorAndBar: return QObject::tr("harpoon, with bar");
+    case JKQTPDiamondDecorator: return QObject::tr("diamond");
+    case JKQTPFilledDiamondDecorator: return QObject::tr("filled diamond");
+    case JKQTPDiamondDecoratorAndBar: return QObject::tr("diamond, with bar");
+    case JKQTPFilledDiamondDecoratorAndBar: return QObject::tr("filled diamond, with bar");
+    case JKQTPBracketDecorator: return QObject::tr("bracket");
+    case JKQTPLineDecoratorCount: JKQTPLineDecoratorStyle2NameString(JKQTPMaxLineDecoratorID);
+    }
+    return "";
+}
+
+JKQTPLineDecoratorStyle String2JKQTPLineDecoratorStyle(const QString &pos)
+{
+    QString s=pos.trimmed().toLower();
+    if (s=="line_decorator_none"||s=="decorator_none"||s=="no_line_decorator"||s=="no_decorator"||s=="none"||s=="-") return JKQTPNoDecorator;
+    if (s=="arrow"||s=="simple_arrow"||s=="arr"||s=="->"||s=="<-"||s==">"||s=="<") return JKQTPArrow;
+    if (s=="filled_arrow") return JKQTPFilledArrow;
+    if (s=="triangle") return JKQTPTriangleDecorator;
+    if (s=="filled_triangle") return JKQTPFilledTriangleDecorator;
+    if (s=="triangle_bar") return JKQTPTriangleDecoratorAndBar;
+    if (s=="filled_triangle_bar") return JKQTPFilledTriangleDecoratorAndBar;
+    if (s=="double_arrow") return JKQTPDoubleArrow;
+    if (s=="filled_double_arrow") return JKQTPFilledDoubleArrow;
+    if (s=="circle") return JKQTPCircleDecorator;
+    if (s=="filled_circle") return JKQTPFilledCircleDecorator;
+    if (s=="rectangle") return JKQTPRectangleDecorator;
+    if (s=="filled_rectangle") return JKQTPFilledRectangleDecorator;
+    if (s=="arrow_bar") return JKQTPArrowAndBar;
+    if (s=="double_arrow_bar") return JKQTPDoubleArrowAndBar;
+    if (s=="bar" || s=="vertical_line") return JKQTPBarDecorator;
+    if (s=="half_bar") return JKQTPHalfBarDecorator;
+    if (s=="skewed_bar") return JKQTPSkewedBarDecorator;
+    if (s=="harpoon") return JKQTPHarpoonDecorator;
+    if (s=="harpoon_bar") return JKQTPHarpoonDecoratorAndBar;
+    if (s=="diamond") return JKQTPDiamondDecorator;
+    if (s=="filled_diamond") return JKQTPFilledDiamondDecorator;
+    if (s=="diamond_bar") return JKQTPDiamondDecoratorAndBar;
+    if (s=="filled_diamond_bar") return JKQTPFilledDiamondDecoratorAndBar;
+    if (s=="bracket") return JKQTPBracketDecorator;
+    return JKQTPNoDecorator;
+}
+
+double JKQTPLineDecoratorStyleCalcDecoratorSize(double line_width, double decoratorSizeFactor)
+{
+    if (line_width<=0.75) return 3.0+(decoratorSizeFactor*0.75-3.0)/(0.75*0.75)*line_width*line_width;
+    if (line_width<=1.0) return decoratorSizeFactor*line_width;
+    return decoratorSizeFactor*pow(line_width, 0.7);
+}
+
