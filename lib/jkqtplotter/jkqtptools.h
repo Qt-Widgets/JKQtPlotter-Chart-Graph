@@ -57,10 +57,21 @@ class JKQTPEnhancedPainter; // forward
 class JKQTBasePlotter; // forward declaration
 
 
+/** \brief used to specify teh type of graph when calling getPlotStyle()
+ * \ingroup jkqtpplottersupprt
+ */
+enum class JKQTPPlotStyleType {
+    Default, /*!< general graphs */
+    Barchart, /*!< barchart-type graphs */
+    Boxplot, /*!< boxplot-type graphs */
+    Filled, /*!< filled graphs  */
+    Impulses, /*!< impulse-type graphs  */
+    Geometric, /*!< geometric elements (e.g. rectangles, circles, lines, ...) */
+    Annotation, /*!< annotation elements */
+};
 
 /** \brief Styles in which to mark single positions during user actions in JKQTPlotter
  * \ingroup jkqtpplottersupprt
-
  */
 enum JKQTPUserActionMarkerType {
     jkqtpuamtCircle=0, /*!< \brief a small circle around the position to mark */
@@ -212,24 +223,50 @@ typedef JKQTPMouseDoubleClickActionsHashMap::const_iterator JKQTPMouseDoubleClic
 
  */
 enum JKQTPColorDerivationMode {
+    JKQTPFFCMFullyTransparentColor, /*!< \brief fully transparent color */
+    JKQTPFFCMNoColor=JKQTPFFCMFullyTransparentColor, /*!< \brief fully transparent color */
+    JKQTPFFCMBlack, /*!< \brief fill with black */
+    JKQTPFFCMGrey75, /*!< \brief fill with 75% grey */
+    JKQTPFFCMGrey50, /*!< \brief fill with 50% grey */
+    JKQTPFFCMGrey25, /*!< \brief fill with 25% grey */
+    JKQTPFFCMWhite, /*!< \brief fill with white */
+    JKQTPFFCMBlackTransparent, /*!< \brief fill with black, slightly transparent */
+    JKQTPFFCMGrey75Transparent, /*!< \brief fill with 75% grey, slightly transparent */
+    JKQTPFFCMGrey50Transparent, /*!< \brief fill with 50% grey, slightly transparent */
+    JKQTPFFCMGrey25Transparent, /*!< \brief fill with 25% grey, slightly transparent */
+    JKQTPFFCMWhiteTransparent, /*!< \brief fill with white, slightly transparent */
     JKQTPFFCMSameColor, /*!< \brief fill with the same color */
+    JKQTPFFCMSameNonTransparentColor, /*!< \brief fill with the same color, but remove any transparency (if any) */
+    JKQTPFFCMSameMoreTransparentColor, /*!< \brief fill with the a partly transparent color */
+    JKQTPFFCMSameEvenMoreTransparentColor, /*!< \brief fill with the a more transparent color than JKQTPFFCMMoreTransparentColor */
+    JKQTPFFCMSameLessTransparentColor, /*!< \brief fill with the a partly transparent color */
+    JKQTPFFCMSameEvenLessTransparentColor, /*!< \brief fill with the a more transparent color than JKQTPFFCMLessTransparentColor*/
     JKQTPFFCMInvertedColor, /*!< \brief fill with the inverted color */
+    JKQTPFFCMInvertedTransparentColor, /*!< \brief fill with the inverted color, slightly transparent */
+    JKQTPFFCMInvertedNonTransparentColor, /*!< \brief fill with the inverted color, non-transparent (even if the basecolor had some transparency) */
     JKQTPFFCMLighterColor, /*!< \brief fill with the a lighter color */
     JKQTPFFCMEvenLighterColor, /*!< \brief fill with the an even lighter color  than JKQTPFFCMLighterColor */
     JKQTPFFCMDarkerColor, /*!< \brief fill with the a darker color */
     JKQTPFFCMEvenDarkerColor, /*!< \brief fill with the an even darker color than JKQTPFFCMDarkerColor */
-    JKQTPFFCMMoreTransparentColor, /*!< \brief fill with the a partly transparent color */
-    JKQTPFFCMEvenMoreTransparentColor, /*!< \brief fill with the a more transparent color than JKQTPFFCMMoreTransparentColor */
-    JKQTPFFCMLessTransparentColor, /*!< \brief fill with the a partly transparent color */
-    JKQTPFFCMEvenLessTransparentColor, /*!< \brief fill with the a more transparent color than JKQTPFFCMLessTransparentColor*/
+    JKQTPFFCMLighterAndTransparentColor, /*!< \brief fill with the a lighter color, that is in addition a bit transparent */
+    JKQTPFFCMEvenLighterAndTransparentColor, /*!< \brief fill with the an even lighter color  than JKQTPFFCMLighterColor, that is in addition a bit transparent */
+    JKQTPFFCMDarkerAndTransparentColor, /*!< \brief fill with the a darker color, that is in addition a bit transparent */
+    JKQTPFFCMEvenDarkerAndTransparentColor, /*!< \brief fill with the an even darker color than JKQTPFFCMDarkerColor, that is in addition a bit transparent */
+    JKQTPFFCMLighterAndNonTransparentColor, /*!< \brief fill with the a lighter color, that is non-transparent (even if the basecolor had some transparency)  */
+    JKQTPFFCMEvenLighterAndNonTransparentColor, /*!< \brief fill with the an even lighter color  than JKQTPFFCMLighterColor, that is non-transparent (even if the basecolor had some transparency)  */
+    JKQTPFFCMDarkerAndNonTransparentColor, /*!< \brief fill with the a darker color, that is non-transparent (even if the basecolor had some transparency)  */
+    JKQTPFFCMEvenDarkerAndNonTransparentColor, /*!< \brief fill with the an even darker color than JKQTPFFCMDarkerColor, that is non-transparent (even if the basecolor had some transparency)  */
 };
 
 /** \brief use a JKQTPColorDerivationMode to derive a color from \a col as specified
  *  \ingroup jkqtpplotter_styling
  *
+ *  \param mode the mode of how to modify the given color \a basecolor
+ *  \param basecolor the color in which to base the derivation
+ *
  *  \see JKQTPColorDerivationMode
  */
-JKQTPLOTTER_LIB_EXPORT QColor JKQTPGetDerivedColor(JKQTPColorDerivationMode mode, const QColor& col);
+JKQTPLOTTER_LIB_EXPORT QColor JKQTPGetDerivedColor(JKQTPColorDerivationMode mode, const QColor& basecolor);
 
 /** \brief construct a QColor, based on the given \a color, but with alpha set to the specified value \a alphaF
  *  \ingroup jkqtpplotter_styling

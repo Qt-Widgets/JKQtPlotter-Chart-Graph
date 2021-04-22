@@ -25,7 +25,6 @@ set(SOURCES
     jkqtpbaseelements.cpp
     jkqtpbaseplotter.cpp
     jkqtpdatastorage.cpp
-    jkqtpoverlaysbase.cpp
     jkqtpgraphsbase.cpp
     jkqtpgraphsbaseerrors.cpp
     jkqtpgraphsbasestylingmixins.cpp
@@ -36,13 +35,16 @@ set(SOURCES
     jkqtpcoordinateaxes.cpp
     jkqtpcoordinateaxesstyle.cpp
     jkqtpimagetools.cpp
+    jkqtpgraphsbasestyle.cpp
     )
 set(SOURCES_GRAPHS
     graphs/jkqtpscatter.cpp
     graphs/jkqtprange.cpp
     graphs/jkqtpspecialline.cpp
+    graphs/jkqtpbarchartbase.cpp 
     graphs/jkqtpbarchart.cpp 
     graphs/jkqtpboxplot.cpp 
+    graphs/jkqtpboxplotbase.cpp 
     graphs/jkqtpboxplotstylingmixins.cpp 
     graphs/jkqtpevaluatedfunctionbase.cpp 
     graphs/jkqtpevaluatedfunction.cpp 
@@ -65,9 +67,6 @@ set(SOURCES_GRAPHS
     graphs/jkqtpstatisticsadaptors.cpp 
     graphs/jkqtpevaluatedparametriccurve.cpp 
     )
-set(SOURCES_OVERLAYS
-    overlays/jkqtpbasicoverlays.cpp
-)
 set(SOURCES_GUI
     gui/jkqtpcomboboxes.cpp
     gui/jkqtpenhancedspinboxes.cpp
@@ -82,7 +81,6 @@ set(HEADERS
     jkqtpbaseelements.h
     jkqtpbaseplotter.h
     jkqtpdatastorage.h
-    jkqtpoverlaysbase.h
     jkqtpgraphsbase.h
     jkqtpgraphsbaseerrors.h
     jkqtpgraphsbasestylingmixins.h
@@ -93,10 +91,12 @@ set(HEADERS
     jkqtpcoordinateaxes.h
     jkqtpcoordinateaxesstyle.h
     jkqtpimagetools.h
+    jkqtpgraphsbasestyle.h
     jkqtplotter_imexport.h
 )
 set(HEADERS_GRAPHS
     graphs/jkqtpboxplot.h
+    graphs/jkqtpboxplotbase.h
     graphs/jkqtpboxplotstylingmixins.h
     graphs/jkqtpevaluatedfunctionbase.h
     graphs/jkqtpevaluatedfunction.h
@@ -120,11 +120,9 @@ set(HEADERS_GRAPHS
     graphs/jkqtpscatter.h
     graphs/jkqtprange.h
     graphs/jkqtpspecialline.h
+    graphs/jkqtpbarchartbase.h
     graphs/jkqtpbarchart.h
     graphs/jkqtpevaluatedparametriccurve.h
-)
-set(HEADERS_OVERLAY
-    overlays/jkqtpbasicoverlays.h
 )
 set(HEADERS_GUI
     gui/jkqtpcomboboxes.h
@@ -143,7 +141,7 @@ include(CMakePackageConfigHelpers)
 
 
 if(JKQtPlotter_BUILD_SHARED_LIBS)
-    add_library(${libsh_name} SHARED  ${SOURCES} ${SOURCES_GRAPHS} ${SOURCES_GUI} ${SOURCES_OVERLAYS} ${HEADERS} ${HEADERS_GRAPHS} ${HEADERS_GUI} ${HEADERS_OVERLAYS} ${RESOURCES})
+    add_library(${libsh_name} SHARED  ${SOURCES} ${SOURCES_GRAPHS} ${SOURCES_GUI} ${HEADERS} ${HEADERS_GRAPHS} ${HEADERS_GUI} ${RESOURCES})
     set_property(TARGET ${libsh_name} PROPERTY VERSION "${PROJECT_VERSION}")
     set_property(TARGET ${libsh_name} PROPERTY OUTPUT_NAME  "${libsh_name_decorated}")
     target_link_libraries(${libsh_name} PUBLIC Qt5::Core Qt5::Gui Qt5::Widgets Qt5::PrintSupport Qt5::Svg Qt5::Xml JKQTCommonSharedLib JKQTMathTextSharedLib)
@@ -171,7 +169,7 @@ if(JKQtPlotter_BUILD_SHARED_LIBS)
 endif()
 
 if(JKQtPlotter_BUILD_STATIC_LIBS)
-    add_library(${lib_name} STATIC   ${SOURCES} ${SOURCES_GRAPHS} ${SOURCES_GUI} ${SOURCES_OVERLAYS} ${HEADERS} ${HEADERS_GRAPHS} ${HEADERS_GUI} ${HEADERS_OVERLAYS} ${RESOURCES})
+    add_library(${lib_name} STATIC   ${SOURCES} ${SOURCES_GRAPHS} ${SOURCES_GUI} ${HEADERS} ${HEADERS_GRAPHS} ${HEADERS_GUI} ${RESOURCES})
     set_property(TARGET ${lib_name} PROPERTY VERSION "${PROJECT_VERSION}")
     set_property(TARGET ${lib_name} PROPERTY OUTPUT_NAME  "${lib_name_decorated}")
     set_property(TARGET ${lib_name} PROPERTY CXX_STANDARD 11)
@@ -252,12 +250,10 @@ install(FILES ${HEADERS_GUI}
 		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${libIncludeSubdir}/gui
 		COMPONENT Headers)
 
-install(FILES ${HEADERS_OVERLAY}
-		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${libIncludeSubdir}/overlays
-		COMPONENT Headers)
-
-configure_file(${CMAKE_SOURCE_DIR}/readme.txt.in ${CMAKE_CURRENT_BINARY_DIR}/${lib_name}_Readme.txt @ONLY)
+configure_file(${PROJECT_SOURCE_DIR}/readme.txt.in ${CMAKE_CURRENT_BINARY_DIR}/${lib_name}_Readme.txt @ONLY)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${lib_name}_Readme.txt" DESTINATION doc/JKQtPlotter )
-install(FILES "${CMAKE_SOURCE_DIR}/LICENSE" DESTINATION doc/JKQtPlotter RENAME "${lib_name}_LICENSE.txt" )
+install(FILES "${PROJECT_SOURCE_DIR}/LICENSE" DESTINATION doc/JKQtPlotter RENAME "${lib_name}_LICENSE.txt" )
 
 
+#get_target_property(printsupp_inc Qt5::PrintSupport INTERFACE_INCLUDE_DIRECTORIES)
+#message("Qt5::PrintSupport::INTERFACE_INCLUDE_DIRECTORIES = ${printsupp_inc}")

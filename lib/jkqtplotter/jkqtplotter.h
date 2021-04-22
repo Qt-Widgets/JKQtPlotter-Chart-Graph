@@ -650,6 +650,9 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPlotter: public QWidget {
         /** \brief returns a pointer to the datastore used by this object */
         inline JKQTPDatastore* getDatastore() { return plotter->getDatastore(); }
 
+        /** \brief returns a pointer to the datastore used by this object */
+        inline const JKQTPDatastore* getDatastore() const { return plotter->getDatastore(); }
+
         /** \brief tells the plotter object to use the given external datastore.
          *
          * If the current datastore is internally managed, this method will free that object and use the supplied datastore
@@ -1034,14 +1037,6 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPlotter: public QWidget {
         /** \brief update the plot and the overlays */
         void redrawPlot();
 
-        /** \brief replot overlays only (use redrawPlot() to replot the plot and the overlays)
-         *
-         * You can use this function, if you only changed the overlays but not the graphs in this plotter.
-         * Then only the overlas are redrawn and the old (saved) image of the graphs and the coordinate syste,
-         * is used as a base. This is significantly faster than redrawing the whole plot.
-         */
-        void redrawOverlays();
-
         /** \brief allows to activate/deactivate toolbar buttons that can activate certain mouse drag actions
          *
          *  \see getActMouseLeftAsDefault(), getActMouseLeftAsRuler(), getActMouseLeftAsToolTip()
@@ -1324,6 +1319,16 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPlotter: public QWidget {
          */
         void zoomChangedLocally(double newxmin, double newxmax, double newymin, double newymax, JKQTPlotter* sender);
 
+        /** \brief signal: emitted whenever the widget is resized
+         *
+         * \param new_width new width of the widget (in pixels)
+         * \param new_height new height of the widget (in pixels)
+         * \param sender JKQTPlotter sending this event
+         *
+         * This signal is designed to be connected to these slots: synchronizeXAxis(), synchronizeYAxis(), synchronizeXYAxis()
+         */
+        void widgetResized(int new_width, int new_height, JKQTPlotter* sender);
+
         /** \brief emitted when the mouse action JKQTPlotter::ScribbleEvents and a click event from the mouse occurs inside the plot,
          *         or the mouse moved while the left button is pressed down
          *
@@ -1497,9 +1502,6 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPlotter: public QWidget {
 
         /** \brief this stores the currently displayed plot */
         QImage image;
-
-        /** \brief this stores the currently displayed plot */
-        QImage imageNoOverlays;
 
         /** \brief this can be used when drawing a zoom rectangle to store an unchanged
          *         copy of the currently displayed image.
@@ -1719,6 +1721,8 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPlotter: public QWidget {
 
 };
 
+QT_BEGIN_NAMESPACE
+
 /** \brief qHash-variant used by JKQTPlotter
  *  \internal
  *  \ingroup jkqtpplottersupprt
@@ -1745,5 +1749,7 @@ template<>
 inline uint qHash(const Qt::KeyboardModifiers &key, uint /*seed*/ ) noexcept(noexcept(qHash(key)))  {
     return static_cast<uint>(key);
 }
+
+QT_END_NAMESPACE
 
 #endif // JKQTPLOTTER_H

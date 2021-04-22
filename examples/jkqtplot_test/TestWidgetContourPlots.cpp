@@ -69,7 +69,7 @@ TestWidgetContourPlots::TestWidgetContourPlots(QWidget *parent) :
     densityplot->setHeight(1.1);
     densityplot->setNx(histAlexNx);
     densityplot->setNy(histAlexNy);
-    densityplot->setPalette(JKQTPMathImageINVERTED_OCEAN);
+    densityplot->setColorPalette(JKQTPMathImageINVERTED_OCEAN);
     densityplot->setImageColumn(colHist2D);
     densityplot->setInfColor(Qt::transparent);
     densityplot->setNanColor(Qt::transparent);
@@ -83,7 +83,7 @@ TestWidgetContourPlots::TestWidgetContourPlots(QWidget *parent) :
     densityplot->setHeight(1.1);
     densityplot->setNx(histAlexNx);
     densityplot->setNy(histAlexNy);
-    densityplot->setPalette(JKQTPMathImageINVERTED_OCEAN);
+    densityplot->setColorPalette(JKQTPMathImageINVERTED_OCEAN);
     densityplot->setImageColumn(colHist2D);
     densityplot->setTitle("density plot");
     plotContour->addGraph(densityplot);
@@ -101,7 +101,7 @@ TestWidgetContourPlots::TestWidgetContourPlots(QWidget *parent) :
     cp->setNx(histAlexNx);
     cp->setNy(histAlexNy);
     cp->setImageColumn(colHist2D);
-//    cp->setPalette(JKQTPMathImageINVERTED_OCEAN);
+//    cp->setColorPalette(JKQTPMathImageINVERTED_OCEAN);
     cp->setContourLevels(levels);
     cp->setTitle("contour plot");
     plotContour->addGraph(cp);

@@ -33,8 +33,11 @@ jkqtmathtext_simpletest.depends = jkqtmathtextlib
 jkqtmathtext_test.subdir = examples/jkqtmathtext_test
 jkqtmathtext_test.depends = jkqtplotterlib
 
-jkqtplotter_simpletest.file = examples/simpletest/jkqtplotter_simpletest.pro
+jkqtplotter_simpletest.file = examples/simpletest/simpletest.pro
 jkqtplotter_simpletest.depends = jkqtplotterlib
+
+jkqtplot_test.file = examples/jkqtplot_test/jkqtplot_test.pro
+jkqtplot_test.depends = jkqtplotterlib
 
 jkqtfastplotter_test.file = $$PWD/examples/jkqtfastplotter_test/jkqtfastplotter_test.pro
 jkqtfastplotter_test.depends = jkqtfastplotterlib
@@ -52,41 +55,42 @@ defineTest(addSimpleTest) {
     export (SUBDIRS)
 }
 
+addSimpleTest(advplotstyling)
 addSimpleTest(barchart)
+addSimpleTest(boxplot)
+addSimpleTest(contourplot)
+addSimpleTest(datastore)
+addSimpleTest(datastore_groupedstat)
+addSimpleTest(datastore_iterators)
+addSimpleTest(datastore_regression)
+addSimpleTest(datastore_statistics)
+addSimpleTest(datastore_statistics_2d)
 addSimpleTest(dateaxes)
 addSimpleTest(errorbarstyles)
+addSimpleTest(evalcurve)
+addSimpleTest(filledgraphs)
+addSimpleTest(functionplot)
+addSimpleTest(geo_arrows)
+addSimpleTest(geo_simple)
+addSimpleTest(geometric)
 addSimpleTest(imageplot)
 addSimpleTest(imageplot_modifier)
+addSimpleTest(imageplot_nodatastore)
+addSimpleTest(impulsesplot)
 addSimpleTest(logaxes)
+addSimpleTest(mandelbrot)
+addSimpleTest(parametriccurve)
+addSimpleTest(paramscatterplot)
+addSimpleTest(paramscatterplot_image)
+addSimpleTest(parsedfunctionplot)
+addSimpleTest(rgbimageplot)
+addSimpleTest(rgbimageplot_qt)
+addSimpleTest(speed)
 addSimpleTest(stackedbars)
 addSimpleTest(symbols_and_errors)
 addSimpleTest(symbols_and_styles)
-addSimpleTest(filledgraphs)
-addSimpleTest(speed)
-addSimpleTest(rgbimageplot)
-addSimpleTest(rgbimageplot_qt)
-addSimpleTest(impulsesplot)
-addSimpleTest(paramscatterplot)
-addSimpleTest(paramscatterplot_image)
-addSimpleTest(parametriccurve)
-addSimpleTest(parsedfunctionplot)
-addSimpleTest(functionplot)
-addSimpleTest(geometric)
-addSimpleTest(geo_simple)
-addSimpleTest(geo_arrows)
 addSimpleTest(ui)
-addSimpleTest(boxplot)
-addSimpleTest(advplotstyling)
-addSimpleTest(imageplot_nodatastore)
-addSimpleTest(datastore)
-addSimpleTest(datastore_iterators)
-addSimpleTest(datastore_statistics)
-addSimpleTest(datastore_statistics_2d)
-addSimpleTest(datastore_regression)
-addSimpleTest(datastore_groupedstat)
-addSimpleTest(contourplot)
 addSimpleTest(violinplot)
-addSimpleTest(evalcurve)
 #addSimpleTest(rgbimageplot_opencv)
 #addSimpleTest(imageplot_opencv)
 

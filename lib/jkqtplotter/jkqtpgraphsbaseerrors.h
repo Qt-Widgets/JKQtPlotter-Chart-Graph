@@ -49,13 +49,13 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPGraphErrorStyleMixin {
         virtual ~JKQTPGraphErrorStyleMixin()=default;
 
         /** \brief initiaize the error indicator style (from the parent plotter) */
-        void initErrorStyle(JKQTBasePlotter* parent, int &parentPlotStyle);
+        void initErrorStyle(JKQTBasePlotter* parent, int &parentPlotStyle, JKQTPPlotStyleType styletype=JKQTPPlotStyleType::Default);
 
 
 
-        /*! \copydoc m_errorBarCapSize */
+        /** \copydoc m_errorBarCapSize */
         void setErrorBarCapSize(double __value);
-        /*! \copydoc m_errorBarCapSize */
+        /** \copydoc m_errorBarCapSize */
         double getErrorBarCapSize() const;
 
 
@@ -169,20 +169,20 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPGraphErrorStyleMixin {
 
 
         /** \brief constructs a QPen from the error indicator line styling properties */
-        QPen getErrorLinePen(JKQTPEnhancedPainter &painter, JKQTBasePlotter* parent) const;
+        QPen getErrorLinePen(JKQTPEnhancedPainter &painter, const JKQTBasePlotter* parent) const;
         /** \brief constructs a QPen from the error indicator line styling properties, suitable for drawing rectangles with sharp edges */
-        QPen getErrorLinePenForRects(JKQTPEnhancedPainter &painter, JKQTBasePlotter* parent) const;
+        QPen getErrorLinePenForRects(JKQTPEnhancedPainter &painter, const JKQTBasePlotter* parent) const;
 
         /** \brief constructs a QBrush from the error indicator fill styling properties */
-        QBrush getErrorFillBrush(JKQTPEnhancedPainter &painter, JKQTBasePlotter* parent) const;
+        QBrush getErrorFillBrush(JKQTPEnhancedPainter &painter, const JKQTBasePlotter *parent) const;
 
         /** \brief draw error indicators with the parameters defined in this class. The position of the datapoints is
          *         given by the \a xColumn and \a yColumn. It is also possible to specify a datarange. */
-        void intPlotXYErrorIndicators(JKQTPEnhancedPainter& painter, JKQTBasePlotter* parent, JKQTPGraph* parentGraph, int xColumn, int yColumn, int xErrorColumn, int yErrorColumn, JKQTPErrorPlotstyle xErrorStyle, JKQTPErrorPlotstyle yErrorStyle, int xErrorColumnLower=-1, int yErrorColumnLower=-1, bool xErrorSymmetric=true, bool yErrorSymmetric=true, double xrelshift=0, double yrelshift=0.0, const QVector<int> *dataorder=nullptr);
+        void intPlotXYErrorIndicators(JKQTPEnhancedPainter& painter, const JKQTBasePlotter *parent, const JKQTPGraph* parentGraph, int xColumn, int yColumn, int xErrorColumn, int yErrorColumn, JKQTPErrorPlotstyle xErrorStyle, JKQTPErrorPlotstyle yErrorStyle, int xErrorColumnLower=-1, int yErrorColumnLower=-1, bool xErrorSymmetric=true, bool yErrorSymmetric=true, double xrelshift=0, double yrelshift=0.0, const QVector<int> *dataorder=nullptr) const;
         /** \brief this function can be used to set the color of the error indicators automatically
          *
          * return \c true and the colors to use, if applicable, the default implementation returns false */
-        virtual bool intPlotXYErrorIndicatorsGetColor(JKQTPEnhancedPainter& painter, JKQTBasePlotter* parent, JKQTPGraph* parentGraph, int xColumn, int yColumn, int xErrorColumn, int yErrorColumn, JKQTPErrorPlotstyle xErrorStyle, JKQTPErrorPlotstyle yErrorStyle, int index, QColor& errorLineColor, QColor& errorFillColor);
+        virtual bool intPlotXYErrorIndicatorsGetColor(JKQTPEnhancedPainter& painter, const JKQTBasePlotter* parent, const JKQTPGraph *parentGraph, int xColumn, int yColumn, int xErrorColumn, int yErrorColumn, JKQTPErrorPlotstyle xErrorStyle, JKQTPErrorPlotstyle yErrorStyle, int index, QColor& errorLineColor, QColor& errorFillColor) const;
 };
 
 
@@ -198,17 +198,17 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPXGraphErrorData  {
         JKQTPXGraphErrorData();
         virtual ~JKQTPXGraphErrorData()=default;
 
-        /*! \copydoc xErrorSymmetric*/
+        /** \copydoc xErrorSymmetric */
         void setXErrorSymmetric(bool __value);
-        /*! \copydoc xErrorSymmetric */
+        /** \copydoc xErrorSymmetric */
         bool getXErrorSymmetric() const;
-        /*! \copydoc xErrorColumnLower */
+        /** \copydoc xErrorColumnLower */
         int getXErrorColumnLower() const;
-        /*! \copydoc xErrorColumn */
+        /** \copydoc xErrorColumn */
         int getXErrorColumn() const;
-        /*! \copydoc xErrorStyle */
+        /** \copydoc xErrorStyle */
         void setXErrorStyle(JKQTPErrorPlotstyle  __value);
-        /*! \copydoc xErrorStyle */
+        /** \copydoc xErrorStyle */
         JKQTPErrorPlotstyle getXErrorStyle() const;
         /** \copydoc xErrorColumn */
         void setXErrorColumn(int __value);
@@ -227,9 +227,9 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPXGraphErrorData  {
         JKQTPErrorPlotstyle xErrorStyle;
 
         /** \brief returns the upper x-error for the i-th datapoint, read from datastore \a ds */
-        virtual double getXErrorU(int i, JKQTPDatastore* ds) const;
+        virtual double getXErrorU(int i, const JKQTPDatastore* ds) const;
         /** \brief returns the lower x-error for the i-th datapoint, read from datastore \a ds */
-        virtual double getXErrorL(int i, JKQTPDatastore* ds) const;
+        virtual double getXErrorL(int i, const JKQTPDatastore *ds) const;
 
 };
 
@@ -248,21 +248,21 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPYGraphErrorData  {
         JKQTPYGraphErrorData();
         virtual ~JKQTPYGraphErrorData()=default;
 
-        /*! \copydoc yErrorSymmetric */
+        /** \copydoc yErrorSymmetric */
         void setYErrorSymmetric(bool __value);
-        /*! \copydoc yErrorSymmetric */
+        /** \copydoc yErrorSymmetric */
         bool getYErrorSymmetric() const;
-        /*! \copydoc yErrorColumnLower */
+        /** \copydoc yErrorColumnLower */
         int getYErrorColumnLower() const;
-        /*! \copydoc yErrorColumn */
+        /** \copydoc yErrorColumn */
         int getYErrorColumn() const;
-        /*! \copydoc yErrorStyle */
+        /** \copydoc yErrorStyle */
         void setYErrorStyle(JKQTPErrorPlotstyle  __value);
-        /*! \copydoc yErrorStyle */
+        /** \copydoc yErrorStyle */
         JKQTPErrorPlotstyle getYErrorStyle() const;
-        /*! \copydoc yErrorColumn */
+        /** \copydoc yErrorColumn */
         void setYErrorColumn(int __value);
-        /*! \copydoc yErrorColumnLower */
+        /** \copydoc yErrorColumnLower */
         void setYErrorColumnLower(int __value);
 
 
@@ -277,9 +277,9 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPYGraphErrorData  {
         JKQTPErrorPlotstyle yErrorStyle;
 
         /** \brief returns the upper y-error for the i-th datapoint, read from datastore \a ds */
-        virtual double getYErrorU(int i, JKQTPDatastore* ds) const;
+        virtual double getYErrorU(int i, const JKQTPDatastore* ds) const;
         /** \brief returns the lower y-error for the i-th datapoint, read from datastore \a ds */
-        virtual double getYErrorL(int i, JKQTPDatastore* ds) const;
+        virtual double getYErrorL(int i, const JKQTPDatastore* ds) const;
 
 };
 
@@ -301,7 +301,7 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPXGraphErrors: public JKQTPXGraphErrorData, pub
 
     protected:
         /** \brief draws the error indicators */
-        virtual void plotErrorIndicators(JKQTPEnhancedPainter& painter, JKQTBasePlotter* parent, JKQTPGraph* parentGraph, int xColumn, int yColumn, double xrelshift=0, double yrelshift=0.0, const QVector<int> *dataorder=nullptr) ;
+        virtual void plotErrorIndicators(JKQTPEnhancedPainter& painter, const JKQTBasePlotter* parent, const JKQTPGraph* parentGraph, int xColumn, int yColumn, double xrelshift=0, double yrelshift=0.0, const QVector<int> *dataorder=nullptr) const ;
 
 };
 
@@ -323,7 +323,7 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPYGraphErrors: public JKQTPYGraphErrorData, pub
 
     protected:
         /** \brief draws the error indicators */
-        virtual void plotErrorIndicators(JKQTPEnhancedPainter& painter, JKQTBasePlotter* parent, JKQTPGraph* parentGraph, int xColumn, int yColumn, double xrelshift=0, double yrelshift=0.0, const QVector<int> *dataorder=nullptr) ;
+        virtual void plotErrorIndicators(JKQTPEnhancedPainter& painter, const JKQTBasePlotter* parent, const JKQTPGraph* parentGraph, int xColumn, int yColumn, double xrelshift=0, double yrelshift=0.0, const QVector<int> *dataorder=nullptr) const ;
 
 };
 
@@ -347,7 +347,7 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPXYGraphErrors: public JKQTPXGraphErrorData, pu
 
     protected:
         /** \brief draws the error indicators */
-        virtual void plotErrorIndicators(JKQTPEnhancedPainter& painter, JKQTBasePlotter* parent, JKQTPGraph* parentGraph, int xColumn, int yColumn, double xrelshift=0, double yrelshift=0.0, const QVector<int> *dataorder=nullptr) ;
+        virtual void plotErrorIndicators(JKQTPEnhancedPainter& painter, const JKQTBasePlotter* parent, const JKQTPGraph* parentGraph, int xColumn, int yColumn, double xrelshift=0, double yrelshift=0.0, const QVector<int> *dataorder=nullptr) const ;
 
 };
 

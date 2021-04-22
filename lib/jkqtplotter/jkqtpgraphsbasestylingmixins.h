@@ -24,6 +24,7 @@
 #include <QBrush>
 #include "jkqtplotter/jkqtptools.h"
 #include "jkqtplotter/jkqtplotter_imexport.h"
+#include "jkqtplotter/jkqtpbaseplotter.h"
 #include "jkqtcommon/jkqtpdrawingtools.h"
 
 
@@ -31,7 +32,6 @@
 #define jkqtpgraphsbasestylingmixins_H
 
 
-class JKQTBasePlotter; // forward
 class JKQTPlotter; // forward
 
 
@@ -51,7 +51,7 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPGraphLineStyleMixin {
         /** \brief class constructor */
         JKQTPGraphLineStyleMixin();
         /** \brief initiaize the line style (from the parent plotter) */
-        void initLineStyle(JKQTBasePlotter *parent, int &parentPlotStyle);
+        void initLineStyle(JKQTBasePlotter *parent, int &parentPlotStyle, JKQTPPlotStyleType styletype=JKQTPPlotStyleType::Default);
 
         virtual ~JKQTPGraphLineStyleMixin();
 
@@ -161,7 +161,7 @@ public:
     /** \brief class constructor */
     JKQTPGraphDecoratedHeadLineStyleMixin();
     /** \brief initiaize the line style (from the parent plotter) */
-    void initDecoratedHeadLineStyle(JKQTBasePlotter *parent, int &parentPlotStyle);
+    void initDecoratedHeadLineStyle(JKQTBasePlotter *parent, int &parentPlotStyle, JKQTPPlotStyleType styletype=JKQTPPlotStyleType::Default);
 
     virtual ~JKQTPGraphDecoratedHeadLineStyleMixin();
 
@@ -212,7 +212,7 @@ public:
     /** \brief class constructor */
     JKQTPGraphDecoratedLineStyleMixin();
     /** \brief initiaize the line style (from the parent plotter) */
-    void initDecoratedLineStyle(JKQTBasePlotter *parent, int &parentPlotStyle);
+    void initDecoratedLineStyle(JKQTBasePlotter *parent, int &parentPlotStyle, JKQTPPlotStyleType styletype=JKQTPPlotStyleType::Default);
 
     virtual ~JKQTPGraphDecoratedLineStyleMixin();
 
@@ -283,7 +283,7 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPGraphSymbolStyleMixin {
         /** \brief class constructor */
         JKQTPGraphSymbolStyleMixin();
         /** \brief initiaize the symbol style (from the parent plotter) */
-        void initSymbolStyle(JKQTBasePlotter *parent, int &parentPlotStyle);
+        void initSymbolStyle(JKQTBasePlotter *parent, int &parentPlotStyle, JKQTPPlotStyleType styletype=JKQTPPlotStyleType::Default);
 
         virtual ~JKQTPGraphSymbolStyleMixin();
 
@@ -399,7 +399,7 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPGraphFillStyleMixin {
         JKQTPGraphFillStyleMixin();
 
         /** \brief initiaize the fill style (from the parent plotter) */
-        void initFillStyle(JKQTBasePlotter* parent, int &parentPlotStyle);
+        void initFillStyle(JKQTBasePlotter* parent, int &parentPlotStyle, JKQTPPlotStyleType styletype=JKQTPPlotStyleType::Default);
 
         virtual ~JKQTPGraphFillStyleMixin();
 
@@ -446,6 +446,39 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPGraphFillStyleMixin {
 
 
 
+/** \brief This Mix-In class provides setter/getter methods, storage and other facilities for the graph line and fill style
+ *  \ingroup jkqtplotter_basegraphs_stylemixins
+*/
+class JKQTPLOTTER_LIB_EXPORT JKQTPGraphLineAndFillStyleMixin: public JKQTPGraphFillStyleMixin, public JKQTPGraphLineStyleMixin {
+    Q_GADGET
+public:
+    /** \brief class constructor */
+    JKQTPGraphLineAndFillStyleMixin();
+
+    /** \copydoc m_drawLine */
+    void setDrawLine(bool __value);
+    /** \copydoc m_drawLine */
+    bool getDrawLine() const;
+    /** \copydoc m_drawLine */
+    bool doDrawLine() const;
+
+    /** \copydoc m_fillCurve */
+    void setFillCurve(bool __value);
+    /** \copydoc m_fillCurve */
+    bool getFillCurve() const;
+    /** \copydoc m_fillCurve */
+    bool doFillCurve() const;
+
+
+    Q_PROPERTY(bool drawLine MEMBER m_drawLine READ getDrawLine WRITE setDrawLine)
+    Q_PROPERTY(bool fillCurve MEMBER m_fillCurve READ getFillCurve WRITE setFillCurve)
+private:
+    /** \brief indicates whether to draw a line on the circumference of the described area (i.e. along the data points from \c xColumn and \c yColumn as well as \c xColumn and \c yColumn2 or not */
+    bool m_drawLine;
+    /** \brief indicates whether to fill the space between the curve and the x-axis */
+    bool m_fillCurve;
+};
+
 
 
 /*! \brief This Mix-In class provides setter/getter methods, storage and other facilities for text in graphs
@@ -464,7 +497,7 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPGraphTextStyleMixin {
         JKQTPGraphTextStyleMixin(JKQTBasePlotter *parent);
 
         /** \brief initiaize the fill style (from the parent plotter) */
-        void initTextStyle(JKQTBasePlotter* parent, int &parentPlotStyle);
+        void initTextStyle(JKQTBasePlotter* parent, int &parentPlotStyle, JKQTPPlotStyleType styletype=JKQTPPlotStyleType::Default);
 
         virtual ~JKQTPGraphTextStyleMixin();
 

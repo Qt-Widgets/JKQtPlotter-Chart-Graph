@@ -418,10 +418,10 @@ struct JKQTPImageTools {
 
 
 
-        /*! \brief return a list of all globally available LUTs, human-readable/localized form */
+        /** \brief return a list of all globally available LUTs, human-readable/localized form  */
         static QStringList JKQTCOMMON_LIB_EXPORT getPredefinedPalettes();
 
-        /*! \brief return a list of all globally available LUTs, machine-readable form */
+        /** \brief return a list of all globally available LUTs, machine-readable form  */
         static QStringList JKQTCOMMON_LIB_EXPORT getPredefinedPalettesMachineReadable();
 
         /*! \brief convert the palette \a p to a string
@@ -435,22 +435,22 @@ struct JKQTPImageTools {
         static JKQTCOMMON_LIB_EXPORT JKQTPMathImageColorPalette String2JKQTPMathImageColorPalette(const QString& p);
 
 
-        /*! \brief generates a QImage with width \a width and height 1 for the i-th color palette (\a i is based on the list returned by JKQTPImagePlot_getPredefinedPalettes() ) */
+        /** \brief generates a QImage with width \a width and height 1 for the i-th color palette (\a i is based on the list returned by JKQTPImagePlot_getPredefinedPalettes() )  */
         static QImage JKQTCOMMON_LIB_EXPORT GetPaletteImage(int i, int width);
-        /*! \brief generates a QImage with width \a width and height \a height for the i-th color palette (\a i is based on the list returned by JKQTPImagePlot_getPredefinedPalettes() ) */
+        /** \brief generates a QImage with width \a width and height \a height for the i-th color palette (\a i is based on the list returned by JKQTPImagePlot_getPredefinedPalettes() )  */
         static QImage JKQTCOMMON_LIB_EXPORT GetPaletteImage(int i, int width, int height);
-        /*! \brief generates a QImage with width \a width and height 1 for a specific JKQTPMathImageColorPalette */
+        /** \brief generates a QImage with width \a width and height 1 for a specific JKQTPMathImageColorPalette  */
         static QImage JKQTCOMMON_LIB_EXPORT GetPaletteImage(JKQTPMathImageColorPalette palette, int width);
-        /*! \brief generates a QImage with width \a width and height \a height for a specific JKQTPMathImageColorPalette */
+        /** \brief generates a QImage with width \a width and height \a height for a specific JKQTPMathImageColorPalette  */
         static QImage JKQTCOMMON_LIB_EXPORT GetPaletteImage(JKQTPMathImageColorPalette palette, int width, int height);
-        /*! \brief generates a QImage with width \a width and height 1 for a lookup-table \a lut */
+        /** \brief generates a QImage with width \a width and height 1 for a lookup-table \a lut  */
         static QImage JKQTCOMMON_LIB_EXPORT GetPaletteImage(const LUTType& lut, int width);
 
-        /*! \brief generates a QIcon for the i-th color palette (\a i is based on the list returned by JKQTPImagePlot_getPredefinedPalettes() ) */
+        /** \brief generates a QIcon for the i-th color palette (\a i is based on the list returned by JKQTPImagePlot_getPredefinedPalettes() )  */
         static QIcon JKQTCOMMON_LIB_EXPORT GetPaletteIcon(int i) ;
 
 
-        /*! \brief generates a QIcon for a specific JKQTPMathImageColorPalette */
+        /** \brief generates a QIcon for a specific JKQTPMathImageColorPalette  */
         static QIcon JKQTCOMMON_LIB_EXPORT GetPaletteIcon(JKQTPMathImageColorPalette palette) ;
 
     private:
@@ -549,7 +549,7 @@ inline QVector<double> JKQTPImagePlot_BarrayToDVector(const bool* input, int N) 
 
  */
 template <class T>
-inline double JKQTPImagePlot_getImageMin(T* dbl, int width, int height)
+inline double JKQTPImagePlot_getImageMin(const T* dbl, int width, int height)
 {
     if (!dbl || width<=0 || height<=0)
             return 0;
@@ -580,7 +580,7 @@ inline double JKQTPImagePlot_getImageMin(T* dbl, int width, int height)
 
  */
 template <class T>
-inline double JKQTPImagePlot_getImageMax(T* dbl, int width, int height)
+inline double JKQTPImagePlot_getImageMax(const T* dbl, int width, int height)
 {
     if (!dbl || width<=0 || height<=0)
             return 0;
@@ -623,7 +623,7 @@ inline double JKQTPImagePlot_getImageMax(T* dbl, int width, int height)
            leave alpha as it is.
 */
 template <class T>
-inline void JKQTPImagePlot_array2RGBimage(T* dbl_in, int width, int height, QImage &img, int channel, double minColor, double maxColor, JKQTPRGBMathImageRGBMode rgbMode=JKQTPRGBMathImageModeRGBMode, bool logScale=false, double logBase=10.0)
+inline void JKQTPImagePlot_array2RGBimage(const T* dbl_in, int width, int height, QImage &img, int channel, double minColor, double maxColor, JKQTPRGBMathImageRGBMode rgbMode=JKQTPRGBMathImageModeRGBMode, bool logScale=false, double logBase=10.0)
 {
     if (!dbl_in || width<=0 || height<=0)
         return;
@@ -653,16 +653,18 @@ inline void JKQTPImagePlot_array2RGBimage(T* dbl_in, int width, int height, QIma
     }
 
 
-    T* dbl=dbl_in;
+    const T* dbl=dbl_in;
+    T* dbllog=nullptr;
     if (logScale) {
         double logB=log10(logBase);
-        dbl=static_cast<T*>(malloc(width*height*sizeof(T)));
+        dbllog=static_cast<T*>(malloc(width*height*sizeof(T)));
         //memcpy(dbl, dbl_in, width*height*sizeof(T));
         for (int i=0; i<width*height; i++) {
-            dbl[i]=log10(dbl_in[i])/logB;
+            dbllog[i]=log10(dbl_in[i])/logB;
         }
         min=log10(min)/logB;
         max=log10(max)/logB;
+        dbl=dbllog;
     }
     double delta=max-min;
 
@@ -864,7 +866,7 @@ inline void JKQTPImagePlot_array2RGBimage(T* dbl_in, int width, int height, QIma
        }
      }
 
-    if (logScale) free(dbl);
+    if (logScale) free(dbllog);
 }
 
 
@@ -1069,7 +1071,7 @@ QString JKQTCOMMON_LIB_EXPORT ModifierModeToString(const JKQTPMathImageModifierM
 /** \brief modify the given image \a img, using  modifier image \a dataModifier (of type \a datatypeModifier and size \a Nx * \a Ny), using values in the range \a internalModifierMin ... \a internalModifierMax )
     \ingroup jkqtplotter_imagelots_tools
  */
-void JKQTCOMMON_LIB_EXPORT JKQTPModifyImage(QImage& img, JKQTPMathImageModifierMode modifierMode, void* dataModifier, JKQTPMathImageDataType datatypeModifier, int Nx, int Ny, double internalModifierMin, double internalModifierMax);
+void JKQTCOMMON_LIB_EXPORT JKQTPModifyImage(QImage& img, JKQTPMathImageModifierMode modifierMode, const void* dataModifier, JKQTPMathImageDataType datatypeModifier, int Nx, int Ny, double internalModifierMin, double internalModifierMax);
 
 
 

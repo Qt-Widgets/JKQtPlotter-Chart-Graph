@@ -33,28 +33,28 @@
 
 JKQTPEvaluatedFunctionWithErrorsGraphDrawingBase::JKQTPEvaluatedFunctionWithErrorsGraphDrawingBase(JKQTBasePlotter* parent):
     JKQTPEvaluatedFunctionWithErrorsGraphBase(parent),
-    drawLine(true),
-    fillCurve(false),
     drawErrorPolygons(false),
     drawErrorLines(false)
 {
-    initLineStyle(parent, parentPlotStyle);
-    initFillStyle(parent, parentPlotStyle);
+    initLineStyle(parent, parentPlotStyle, JKQTPPlotStyleType::Default);
+    initFillStyle(parent, parentPlotStyle, JKQTPPlotStyleType::Default);
+    setFillCurve(false);
 
-    errorColor=getLineColor().lighter();
-    errorFillColor=getLineColor().lighter();
+    errorColor=JKQTPGetDerivedColor(parent->getCurrentPlotterStyle().graphsStyle.defaultGraphStyle.errorColorDerivationMode, getLineColor());
+    errorFillColor=JKQTPGetDerivedColor(parent->getCurrentPlotterStyle().graphsStyle.defaultGraphStyle.errorFillColorDerivationMode, errorColor);
     errorStyle=Qt::SolidLine;
-    errorLineWidth=1;
+    errorLineWidth=parent->getCurrentPlotterStyle().graphsStyle.defaultGraphStyle.defaultErrorIndicatorWidth;
     errorFillStyle=Qt::SolidPattern;
 
 
     if (parent && parentPlotStyle>=0) { // get style settings from parent object
         //std::cout<<"got style settings from parent: "<<parentPlotStyle<<std::endl;
-        errorColor=parent->getPlotStyle(parentPlotStyle).errorColor();
-        errorStyle=parent->getPlotStyle(parentPlotStyle).errorStyle();
-        errorLineWidth=parent->getPlotStyle(parentPlotStyle).errorWidthF();
-        errorFillStyle=parent->getPlotStyle(parentPlotStyle).errorFillStyle();
-        errorFillColor=parent->getPlotStyle(parentPlotStyle).errorFillColor();
+        const JKQTBasePlotter::JKQTPPen pen=parent->getPlotStyle(parentPlotStyle);
+        errorColor=pen.errorColor();
+        errorStyle=pen.errorStyle();
+        errorLineWidth=pen.errorWidthF();
+        errorFillStyle=pen.errorFillStyle();
+        errorFillColor=pen.errorFillColor();
     }
     errorFillColor.setAlphaF(0.5);
 }
@@ -71,16 +71,6 @@ JKQTPEvaluatedFunctionWithErrorsGraphDrawingBase::~JKQTPEvaluatedFunctionWithErr
 }
 
 
-void JKQTPEvaluatedFunctionWithErrorsGraphDrawingBase::setDrawLine(bool __value)
-{
-    this->drawLine = __value;
-}
-
-bool JKQTPEvaluatedFunctionWithErrorsGraphDrawingBase::getDrawLine() const
-{
-    return this->drawLine;
-}
-
 void JKQTPEvaluatedFunctionWithErrorsGraphDrawingBase::drawKeyMarker(JKQTPEnhancedPainter& painter, QRectF& rect) {
     painter.save(); auto __finalpaint=JKQTPFinally([&painter]() {painter.restore();});
     QPen p=getLinePen(painter, parent);
@@ -90,10 +80,10 @@ void JKQTPEvaluatedFunctionWithErrorsGraphDrawingBase::drawKeyMarker(JKQTPEnhanc
     QBrush b=getFillBrush(painter, parent);
     const double y=rect.top()+rect.height()/2.0;
     painter.setPen(np);
-    if (drawLine) painter.setPen(p);
+    if (getDrawLine()) painter.setPen(p);
     painter.setBrush(b);
-    if (fillCurve) painter.drawRect(rect);
-    if (!fillCurve & drawLine) painter.drawLine(QLineF(rect.left(), y, rect.right(), y));
+    if (getFillCurve()) painter.drawRect(rect);
+    if (!getFillCurve() && getDrawLine()) painter.drawLine(QLineF(rect.left(), y, rect.right(), y));
 
 }
 
@@ -262,7 +252,7 @@ void JKQTPEvaluatedFunctionWithErrorsGraphDrawingBase::drawXGraph(JKQTPEnhancedP
 
                 y=qBound(yami, y, yama);
 
-                if (fillCurve) {
+                if (getFillCurve()) {
                     if (!first) filledPolygon<<QPointF(x, y0);
                     filledPolygon<<QPointF(x, y);
                     if (it+1==data.end()) filledPolygon<<QPointF(x, y0);
@@ -273,7 +263,7 @@ void JKQTPEvaluatedFunctionWithErrorsGraphDrawingBase::drawXGraph(JKQTPEnhancedP
                     epBottom<<QPointF(x, yme);
                 }
 
-                if (drawLine) {
+                if (getDrawLine()) {
                     linePolygon<<QPointF(x, y);
                 }
 
@@ -299,13 +289,13 @@ void JKQTPEvaluatedFunctionWithErrorsGraphDrawingBase::drawXGraph(JKQTPEnhancedP
             painter.drawPolygon(poly, Qt::OddEvenFill);
 
         }
-        if (fillCurve) {
+        if (getFillCurve()) {
             painter.save(); auto __finalpaintfillc=JKQTPFinally([&painter]() {painter.restore();});
             painter.setBrush(b);
             painter.setPen(np);
             painter.drawPolygon(filledPolygon, Qt::OddEvenFill);
         }
-        if (drawLine) {
+        if (getDrawLine()) {
             painter.save(); auto __finalpaintline=JKQTPFinally([&painter]() {painter.restore();});
             painter.setPen(p);
             painter.drawPolyline(linePolygon);
@@ -389,7 +379,7 @@ void JKQTPEvaluatedFunctionWithErrorsGraphDrawingBase::drawYGraph(JKQTPEnhancedP
 
                 x=qBound(xami, x, xama);
 
-                if (fillCurve) {
+                if (getFillCurve()) {
                     if (!first) filledPolygon<<QPointF(x0, y);
                     filledPolygon<<QPointF(x, y);
                     if (it+1==data.end()) filledPolygon<<QPointF(x0, y);
@@ -400,7 +390,7 @@ void JKQTPEvaluatedFunctionWithErrorsGraphDrawingBase::drawYGraph(JKQTPEnhancedP
                     epBottom<<QPointF(xme, y);
                 }
 
-                if (drawLine) {
+                if (getDrawLine()) {
                     linePolygon<<QPointF(x, y);
                 }
 
@@ -425,13 +415,13 @@ void JKQTPEvaluatedFunctionWithErrorsGraphDrawingBase::drawYGraph(JKQTPEnhancedP
             }
             painter.drawPolygon(poly, Qt::OddEvenFill);
         }
-        if (fillCurve) {
+        if (getFillCurve()) {
             painter.save(); auto __finalpaintfillc=JKQTPFinally([&painter]() {painter.restore();});
             painter.setBrush(b);
             painter.setPen(np);
             painter.drawPolygon(filledPolygon, Qt::OddEvenFill);
         }
-        if (drawLine) {
+        if (getDrawLine()) {
             painter.save(); auto __finalpaintline=JKQTPFinally([&painter]() {painter.restore();});
             painter.setPen(p);
             painter.drawPolyline(linePolygon);

@@ -351,22 +351,7 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPDatastore{
          */
         size_t addColumnForItem(size_t itemID, size_t columnInItem, const QString& name=QString(""));
 
-        /** \brief returns the JKQTPColumn object for the \a i -th column in the store
-         *
-         *  \warning This function copies the pointers/references to the internal data into a new object.
-         *           Therefore you should delete it as soon as possible and not store the return value over long durations,
-         *           as the data may get moved in the meantime and then the object gets invalid, but is not informed of this fact!
-         */
-        JKQTPColumn getColumn(size_t i) const;
 
-
-        /** \brief returns the JKQTPColumn object for the \a i -th column in the store
-         *
-         *  \warning This function copies the pointers/references to the internal data into a new object.
-         *           Therefore you should delete it as soon as possible and not store the return value over long durations,
-         *           as the data may get moved in the meantime and then the object gets invalid, but is not informed of this fact!
-         */
-        JKQTPColumn getColumn(int i) const;
         /** \brief mutable iterator for columns in the JKQTPDatastore (\c ColumnIterator::first: column number, \c ColumnIterator::second: column data) */
         typedef QMap<size_t, JKQTPColumn>::iterator ColumnIterator;
         /** \brief constant iterator for columns in the JKQTPDatastore (\c ColumnIterator::first: column number, \c ColumnIterator::second: column data) */
@@ -471,9 +456,14 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPDatastore{
         inline double* getColumnPointer(int column, size_t row=0);
         /** \brief returns the width of the image, represented by \a column (in row-major ordering).
          *         Internally this returns the imageColumns or image width, if set in the column */
-        inline size_t getColumnImageWidth(int column) const;
+        size_t getColumnImageWidth(int column) const;
         /** \brief returns the height of the image, represented by \a column (in row-major ordering) */
-        inline size_t getColumnImageHeight(int column) const;
+        size_t getColumnImageHeight(int column) const;
+        /** \brief sets the height of the image, represented by \a column (in row-major ordering) to \a imageHeight */
+        void setColumnImageHeight(size_t column, size_t imageHeight);
+        /** \brief sets the width of the image, represented by \a column (in row-major ordering) to \a imageWidth */
+        void setColumnImageWidth(size_t column, size_t imageWidth);
+
         /** \brief returns the data checksum of the given column */
         quint16 getColumnChecksum(int column) const;
 
@@ -507,6 +497,36 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPDatastore{
         inline void set(size_t column, size_t row, double value);
         /** \brief sets the value at position (\c column, \c row). \c column is the logical column and will be mapped to the according memory block internally!) */
         inline void set(int column, size_t row, double value);
+        /** \brief copies the data from \a data into an existing column \a toColumn
+         *
+         *  \param toColumn target of the copy operation
+         *  \param data data to copy
+         *
+         *  \warning If the memory in \a toColumn was externally managed before, it will be
+         *           internally managed afterwards!
+        */
+        void setColumnData(size_t toColumn, const QVector<double>& data);
+        /** \brief copies the data from \a data into an existing column \a toColumn
+         *
+         *  \param toColumn target of the copy operation
+         *  \param data data to copy
+         *  \param N entries in \a data
+         *
+         *  \warning If the memory in \a toColumn was externally managed before, it will be
+         *           internally managed afterwards!
+        */
+        void setColumnCopiedData(size_t toColumn, const double* data, size_t N);
+        /** \brief copies the image data from \a data into an existing column \a toColumn
+         *
+         *  \param toColumn target of the copy operation
+         *  \param data data to copy, size is \a width * \a height
+         *  \param width number of columns in \a data
+         *  \param height number of rows in \a data
+         *
+         *  \warning If the memory in \a toColumn was externally managed before, it will be
+         *           internally managed afterwards!
+        */
+        void setColumnCopiedImageData(size_t toColumn, const double* data, size_t width, size_t height);
         /** \brief adds a value \a value to the column \a column. This changes the column length (number of rows).
          *
          * \warning This changes the column length (number of rows). If the memory was externally managed before, it will be internally managed afterwards .
@@ -514,6 +534,20 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPDatastore{
          * \see appendToColumns()
          */
         void appendToColumn(size_t column, double value);
+        /** \brief resizes the column \a column to have \a new_rows rows
+         *
+         * \warning This changes the column length (number of rows). If the memory was externally managed before, it will be internally managed afterwards .
+         *
+         * \see resizeImageColumn(), appendToColumn()
+         */
+        void resizeColumn(size_t column, size_t new_rows);
+        /** \brief resizes the column \a column to have enough rows to be interpreted as an image of size \a new_image_width * \a new_image_height pixels, also sets the internally store image size in the column!
+         *
+         * \warning This changes the column length (number of rows). If the memory was externally managed before, it will be internally managed afterwards .
+         *
+         * \see resizeColumn(), appendToColumn()
+         */
+        void resizeImageColumn(size_t column, size_t new_image_width, size_t new_image_height);
         /** \brief adds a value \a value1 to the column \a column1 and a value \a value2 to \a column2.
          *
          * This is equivalent to
@@ -776,6 +810,16 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPDatastore{
          *  \see \ref JKQTPlotterBasicJKQTPDatastore
          */
         size_t copyColumn(size_t old_column, const QString& name=QString(""));
+        /** \brief copies the data from \a fromColumn into an existing column \a toColumn
+         *
+         *  \param toColumn target of the copy operation
+         *  \param fromColumn source of the copy operation
+         *
+         *  \warning If the memory in \a toColumn was externally managed before, it will be
+         *           internally managed afterwards!
+        */
+        void copyColumnData(size_t toColumn, size_t fromColumn);
+
 
 
         /** \brief add one column to the datastore. It will be filled with the values from \a first ... \a last
@@ -1387,8 +1431,9 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPDatastore{
 
 
 
-/** \brief stores information about one data column. See JKQTPDatastore for more information.
+/** \brief internally stores information about one data column. See JKQTPDatastore for more information.
  * \ingroup jkqtpdatastorage
+ * \internal
  *
  * \see JKQTPDatastore
  */
@@ -1429,14 +1474,14 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPColumn {
                 && (valid==other.valid);
     }
 
-    /*! \copydoc name */
+    /** \copydoc name */
     void setName (const QString& __value);
-    /*! \copydoc name */
+    /** \copydoc name */
     QString getName () const;
 
-    /*! \copydoc imageColumns */
-    void setImageColumns (size_t __value);
-    /*! \copydoc imageColumns */
+    /** \copydoc imageColumns */
+    void setImageColumns (size_t imageWidth);
+    /** \copydoc imageColumns */
     inline size_t getImageColumns () const { return imageColumns; }
 
     /** \brief returns the number of rows in this column (accesses the datastore) */
@@ -1538,7 +1583,7 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPColumn {
      * This copies \a N elements from \a data into the column where the first overwritten column
      * line is \a offset, so you can shift the location where the copy process starts.
      */
-    void copy(double* data, size_t N, size_t offset=0);
+    void copy(const double* data, size_t N, size_t offset=0);
 
     /** \brief exchange every occurence of a given \a value by a \a replace value */
     void exchange(double value, double replace);
@@ -1554,10 +1599,10 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPColumn {
     /** \brief calculates a checksum over the contents of the column (using <a href="https://doc.qt.io/qt-5/qbytearray.html#qChecksum">qChecksum()</a>) */
     inline quint16 calculateChecksum() const;
 
-    /*! \copydoc datastoreItem */ \
+    /** \copydoc datastoreItem */ \
     inline size_t getDatastoreItemNum() const  \
     {   return this->datastoreItem;   }
-    /*! \copydoc datastoreOffset */ \
+    /** \copydoc datastoreOffset */ \
     inline size_t getDatastoreOffset() const  \
     {   return this->datastoreOffset;   }
 
@@ -2245,16 +2290,24 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPDatastoreItem {
     /** \brief change the size of all columns to the givne number of rows. Returns \c true if the old data could be retained/saved and \c false if the old data was lost (which happens in most of the cases!) */
     bool resizeColumns(size_t rows);
 
-    /*! \copydoc JKQTPDatastoreItem::rows */
+    /** \copydoc JKQTPDatastoreItem::rows */
     inline size_t getRows() const
     {   return rows;   }
-    /*! \copydoc JKQTPDatastoreItem::columns */
+    /** \copydoc JKQTPDatastoreItem::columns */
     inline size_t getColumns() const
     {   return columns;   }
 
     /** \brief checks whether dataformat==JKQTPDatastoreItemFormat::SingleColumn and storageType==StorageType::Vector */
     inline bool isVector() const {
         return dataformat==JKQTPDatastoreItemFormat::SingleColumn && storageType==StorageType::Vector;
+    }
+
+    /** \brief if \c isValid() : resize the row to have \a rows_new rows */
+    inline void resize(size_t rows_new) {
+        JKQTPASSERT(isVector());
+        datavec.resize(rows_new);
+        rows=static_cast<size_t>(datavec.size());
+        data=datavec.data();
     }
 
     /** \brief if \c isValid() : erase the row \a row */
@@ -2546,20 +2599,6 @@ double *JKQTPDatastore::getColumnPointer(int column, size_t row)
 {
     if (column<0) return nullptr;
     return columns[static_cast<size_t>(column)].getPointer(row);
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////
-size_t JKQTPDatastore::getColumnImageWidth(int column) const
-{
-    if (column<0) return 0;
-    return columns[static_cast<size_t>(column)].getImageColumns();
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////
-size_t JKQTPDatastore::getColumnImageHeight(int column) const
-{
-    if (column<0) return 0;
-    return columns[static_cast<size_t>(column)].getRows()/columns[static_cast<size_t>(column)].getImageColumns();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////

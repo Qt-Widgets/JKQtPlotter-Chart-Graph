@@ -46,16 +46,17 @@ JKQTPGraphErrorStyleMixin::JKQTPGraphErrorStyleMixin() {
     m_errorBarCapSize=7;
 }
 
-void JKQTPGraphErrorStyleMixin::initErrorStyle(JKQTBasePlotter *parent, int &parentPlotStyle)
+void JKQTPGraphErrorStyleMixin::initErrorStyle(JKQTBasePlotter *parent, int &parentPlotStyle, JKQTPPlotStyleType styletype)
 {
     if (parent) { // get style settings from parent object
         if (parentPlotStyle<0) parentPlotStyle=parent->getNextStyle();
-        m_errorFillColor=parent->getPlotStyle(parentPlotStyle).errorFillColor();
+        const JKQTBasePlotter::JKQTPPen pen=parent->getPlotStyle(parentPlotStyle, styletype);
+        m_errorFillColor=pen.errorFillColor();
         m_errorFillBrush.setColor(m_errorFillColor);
-        m_errorFillBrush.setStyle(parent->getPlotStyle(parentPlotStyle).errorFillStyle());
-        m_errorLinePen.setColor(parent->getPlotStyle(parentPlotStyle).errorColor());
-        m_errorLinePen.setStyle(parent->getPlotStyle(parentPlotStyle).errorStyle());
-        m_errorLineWidth=parent->getPlotStyle(parentPlotStyle).errorWidthF();
+        m_errorFillBrush.setStyle(pen.errorFillStyle());
+        m_errorLinePen.setColor(pen.errorColor());
+        m_errorLinePen.setStyle(pen.errorStyle());
+        m_errorLineWidth=pen.errorWidthF();
     }
 
 }
@@ -79,21 +80,21 @@ void JKQTPGraphErrorStyleMixin::setErrorColorFromGraphColor(QColor graphColor)
     //errorColor.setAlphaF(0.5);
 }
 
-QPen JKQTPGraphErrorStyleMixin::getErrorLinePen(JKQTPEnhancedPainter &painter, JKQTBasePlotter *parent) const
+QPen JKQTPGraphErrorStyleMixin::getErrorLinePen(JKQTPEnhancedPainter &painter, const JKQTBasePlotter *parent) const
 {
     QPen p=m_errorLinePen;
     p.setWidthF(qMax(JKQTPlotterDrawingTools::ABS_MIN_LINEWIDTH,parent->pt2px(painter, parent->getLineWidthMultiplier()*m_errorLineWidth)));
     return p;
 }
 
-QPen JKQTPGraphErrorStyleMixin::getErrorLinePenForRects(JKQTPEnhancedPainter &painter, JKQTBasePlotter *parent) const
+QPen JKQTPGraphErrorStyleMixin::getErrorLinePenForRects(JKQTPEnhancedPainter &painter, const JKQTBasePlotter *parent) const
 {
     QPen p=getErrorLinePen(painter, parent);
     p.setJoinStyle(Qt::MiterJoin);
     return p;
 }
 
-QBrush JKQTPGraphErrorStyleMixin::getErrorFillBrush(JKQTPEnhancedPainter &/*painter*/, JKQTBasePlotter * /*parent*/) const
+QBrush JKQTPGraphErrorStyleMixin::getErrorFillBrush(JKQTPEnhancedPainter &/*painter*/, const JKQTBasePlotter * /*parent*/) const
 {
     return m_errorFillBrush;
 }
@@ -259,10 +260,10 @@ void JKQTPGraphErrorStyleMixin::setErrorFillTransform(const QTransform &b)
     m_errorFillBrush.setTransform(b);
 }
 
-void JKQTPGraphErrorStyleMixin::intPlotXYErrorIndicators(JKQTPEnhancedPainter& painter, JKQTBasePlotter* parent, JKQTPGraph* parentGraph, int xColumn, int yColumn, int xErrorColumn, int yErrorColumn, JKQTPErrorPlotstyle xErrorStyle, JKQTPErrorPlotstyle yErrorStyle, int xErrorColumnLower, int yErrorColumnLower, bool xErrorSymmetric, bool yErrorSymmetric, double xrelshift, double yrelshift, const  QVector<int>* dataorder) {
+void JKQTPGraphErrorStyleMixin::intPlotXYErrorIndicators(JKQTPEnhancedPainter& painter, const JKQTBasePlotter* parent, const JKQTPGraph* parentGraph, int xColumn, int yColumn, int xErrorColumn, int yErrorColumn, JKQTPErrorPlotstyle xErrorStyle, JKQTPErrorPlotstyle yErrorStyle, int xErrorColumnLower, int yErrorColumnLower, bool xErrorSymmetric, bool yErrorSymmetric, double xrelshift, double yrelshift, const  QVector<int>* dataorder) const {
     //std::cout<<"JKQTPGraphErrors::intPlotXYErrorIndicators(p, "<<parent<<", "<<xColumn<<", "<<yColumn<<", "<<xErrorColumn<<", "<<yErrorColumn<<", "<<xErrorStyle<<", "<<yErrorStyle<<", ...)\n";
     if (parent==nullptr) return;
-    JKQTPDatastore* datastore=parent->getDatastore();
+    const JKQTPDatastore* datastore=parent->getDatastore();
     if (datastore==nullptr) return;
 
     if ((yErrorStyle==JKQTPNoError) && (xErrorStyle==JKQTPNoError)) return;
@@ -561,7 +562,7 @@ void JKQTPGraphErrorStyleMixin::intPlotXYErrorIndicators(JKQTPEnhancedPainter& p
     //std::cout<<"end\n";
 }
 
-bool JKQTPGraphErrorStyleMixin::intPlotXYErrorIndicatorsGetColor(JKQTPEnhancedPainter &/*painter*/, JKQTBasePlotter * /*parent*/, JKQTPGraph* /*parentGraph*/, int /*xColumn*/, int /*yColumn*/, int /*xErrorColumn*/, int /*yErrorColumn*/, JKQTPErrorPlotstyle /*xErrorStyle*/, JKQTPErrorPlotstyle /*yErrorStyle*/, int /*index*/, QColor &/*errorColor*/, QColor &/*errorFillColor*/)
+bool JKQTPGraphErrorStyleMixin::intPlotXYErrorIndicatorsGetColor(JKQTPEnhancedPainter &/*painter*/, const JKQTBasePlotter * /*parent*/, const JKQTPGraph* /*parentGraph*/, int /*xColumn*/, int /*yColumn*/, int /*xErrorColumn*/, int /*yErrorColumn*/, JKQTPErrorPlotstyle /*xErrorStyle*/, JKQTPErrorPlotstyle /*yErrorStyle*/, int /*index*/, QColor &/*errorColor*/, QColor &/*errorFillColor*/) const
 {
     return false;
 }
@@ -623,7 +624,7 @@ void JKQTPXGraphErrorData::setXErrorColumnLower(int __value) {
 }
 
 
-double JKQTPXGraphErrorData::getXErrorU(int i, JKQTPDatastore *ds) const
+double JKQTPXGraphErrorData::getXErrorU(int i, const JKQTPDatastore *ds) const
 {
     if (ds && xErrorColumn>=0 && i>=0 && i<static_cast<int>(ds->getRows(xErrorColumn))) {
         return ds->get(xErrorColumn, static_cast<size_t>(i));
@@ -631,7 +632,7 @@ double JKQTPXGraphErrorData::getXErrorU(int i, JKQTPDatastore *ds) const
     return 0.0;
 }
 
-double JKQTPXGraphErrorData::getXErrorL(int i, JKQTPDatastore *ds) const
+double JKQTPXGraphErrorData::getXErrorL(int i, const JKQTPDatastore *ds) const
 {
     if (ds) {
         if (xErrorSymmetric) {
@@ -699,7 +700,7 @@ void JKQTPYGraphErrorData::setYErrorColumnLower(int __value) {
 }
 
 
-double JKQTPYGraphErrorData::getYErrorU(int i, JKQTPDatastore *ds) const
+double JKQTPYGraphErrorData::getYErrorU(int i, const JKQTPDatastore *ds) const
 {
     if (ds && yErrorColumn>=0 && i>=0 && i<static_cast<int>(ds->getRows(yErrorColumn))) {
         return ds->get(yErrorColumn, static_cast<size_t>(i));
@@ -707,7 +708,7 @@ double JKQTPYGraphErrorData::getYErrorU(int i, JKQTPDatastore *ds) const
     return 0.0;
 }
 
-double JKQTPYGraphErrorData::getYErrorL(int i, JKQTPDatastore *ds) const
+double JKQTPYGraphErrorData::getYErrorL(int i, const JKQTPDatastore *ds) const
 {
     if (ds) {
         if (yErrorSymmetric) {
@@ -735,7 +736,7 @@ bool JKQTPXGraphErrors::errorUsesColumn(int c) const
     return c==(xErrorColumn) || (c==xErrorColumnLower);
 }
 
-void JKQTPXGraphErrors::plotErrorIndicators(JKQTPEnhancedPainter& painter, JKQTBasePlotter* parent, JKQTPGraph *parentGraph, int xColumn, int yColumn, double xrelshift, double yrelshift, const  QVector<int>* dataorder) {
+void JKQTPXGraphErrors::plotErrorIndicators(JKQTPEnhancedPainter& painter, const JKQTBasePlotter* parent, const JKQTPGraph *parentGraph, int xColumn, int yColumn, double xrelshift, double yrelshift, const  QVector<int>* dataorder) const {
     intPlotXYErrorIndicators(painter, parent, parentGraph, xColumn, yColumn, xErrorColumn, -1, xErrorStyle, JKQTPNoError, xErrorColumnLower, -1, xErrorSymmetric, true, xrelshift, yrelshift, dataorder);
 }
 
@@ -747,7 +748,7 @@ JKQTPYGraphErrors::JKQTPYGraphErrors()
 {
 }
 
-void JKQTPYGraphErrors::plotErrorIndicators(JKQTPEnhancedPainter& painter, JKQTBasePlotter* parent, JKQTPGraph* parentGraph, int xColumn, int yColumn, double xrelshift, double yrelshift, const  QVector<int>* dataorder) {
+void JKQTPYGraphErrors::plotErrorIndicators(JKQTPEnhancedPainter& painter, const JKQTBasePlotter* parent, const JKQTPGraph* parentGraph, int xColumn, int yColumn, double xrelshift, double yrelshift, const  QVector<int>* dataorder) const {
     intPlotXYErrorIndicators(painter, parent, parentGraph, xColumn, yColumn, -1, yErrorColumn, JKQTPNoError, yErrorStyle, -1, yErrorColumnLower, true, yErrorSymmetric, xrelshift, yrelshift, dataorder);
 }
 
@@ -767,7 +768,7 @@ JKQTPXYGraphErrors::JKQTPXYGraphErrors()
 
 }
 
-void JKQTPXYGraphErrors::plotErrorIndicators(JKQTPEnhancedPainter& painter, JKQTBasePlotter* parent, JKQTPGraph* parentGraph, int xColumn, int yColumn, double xrelshift, double yrelshift, const  QVector<int>* dataorder) {
+void JKQTPXYGraphErrors::plotErrorIndicators(JKQTPEnhancedPainter& painter, const JKQTBasePlotter* parent, const JKQTPGraph* parentGraph, int xColumn, int yColumn, double xrelshift, double yrelshift, const  QVector<int>* dataorder) const {
     this->intPlotXYErrorIndicators(painter, parent, parentGraph, xColumn, yColumn, xErrorColumn, yErrorColumn, xErrorStyle, yErrorStyle, xErrorColumnLower, yErrorColumnLower, xErrorSymmetric, yErrorSymmetric, xrelshift, yrelshift, dataorder);
 }
 

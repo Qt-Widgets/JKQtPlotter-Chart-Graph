@@ -77,7 +77,7 @@ JKQTPColorPaletteStyleAndToolsMixin::JKQTPColorPaletteStyleAndToolsMixin(JKQTBas
     this->colorBarTopVisible=false;
     this->colorBarRightVisible=true;
 
-    if (parent) this->palette=parent->getCurrentPlotterStyle().defaultPalette;
+    if (parent) this->palette=parent->getCurrentPlotterStyle().graphsStyle.defaultPalette;
 
 }
 
@@ -320,7 +320,7 @@ QImage JKQTPColorPaletteStyleAndToolsMixin::getPaletteKeyImage(JKQTPMathImageCol
 }
 
 
-void JKQTPColorPaletteStyleAndToolsMixin::setPalette(int pal) {
+void JKQTPColorPaletteStyleAndToolsMixin::setColorPalette(int pal) {
     palette=static_cast<JKQTPMathImageColorPalette>(pal);
 }
 
@@ -331,12 +331,12 @@ void JKQTPColorPaletteStyleAndToolsMixin::cbSetParent(JKQTBasePlotter* parent) {
 
 }
 
-void JKQTPColorPaletteStyleAndToolsMixin::setPalette(const JKQTPMathImageColorPalette &__value)
+void JKQTPColorPaletteStyleAndToolsMixin::setColorPalette(const JKQTPMathImageColorPalette &__value)
 {
     this->palette = __value;
 }
 
-JKQTPMathImageColorPalette JKQTPColorPaletteStyleAndToolsMixin::getPalette() const
+JKQTPMathImageColorPalette JKQTPColorPaletteStyleAndToolsMixin::getColorPalette() const
 {
     return this->palette;
 }
@@ -754,7 +754,7 @@ JKQTPMathImageModifierMode JKQTPColorPaletteWithModifierStyleAndToolsMixin::getM
 }
 
 
-void JKQTPColorPaletteWithModifierStyleAndToolsMixin::modifyImage(QImage &img, void *dataModifier, JKQTPMathImageDataType datatypeModifier, int Nx, int Ny, double internalModifierMin, double internalModifierMax)
+void JKQTPColorPaletteWithModifierStyleAndToolsMixin::modifyImage(QImage &img, const void *dataModifier, JKQTPMathImageDataType datatypeModifier, int Nx, int Ny, double internalModifierMin, double internalModifierMax)
 {
     JKQTPModifyImage(img, modifierMode, dataModifier, datatypeModifier, Nx, Ny, internalModifierMin, internalModifierMax);
 }

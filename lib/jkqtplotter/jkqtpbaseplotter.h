@@ -22,7 +22,6 @@
 #include "jkqtplotter/jkqtpbaseplotterstyle.h"
 #include "jkqtmathtext/jkqtmathtext.h"
 #include "jkqtplotter/jkqtpbaseelements.h"
-#include "jkqtplotter/overlays/jkqtpbasicoverlays.h"
 #include "jkqtcommon/jkqtpenhancedpainter.h"
 #include "jkqtplotter/gui/jkqtpenhancedspinboxes.h"
 
@@ -98,7 +97,6 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPPaintDeviceAdapter {
  *   -# coordinate transforms
  *   -# a set of properties for the graphs (colors, widthes ...) and also a system (see getNextStyle() to automatically
  *     choose a drawing style for different graphs.
- *   -# plot a set of overlay elements (may be used for fast plotting of indicators onto a complex plot)
  *   -# drawing the coordinate axes, grids ... (logarithmic and linear)
  *   -# saveing and printing the resulting plots
  * .
@@ -169,7 +167,9 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPPaintDeviceAdapter {
  *
  * You can set two different aspect ratios:
  *   - The ratio of plotWidth/plotHeight (setAspectRatio(), setMaintainAspectRatio()) will keep the plots pixel-width and height at a certain value.
+ *     \f[ \mbox{aspectRatio}=\frac{\mbox{plotWidth}}{\mbox{plotHeight}} \f]
  *   - The ratio of (xmax-xmin)/(ymax-ymin) (setAxisAspectRatio(), setMaintainAxisAspectRatio()) will keep the displayed axis ranges in a certain ratio.
+ *     \f[ \mbox{axisAspectRatio}=\frac{\left|x_\text{max}-x_\text{min}\right|}{\left|y_\text{max}-y_\text{min}\right|} \f]
  * .
  * So to achieve different effects, use these combinations:
  *   - you have a 200x100 range where each 1x1-pixel should have an aspect ratio of 4:
@@ -208,7 +208,6 @@ class JKQTPLOTTER_LIB_EXPORT JKQTPPaintDeviceAdapter {
  *   - print() prints the graph on a QPrinter object
  *   - saveAsPixelImage() saves the plot into a pixel image file (PNG, TIFF, ... formats, as supported by Qt)
  *   - saveAsPDF() saves the graph as a PDF file (using the Qt printing engine)
- *   - saveAsPS() saves the graph as a PDF file (using the Qt printing engine)
  *   - saveAsSVG() saves the graph as a SVG file (using the Qt SVG library)
  *   - saveImage() saves the graph
  * .
@@ -615,54 +614,40 @@ class JKQTPLOTTER_LIB_EXPORT JKQTBasePlotter: public QObject {
         };
 
 
+
         /** \brief returns a QPen object for the i-th plot style */
-        JKQTPPen getPlotStyle(int i) const;
-
-        /*! \brief draw the contained graph (including grid prints) into the given JKQTPEnhancedPainter
-            \param painter JKQTPEnhancedPainter to which the plot should be drawn
-            \param rect rectangle to plot into
-            \param showOverlays decides whether to draw overlays
-         */
-        void draw(JKQTPEnhancedPainter& painter, const QRect& rect, bool showOverlays=true);
+        JKQTPPen getPlotStyle(int i, JKQTPPlotStyleType type=JKQTPPlotStyleType::Default) const;
 
         /*! \brief draw the contained graph (including grid prints) into the given JKQTPEnhancedPainter
             \param painter JKQTPEnhancedPainter to which the plot should be drawn
             \param rect rectangle to plot into
          */
-        void drawOverlays(JKQTPEnhancedPainter& painter, const QRect& rect);
+        void draw(JKQTPEnhancedPainter& painter, const QRect& rect);
 
         /*! \brief draw the contained graph (including grid prints) into the given JKQTPEnhancedPainter
             \param painter JKQTPEnhancedPainter to which the plot should be drawn
             \param pos where to plot the painter (left-top corner)
-            \param showOverlays decides whether to draw overlays
          */
-        void draw(JKQTPEnhancedPainter& painter, const QPoint& pos=QPoint(0,0), bool showOverlays=true);
+        void draw(JKQTPEnhancedPainter& painter, const QPoint& pos=QPoint(0,0));
 
         /*! \brief draw the contained graph (including grid prints) into the given JKQTPEnhancedPainter
             \param painter JKQTPEnhancedPainter to which the plot should be drawn
             \param rect rectangle to plot into
-            \param showOverlays decides whether to draw overlays
          */
-        void drawNonGrid(JKQTPEnhancedPainter& painter, const QRect& rect, bool showOverlays=true);
+        void drawNonGrid(JKQTPEnhancedPainter& painter, const QRect& rect);
 
         /*! \brief draw the contained graph (including grid prints) into the given JKQTPEnhancedPainter
             \param painter JKQTPEnhancedPainter to which the plot should be drawn
             \param pos where to plot the painter (left-top corner)
-            \param showOverlays decides whether to draw overlays
          */
-        void drawNonGrid(JKQTPEnhancedPainter& painter, const QPoint& pos=QPoint(0,0), bool showOverlays=true);
-        /*! \brief draw the contained graph overlays (including grid prints) into the given JKQTPEnhancedPainter
-            \param painter JKQTPEnhancedPainter to which the plot should be drawn
-            \param pos where to plot the painter (left-top corner)
-         */
-        void drawNonGridOverlays(JKQTPEnhancedPainter &painter, const QPoint& pos=QPoint(0,0));
+        void drawNonGrid(JKQTPEnhancedPainter& painter, const QPoint& pos=QPoint(0,0));
 
         /** \brief emit plotUpdated() */
         void redrawPlot() { if (emitPlotSignals) emit plotUpdated(); }
 
-        /** \brief controls, whether the signals plotUpdated() and overlaysUpdated() are emitted */
+        /** \brief controls, whether the signals plotUpdated() are emitted */
         void setEmittingPlotSignalsEnabled(bool __value);
-        /** \brief returns, whether the signals plotUpdated() and overlaysUpdated() are emitted */
+        /** \brief returns, whether the signals plotUpdated() are emitted */
         bool isEmittingPlotSignalsEnabled() const;
 
         /** \copydoc JKQTBasePlotterStyle::plotBorderTop  */
@@ -674,14 +659,14 @@ class JKQTPLOTTER_LIB_EXPORT JKQTBasePlotter: public QObject {
         /** \copydoc JKQTBasePlotterStyle::plotBorderRight  */
         int getPlotBorderRight() const;
 
-        /** \brief returns whether the maintaining of the data aspect ratio is enabled or disabled */
+        /** \brief returns whether the maintaining of the data aspect ratio is enabled or disabled \see aspectRatio */
         bool doesMaintainAspectRatio() const;
-        /** \brief returns the data aspect ratio, enforced with setMaintainApsectRatio(true) */
+        /** \brief returns the data aspect ratio, enforced with setMaintainApsectRatio(true) \see aspectRatio */
         double getAspectRatio() const;
 
-        /** \brief returns whether the maintaining of the axis aspect ratio is enabled or disabled */
+        /** \brief returns whether the maintaining of the axis aspect ratio is enabled or disabled \see axisAspectRatio */
         bool doesMaintainAxisAspectRatio() const;
-        /** \brief returns the axis aspect ratio, enforced with setMaintainAxisApsectRatio(true) */
+        /** \brief returns the axis aspect ratio, enforced with setMaintainAxisApsectRatio(true) \see axisAspectRatio */
         double getAxisAspectRatio() const;
         /** \copydoc JKQTBasePlotterStyle::useAntiAliasingForSystem  */
         bool isUsingAntiAliasingForSystem() const;
@@ -689,8 +674,6 @@ class JKQTPLOTTER_LIB_EXPORT JKQTBasePlotter: public QObject {
         bool isUsingAntiAliasingForGraphs() const;
         /** \copydoc JKQTBasePlotterStyle::useAntiAliasingForText  */
         bool isUsingAntiAliasingForText() const;
-        /** \copydoc JKQTBasePlotterStyle::defaultGraphWidth   */
-        double getGraphWidth() const;
         /** \copydoc JKQTBasePlotterStyle::widgetBackgroundBrush  */
         QColor getBackgroundColor() const;
         /** \copydoc JKQTBasePlotterStyle::exportBackgroundBrush  */
@@ -703,88 +686,88 @@ class JKQTPLOTTER_LIB_EXPORT JKQTBasePlotter: public QObject {
         QBrush getExportBackgroundBrush() const;
         /** \copydoc JKQTBasePlotterStyle::plotBackgroundBrush  */
         QBrush getPlotBackgroundBrush() const;
-        /*! \copydoc JKQTPKeyStyle::fontSize */
+        /** \copydoc JKQTPKeyStyle::fontSize */
         double getKeyFontSize() const;
-        /*! \copydoc JKQTPKeyStyle::itemWidth */
+        /** \copydoc JKQTPKeyStyle::itemWidth */
         double getKeyItemWidth() const;
-        /*! \copydoc JKQTPKeyStyle::itemHeight */
+        /** \copydoc JKQTPKeyStyle::itemHeight */
         double getKeyItemHeight() const;
-        /*! \copydoc JKQTPKeyStyle::ySeparation */
+        /** \copydoc JKQTPKeyStyle::ySeparation */
         double getKeyYSeparation() const;
-        /*! \copydoc JKQTPKeyStyle::sampleLineLength */
+        /** \copydoc JKQTPKeyStyle::sampleLineLength */
         double getKeyLineLength() const;
-        /*! \copydoc JKQTPKeyStyle::xMargin */
+        /** \copydoc JKQTPKeyStyle::xMargin */
         double getKeyXMargin() const;
-        /*! \copydoc JKQTPKeyStyle::yMargin */
+        /** \copydoc JKQTPKeyStyle::yMargin */
         double getKeyYMargin() const;
-        /*! \copydoc JKQTPKeyStyle::xSeparation */
+        /** \copydoc JKQTPKeyStyle::xSeparation */
         double getKeyXSeparation() const;
-        /*! \copydoc JKQTPKeyStyle::xOffset */
+        /** \copydoc JKQTPKeyStyle::xOffset */
         double getKeyXOffset() const;
-        /*! \copydoc JKQTPKeyStyle::yOffset */
+        /** \copydoc JKQTPKeyStyle::yOffset */
         double getKeyYOffset() const;
-        /*! \copydoc JKQTPKeyStyle::visible */
+        /** \copydoc JKQTPKeyStyle::visible */
         bool getShowKey() const;
-        /*! \copydoc JKQTPKeyStyle::frameVisible */
+        /** \copydoc JKQTPKeyStyle::frameVisible */
         bool getShowKeyFrame() const;
-        /*! \copydoc JKQTPKeyStyle::frameColor */
+        /** \copydoc JKQTPKeyStyle::frameColor */
         QColor getKeyFrameColor() const;
-        /*! \copydoc JKQTPKeyStyle::backgroundBrush */
+        /** \copydoc JKQTPKeyStyle::backgroundBrush */
         QColor getKeyBackgroundColor() const;
-        /*! \copydoc JKQTPKeyStyle::backgroundBrush */
+        /** \copydoc JKQTPKeyStyle::backgroundBrush */
         QBrush getKeyBackgroundBrush() const;
 
-        /*! \copydoc JKQTPKeyStyle::textColor */
+        /** \copydoc JKQTPKeyStyle::textColor */
         QColor getKeyTextColor() const;
-        /*! \copydoc JKQTPKeyStyle::frameWidth */
+        /** \copydoc JKQTPKeyStyle::frameWidth */
         double getKeyFrameWidth() const;
-        /*! \copydoc JKQTPKeyStyle::frameRounding */
+        /** \copydoc JKQTPKeyStyle::frameRounding */
         double getKeyFrameRounding() const;
-        /*! \copydoc JKQTPKeyStyle::autosize */
+        /** \copydoc JKQTPKeyStyle::autosize */
         bool getKeyAutosize() const;
-        /*! \copydoc JKQTPKeyStyle::position */
+        /** \copydoc JKQTPKeyStyle::position */
         JKQTPKeyPosition getKeyPosition() const;
-        /*! \copydoc JKQTPKeyStyle::layout */
+        /** \copydoc JKQTPKeyStyle::layout */
         JKQTPKeyLayout getKeyLayout() const;
-        /*! \copydoc JKQTBasePlotterStyle::defaultTextColor */
+        /** \copydoc JKQTBasePlotterStyle::defaultTextColor */
         QColor getDefaultTextColor() const;
-        /*! \copydoc JKQTBasePlotterStyle::defaultFontSize */
+        /** \copydoc JKQTBasePlotterStyle::defaultFontSize */
         double getDefaultTextSize() const;
-        /*! \copydoc JKQTBasePlotterStyle::defaultFontName */
+        /** \copydoc JKQTBasePlotterStyle::defaultFontName */
         QString getDefaultTextFontName() const;
         /** \brief if set \c true (default: \c false ) the JKQTBasePlotter draws colored rectangles to indicate the different regions in the plot (border, axes, ...)
          *
          * \see JKQTBasePlotterStyle::debugShowRegionBoxes, enableDebugShowRegionBoxes()
          */
         bool isDebugShowRegionBoxesEnabled() const;
-        /*! \copydoc JKQTBasePlotterStyle::plotFrameVisible */
+        /** \copydoc JKQTBasePlotterStyle::plotFrameVisible */
         bool isPlotFrameVisible() const;
-        /*! \copydoc JKQTBasePlotterStyle::plotFrameColor */
+        /** \copydoc JKQTBasePlotterStyle::plotFrameColor */
         QColor getPlotFrameColor() const;
-        /*! \copydoc JKQTBasePlotterStyle::plotFrameWidth */
+        /** \copydoc JKQTBasePlotterStyle::plotFrameWidth */
         double getPlotFrameWidth() const;
-        /*! \copydoc JKQTBasePlotterStyle::plotFrameRounding */
+        /** \copydoc JKQTBasePlotterStyle::plotFrameRounding */
         double getPlotFrameRounding() const;
 
-        /*! \copydoc JKQTBasePlotterStyle::plotLabelFontSize */
+        /** \copydoc JKQTBasePlotterStyle::plotLabelFontSize */
         double getPlotLabelFontSize() const;
-        /*! \copydoc JKQTBasePlotterStyle::plotLabelFontName */
+        /** \copydoc JKQTBasePlotterStyle::plotLabelFontName */
         QString getplotLabelFontName() const;
 
-        /*! \copydoc plotLabel */ 
+        /** \copydoc plotLabel */ 
         QString getPlotLabel() const;
 
-        /*! \copydoc gridPrinting */ 
+        /** \copydoc gridPrinting */ 
         void setGridPrinting(bool __value);
-        /*! \copydoc gridPrinting */ 
+        /** \copydoc gridPrinting */ 
         bool getGridPrinting() const;
-        /*! \copydoc gridPrintingCurrentX */ 
+        /** \copydoc gridPrintingCurrentX */ 
         void setGridPrintingCurrentX(size_t __value);
-        /*! \copydoc gridPrintingCurrentX */ 
+        /** \copydoc gridPrintingCurrentX */ 
         size_t getGridPrintingCurrentX() const;
-        /*! \copydoc gridPrintingCurrentY */ 
+        /** \copydoc gridPrintingCurrentY */ 
         void setGridPrintingCurrentY(size_t __value);
-        /*! \copydoc gridPrintingCurrentY */ 
+        /** \copydoc gridPrintingCurrentY */ 
         size_t getGridPrintingCurrentY() const;
 
         /** \brief set the x- and y-positions of this JKQTPlotter in the grid-printing grid
@@ -803,17 +786,17 @@ class JKQTPLOTTER_LIB_EXPORT JKQTBasePlotter: public QObject {
         /** \brief set the string used to introduce comments in text output when exporting data */
         QString getCSVcommentInitializer() const;
 
-        /*! \copydoc internalPlotBorderTop */
+        /** \copydoc internalPlotBorderTop */
         inline double getInternalPlotBorderTop() const { return this->internalPlotBorderTop; }
-        /*! \copydoc internalPlotBorderLeft */
+        /** \copydoc internalPlotBorderLeft */
         inline double getInternalPlotBorderLeft() const { return this->internalPlotBorderLeft; }
-        /*! \copydoc internalPlotBorderBottom */
+        /** \copydoc internalPlotBorderBottom */
         inline double getInternalPlotBorderBottom() const { return this->internalPlotBorderBottom; }
-        /*! \copydoc internalPlotBorderRight */
+        /** \copydoc internalPlotBorderRight */
         inline double getInternalPlotBorderRight() const { return this->internalPlotBorderRight; }
-        /*! \copydoc internalPlotWidth */
+        /** \copydoc internalPlotWidth */
         inline int getPlotWidth() const { return this->internalPlotWidth; }
-        /*! \copydoc internalPlotHeight */
+        /** \copydoc internalPlotHeight */
         inline int getPlotHeight() const { return this->internalPlotHeight; }
         /** \brief returns the internal JKQTMathText, used to render text with LaTeX markup */
         JKQTMathText* getMathText();
@@ -829,39 +812,35 @@ class JKQTPLOTTER_LIB_EXPORT JKQTBasePlotter: public QObject {
         const JKQTPVerticalAxis *getYAxis() const;
 
 
-        /*! \copydoc actSavePlot */ 
+        /** \copydoc actSavePlot */ 
         QAction* getActionSavePlot() const;
-        /*! \copydoc actSaveData */ 
+        /** \copydoc actSaveData */ 
         QAction* getActionSaveData() const;
-        /*! \copydoc actCopyData */ 
+        /** \copydoc actCopyData */ 
         QAction* getActionCopyData() const;
-        /*! \copydoc actCopyPixelImage */ 
+        /** \copydoc actCopyPixelImage */ 
         QAction* getActionCopyPixelImage() const;
-        /*! \copydoc actCopyMatlab */ 
+        /** \copydoc actCopyMatlab */ 
         QAction* getActionCopyMatlab() const;
-        /*! \copydoc actSavePDF */ 
+        /** \copydoc actSavePDF */ 
         QAction* getActionSavePDF() const;
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-        /*! \copydoc actSavePS */
-        QAction* getActionSavePS() const;
-#endif
-        /*! \copydoc actSavePix */ 
+        /** \copydoc actSavePix */
         QAction* getActionSavePix() const;
-        /*! \copydoc actSaveSVG */ 
+        /** \copydoc actSaveSVG */ 
         QAction* getActionSaveSVG() const;
-        /*! \copydoc actPrint */ 
+        /** \copydoc actPrint */ 
         QAction* getActionPrint() const;
-        /*! \copydoc actSaveCSV */ 
+        /** \copydoc actSaveCSV */ 
         QAction* getActionSaveCSV() const;
-        /*! \copydoc actZoomAll */ 
+        /** \copydoc actZoomAll */ 
         QAction* getActionZoomAll() const;
-        /*! \copydoc actZoomIn */ 
+        /** \copydoc actZoomIn */ 
         QAction* getActionZoomIn() const;
-        /*! \copydoc actZoomOut */ 
+        /** \copydoc actZoomOut */ 
         QAction *getActionZoomOut() const;
-        /*! \copydoc actShowPlotData */ 
+        /** \copydoc actShowPlotData */ 
         QAction *getActionShowPlotData() const;
-        /*! \copydoc lstAdditionalPlotterActions */ 
+        /** \copydoc lstAdditionalPlotterActions */ 
         AdditionalActionsMap getLstAdditionalPlotterActions() const;
 
         /** \brief this function registers additional actions to lstAdditionalPlotterActions, which are displayed in the context-menu */
@@ -872,21 +851,21 @@ class JKQTPLOTTER_LIB_EXPORT JKQTBasePlotter: public QObject {
          */
         void deregisterAdditionalAction(QAction* act);
 
-        /*! \copydoc masterSynchronizeWidth */ 
+        /** \copydoc masterSynchronizeWidth */ 
         bool getMasterSynchronizeWidth() const;
-        /*! \copydoc masterSynchronizeHeight */ 
+        /** \copydoc masterSynchronizeHeight */ 
         bool getMasterSynchronizeHeight() const;
-        /*! \copydoc fontSizePrintMultiplier */ 
+        /** \copydoc fontSizePrintMultiplier */ 
         void setFontSizePrintMultiplier(double __value);
-        /*! \copydoc fontSizePrintMultiplier */ 
+        /** \copydoc fontSizePrintMultiplier */ 
         double getFontSizePrintMultiplier() const;
-        /*! \copydoc lineWidthPrintMultiplier */ 
+        /** \copydoc lineWidthPrintMultiplier */ 
         void setLineWidthPrintMultiplier(double __value);
-        /*! \copydoc lineWidthPrintMultiplier */ 
+        /** \copydoc lineWidthPrintMultiplier */ 
         double getLineWidthPrintMultiplier() const;
-        /*! \copydoc fontSizeMultiplier */ 
+        /** \copydoc fontSizeMultiplier */ 
         double getFontSizeMultiplier() const;
-        /*! \copydoc lineWidthMultiplier */ 
+        /** \copydoc lineWidthMultiplier */ 
         double getLineWidthMultiplier() const;
 
 
@@ -1026,35 +1005,6 @@ class JKQTPLOTTER_LIB_EXPORT JKQTBasePlotter: public QObject {
 
 
 
-        /** \brief returns description of i'th overlay element */
-        JKQTPOverlayElement* getOverlayElement(size_t i);
-
-        /** \brief returns the number of overlay elements */
-        size_t getOverlayElementCount();
-
-        /** \brief remove the i-th overlay element */
-        void deleteOverlayElement(size_t i, bool deletegraph=true);
-
-        /** \brief remove the given overlay element, if it is contained */
-        void deleteOverlayElement(JKQTPOverlayElement* gr, bool deletegraph=true);
-
-        /** \brief remove all overlay elements
-         *
-         *  \param deleteGraphs if set \c true (default) the overlay element objects will also be deleted
-         */
-        void clearOverlayElement(bool deleteGraphs=true);
-
-        /** \brief add a new overlay element, returns it's position in the overlay elements list, if the overlay element is already in the plot, this returns the index in the list */
-        size_t addOverlayElement(JKQTPOverlayElement* gr);
-
-        /** \brief returns \c true, if the given overlay element is in this plot */
-        bool containsOverlayElement(JKQTPOverlayElement* gr) const;
-
-        /** \brief move the given overlay element to the top, or add it, if it is not yet contained */
-        size_t moveOverlayElementTop(JKQTPOverlayElement* gr);
-
-        /** \brief add a new overlay elements from a QList */
-        void addOverlayElements(const QList<JKQTPOverlayElement*>& gr);
 
         /** \brief save the current plot data as a Comma Separated Values (CSV) file
          *
@@ -1126,16 +1076,19 @@ class JKQTPLOTTER_LIB_EXPORT JKQTBasePlotter: public QObject {
         QSizeF getTextSizeSize(const QString& fontName, double fontSize, const QString& text,  QPainter &painter);
 
 
-
+        /** \brief takes a new axis range \a xminn ... \a xmaxx and \a yminn ... \a ymaxx and corrects the values to match the currently set axisAspectRatio
+         *
+         *  This function is used by setXY(), setX(), setY().
+         *
+         *  \see axisAspectRatio, setXY(), setX(), setY()
+         */
+        void correctXYRangeForAspectRatio(double &xminn, double &xmaxx, double &yminn, double &ymaxx) const;
     signals:
         /** \brief signal: emitted whenever the user selects a new x-y zoom range (by mouse) */
         void zoomChangedLocally(double newxmin, double newxmax, double newymin, double newymax, JKQTBasePlotter* sender);
 
         /** \brief emitted when the plot has to be updated */
         void plotUpdated();
-
-        /** \brief emitted when the overlay elements have to be updated */
-        void overlaysUpdated();
 
         /** \brief emitted when the plot scaling had to be recalculated */
         void plotScalingRecalculated();
@@ -1354,9 +1307,6 @@ class JKQTPLOTTER_LIB_EXPORT JKQTBasePlotter: public QObject {
         /** \brief save the current plot as a PDF file, with the current widget aspect ratio, if filename is empty a file selection dialog is displayed  */
         void saveAsPDF(const QString& filename=QString(""), bool displayPreview=true);
 
-        /** \brief save the current plot as a PS file, with the current widget aspect ratio, if filename is empty a file selection dialog is displayed */
-        void saveAsPS(const QString& filename=QString(""), bool displayPreview=true);
-
         /** \brief save the current plot as an image file, with the current widget aspect ratio, if filename is empty a file selection dialog is displayed.
         *          The image format is extracted from the file extension (jpeg, tiff, png, pdf, ...) */
         void saveImage(const QString& filename=QString(""), bool displayPreview=true);
@@ -1448,10 +1398,10 @@ class JKQTPLOTTER_LIB_EXPORT JKQTBasePlotter: public QObject {
         /** \brief zooms out of the graph (the same as turning the mouse wheel) by the given factor */
         void zoomOut(double factor=2.0);
 
-        /** \brief en-/disables the maintaining of the data aspect ratio */
+        /** \brief en-/disables the maintaining of the data aspect ratio \see aspectRatio */
         void setMaintainAspectRatio(bool value);
 
-        /** \brief en-/disables the maintaining of the axis aspect ratio */
+        /** \brief en-/disables the maintaining of the axis aspect ratio \see axisAspectRatio */
         void setMaintainAxisAspectRatio(bool value);
 
         /** \brief set filename and prefix, used by loadUserSettings() and saveUserSettings()
@@ -1498,119 +1448,117 @@ class JKQTPLOTTER_LIB_EXPORT JKQTBasePlotter: public QObject {
         /** \brief set all graphs invisible, except graph start, start+n, start+2*n, ... */
         void setOnlyNthGraphsVisible(int start, int n);
 
-        /** \brief sets the data aspect ratio, enforced with setMaintainApsectRatio(true) */
+        /** \brief sets the data aspect ratio, enforced with setMaintainApsectRatio(true) \see aspectRatio */
         void setAspectRatio(double __value);
-        /** \brief sets the axis aspect ratio, enforced with setMaintainAxisApsectRatio(true) */
+        /** \brief sets the axis aspect ratio, enforced with setMaintainAxisApsectRatio(true) \see axisAspectRatio */
         void setAxisAspectRatio(double __value);
-        /*! \copydoc JKQTBasePlotterStyle::useAntiAliasingForSystem */
+        /** \copydoc JKQTBasePlotterStyle::useAntiAliasingForSystem */
         void setUseAntiAliasingForSystem(bool __value);
-        /*! \copydoc JKQTBasePlotterStyle::useAntiAliasingForGraphs */
+        /** \copydoc JKQTBasePlotterStyle::useAntiAliasingForGraphs */
         void setUseAntiAliasingForGraphs(bool __value);
-        /*! \copydoc JKQTBasePlotterStyle::useAntiAliasingForText */
+        /** \copydoc JKQTBasePlotterStyle::useAntiAliasingForText */
         void setUseAntiAliasingForText(bool __value);
-        /*! \copydoc JKQTBasePlotterStyle::defaultGraphWidth */
-        void setGraphWidth(double __value);
-        /*! \copydoc JKQTBasePlotterStyle::widgetBackgroundBrush */
+        /** \copydoc JKQTBasePlotterStyle::widgetBackgroundBrush */
         void setBackgroundColor(const QColor & __value);
-        /*! \copydoc JKQTBasePlotterStyle::exportBackgroundBrush */
+        /** \copydoc JKQTBasePlotterStyle::exportBackgroundBrush */
         void setExportBackgroundColor(const QColor & __value);
-        /*! \copydoc JKQTBasePlotterStyle::plotBackgroundBrush */
+        /** \copydoc JKQTBasePlotterStyle::plotBackgroundBrush */
         void setPlotBackgroundColor(const QColor & __value);
-        /*! \copydoc JKQTBasePlotterStyle::widgetBackgroundBrush */
+        /** \copydoc JKQTBasePlotterStyle::widgetBackgroundBrush */
         void setBackgroundBrush(const QBrush & __value);
-        /*! \copydoc JKQTBasePlotterStyle::exportBackgroundBrush */
+        /** \copydoc JKQTBasePlotterStyle::exportBackgroundBrush */
         void setExportBackgroundBrush(const QBrush & __value);
-        /*! \copydoc JKQTBasePlotterStyle::plotBackgroundBrush */
+        /** \copydoc JKQTBasePlotterStyle::plotBackgroundBrush */
         void setPlotBackgroundBrush(const QBrush & __value);
-        /*! \copydoc JKQTBasePlotterStyle::widgetBackgroundBrush */
+        /** \copydoc JKQTBasePlotterStyle::widgetBackgroundBrush */
         void setBackgroundGradient(const QGradient & __value);
-        /*! \copydoc JKQTBasePlotterStyle::exportBackgroundBrush */
+        /** \copydoc JKQTBasePlotterStyle::exportBackgroundBrush */
         void setExportBackgroundGradient(const QGradient & __value);
-        /*! \copydoc JKQTBasePlotterStyle::plotBackgroundBrush */
+        /** \copydoc JKQTBasePlotterStyle::plotBackgroundBrush */
         void setPlotBackgroundGradient(const QGradient & __value);
-        /*! \copydoc JKQTBasePlotterStyle::widgetBackgroundBrush */
+        /** \copydoc JKQTBasePlotterStyle::widgetBackgroundBrush */
         void setBackgroundTexture(const QPixmap & __value);
-        /*! \copydoc JKQTBasePlotterStyle::exportBackgroundBrush */
+        /** \copydoc JKQTBasePlotterStyle::exportBackgroundBrush */
         void setExportBackgroundTexture(const QPixmap & __value);
-        /*! \copydoc JKQTBasePlotterStyle::plotBackgroundBrush */
+        /** \copydoc JKQTBasePlotterStyle::plotBackgroundBrush */
         void setPlotBackgroundTexture(const QPixmap & __value);
-        /*! \copydoc JKQTBasePlotterStyle::widgetBackgroundBrush */
+        /** \copydoc JKQTBasePlotterStyle::widgetBackgroundBrush */
         void setBackgroundTexture(const QImage & __value);
-        /*! \copydoc JKQTBasePlotterStyle::exportBackgroundBrush */
+        /** \copydoc JKQTBasePlotterStyle::exportBackgroundBrush */
         void setExportBackgroundTexture(const QImage & __value);
-        /*! \copydoc JKQTBasePlotterStyle::plotBackgroundBrush */
+        /** \copydoc JKQTBasePlotterStyle::plotBackgroundBrush */
         void setPlotBackgroundTexture(const QImage & __value);
-        /*! \copydoc JKQTPKeyStyle::textColor */
+        /** \copydoc JKQTPKeyStyle::textColor */
         void setKeyTextColor(const QColor & __value);
 
 
-        /*! \copydoc JKQTBasePlotterStyle::plotFrameWidth */
+        /** \copydoc JKQTBasePlotterStyle::plotFrameWidth */
         void setPlotFrameWidth(double __value);
-        /*! \copydoc JKQTBasePlotterStyle::plotFrameRounding */
+        /** \copydoc JKQTBasePlotterStyle::plotFrameRounding */
         void setPlotFrameRounding(double __value);
-        /*! \copydoc JKQTBasePlotterStyle::plotFrameColor */
+        /** \copydoc JKQTBasePlotterStyle::plotFrameColor */
         void setPlotFrameColor(QColor col);
-        /*! \copydoc JKQTBasePlotterStyle::plotFrameVisible */
+        /** \copydoc JKQTBasePlotterStyle::plotFrameVisible */
         void setPlotFrameVisible(bool enabled);
 
 
-        /*! \copydoc JKQTPKeyStyle::fontSize */
+        /** \copydoc JKQTPKeyStyle::fontSize */
         void setKeyFontSize(double __value);
-        /*! \copydoc JKQTPKeyStyle::itemWidth */
+        /** \copydoc JKQTPKeyStyle::itemWidth */
         void setKeyItemWidth(double __value);
-        /*! \copydoc JKQTPKeyStyle::itemHeight */
+        /** \copydoc JKQTPKeyStyle::itemHeight */
         void setKeyItemHeight(double __value);
-        /*! \copydoc JKQTPKeyStyle::ySeparation */
+        /** \copydoc JKQTPKeyStyle::ySeparation */
         void setKeyYSeparation(double __value);
-        /*! \copydoc JKQTPKeyStyle::sampleLineLength */
+        /** \copydoc JKQTPKeyStyle::sampleLineLength */
         void setKeyLineLength(double __value);
-        /*! \copydoc JKQTPKeyStyle::xMargin */
+        /** \copydoc JKQTPKeyStyle::xMargin */
         void setKeyXMargin(double __value);
-        /*! \copydoc JKQTPKeyStyle::yMargin */
+        /** \copydoc JKQTPKeyStyle::yMargin */
         void setKeyYMargin(double __value);
-        /*! \copydoc JKQTPKeyStyle::xSeparation */
+        /** \copydoc JKQTPKeyStyle::xSeparation */
         void setKeyXSeparation(double __value);
-        /*! \copydoc JKQTPKeyStyle::yOffset */
+        /** \copydoc JKQTPKeyStyle::yOffset */
         void setKeyXOffset(double __value);
-        /*! \copydoc JKQTPKeyStyle::xOffset */
+        /** \copydoc JKQTPKeyStyle::xOffset */
         void setKeyYOffset(double __value);
-        /*! \copydoc JKQTPKeyStyle::visible */
+        /** \copydoc JKQTPKeyStyle::visible */
         void setShowKey(bool __value);
-        /*! \copydoc JKQTPKeyStyle::frameVisible */
+        /** \copydoc JKQTPKeyStyle::frameVisible */
         void setShowKeyFrame(bool __value);
-        /*! \copydoc JKQTPKeyStyle::frameColor */
+        /** \copydoc JKQTPKeyStyle::frameColor */
         void setKeyFrameColor(const QColor & __value);
-        /*! \copydoc JKQTPKeyStyle::backgroundBrush */
+        /** \copydoc JKQTPKeyStyle::backgroundBrush */
         void setKeyBackgroundColor(const QColor & __value, Qt::BrushStyle __style);
-        /*! \copydoc JKQTPKeyStyle::backgroundBrush */
+        /** \copydoc JKQTPKeyStyle::backgroundBrush */
         void setKeyBackgroundBrush(const QBrush & __value);
-        /*! \copydoc JKQTPKeyStyle::backgroundBrush */
+        /** \copydoc JKQTPKeyStyle::backgroundBrush */
         void setKeyBackgroundGradient(const QGradient & __value);
-        /*! \copydoc JKQTPKeyStyle::backgroundBrush */
+        /** \copydoc JKQTPKeyStyle::backgroundBrush */
         void setKeyBackgroundTexture(const QImage & __value);
-        /*! \copydoc JKQTPKeyStyle::backgroundBrush */
+        /** \copydoc JKQTPKeyStyle::backgroundBrush */
         void setKeyBackgroundTexture(const QPixmap & __value);
-        /*! \copydoc JKQTPKeyStyle::frameWidth */
+        /** \copydoc JKQTPKeyStyle::frameWidth */
         void setKeyFrameWidth(double __value);
-        /*! \copydoc JKQTPKeyStyle::frameRounding */
+        /** \copydoc JKQTPKeyStyle::frameRounding */
         void setKeyFrameRounding(double __value);
-        /*! \copydoc JKQTPKeyStyle::autosize */
+        /** \copydoc JKQTPKeyStyle::autosize */
         void setKeyAutosize(bool __value);
-        /*! \copydoc JKQTPKeyStyle::position */
+        /** \copydoc JKQTPKeyStyle::position */
         void setKeyPosition(const JKQTPKeyPosition & __value);
-        /*! \copydoc JKQTPKeyStyle::layout */
+        /** \copydoc JKQTPKeyStyle::layout */
         void setKeyLayout(const JKQTPKeyLayout & __value);
-        /*! \copydoc JKQTBasePlotterStyle::plotLabelFontSize */
+        /** \copydoc JKQTBasePlotterStyle::plotLabelFontSize */
         void setPlotLabelFontSize(double __value);
-        /*! \copydoc JKQTBasePlotterStyle::plotLabelFontName */
+        /** \copydoc JKQTBasePlotterStyle::plotLabelFontName */
         void setplotLabelFontName(const QString & __value);
         /** \brief set the plot label text */
         void setPlotLabel(const QString & __value);
-        /*! \copydoc JKQTBasePlotterStyle::defaultTextColor */
+        /** \copydoc JKQTBasePlotterStyle::defaultTextColor */
         void setDefaultTextColor(QColor __value) ;
-        /*! \copydoc JKQTBasePlotterStyle::defaultFontSize */
+        /** \copydoc JKQTBasePlotterStyle::defaultFontSize */
         void setDefaultTextSize(double __value) ;
-        /*! \copydoc JKQTBasePlotterStyle::defaultFontName */
+        /** \copydoc JKQTBasePlotterStyle::defaultFontName */
         void setDefaultTextFontName(const QString& __value) ;
         /** \brief sets the current directory in which to open SaveAs ... dialogs */
         void setCurrentSaveDirectory(const QString & __value);
@@ -1639,9 +1587,8 @@ class JKQTPLOTTER_LIB_EXPORT JKQTBasePlotter: public QObject {
         /** \brief paints the plot onto the given JKQTPEnhancedPainter object
          *
          *  \param painter JKQTPEnhancedPainter to draw on
-         *  \param showOverlays decides whether to draw overlays
          */
-        void drawPlot(JKQTPEnhancedPainter& painter, bool showOverlays=true);
+        void drawPlot(JKQTPEnhancedPainter& painter);
         /** \brief simply calls paintPlot() if grid printing mode is deactivated and prints the graph grid otherwise
          *         \a pageRect is used to determine the size of the page to draw on. If this does not coincide with
          *         the widget extents this function calculates a scaling factor so the graphs fit onto the page. This
@@ -1649,12 +1596,10 @@ class JKQTPLOTTER_LIB_EXPORT JKQTBasePlotter: public QObject {
          *
          *  \param painter JKQTPEnhancedPainter to draw on
          *  \param pageRect size of the page
-         *  \param showOverlays decides whether to draw overlays
          *  \param scaleIfTooLarge scale image if it is too large for pageRect
          *  \param scaleIfTooSmall scale image if it is smaller than pageRect
          */
-        void gridPaint(JKQTPEnhancedPainter& painter, QSizeF pageRect, bool showOverlays=true, bool scaleIfTooLarge=true, bool scaleIfTooSmall=true);
-        void gridPaintOverlays(JKQTPEnhancedPainter& painter, QSizeF pageRect);
+        void gridPaint(JKQTPEnhancedPainter& painter, QSizeF pageRect, bool scaleIfTooLarge=true, bool scaleIfTooSmall=true);
 
         /** \brief This method goes through all registered plotters and calculates the width of every column and
          *      height of every row as the max over the row/column. The reults are stored in the private datamembers
@@ -1672,8 +1617,6 @@ class JKQTPLOTTER_LIB_EXPORT JKQTBasePlotter: public QObject {
         void drawGraphs(JKQTPEnhancedPainter& painter);
         /** \brief plot a key */
         void drawKey(JKQTPEnhancedPainter& painter);
-        /** \brief plot all overlay elements, also sets the render hints in \a painter */
-        void drawOverlaysWithHints(JKQTPEnhancedPainter& painter);
 
         /** \brief plot the key contents
          *
@@ -1705,17 +1648,17 @@ class JKQTPLOTTER_LIB_EXPORT JKQTBasePlotter: public QObject {
         /** \brief show the export preview window for a given page size \a pageSize, either in pixels (\a unitIsMM \c ==false ) or in millimeters (\a unitIsMM \c ==true ) */
         bool exportpreview(QSizeF pageSize, bool unitIsMM=false);
 
-        /*! \copydoc fontSizeMultiplier */
+        /** \copydoc fontSizeMultiplier */
         void setFontSizeMultiplier(double __value);
-        /*! \copydoc lineWidthMultiplier */
+        /** \copydoc lineWidthMultiplier */
         void setLineWidthMultiplier(double __value);
-        /*! \copydoc printMagnification */
+        /** \copydoc printMagnification */
         void setPrintMagnification(double __value);
-        /*! \copydoc printMagnification */
+        /** \copydoc printMagnification */
         double getPrintMagnification() const;
-        /*! \copydoc paintMagnification */
+        /** \copydoc paintMagnification */
         void setPaintMagnification(double __value);
-        /*! \copydoc paintMagnification */
+        /** \copydoc paintMagnification */
         double getPaintMagnification() const;
 
 
@@ -2014,14 +1957,44 @@ class JKQTPLOTTER_LIB_EXPORT JKQTBasePlotter: public QObject {
          */
         int internalPlotHeight;
 
-        /** \brief indicates whether the widget should maintain an aspect ratio of plotwidth and plotheight */
+        /** \brief indicates whether the widget should maintain an aspect ratio of plotwidth and plotheight
+         *
+         *  \see aspectRatio
+         */
         bool maintainAspectRatio;
-        /** \brief the aspect ratio of plotwidth and plotheight to maintain, if \c maintainAspectRatio==true */
+        /** \brief the aspect ratio of plotwidth and plotheight to maintain, if \c maintainAspectRatio==true
+         *
+         *  \f[ \mbox{aspectRatio}=\frac{\mbox{plotWidth}}{\mbox{plotHeight}} \f]
+         *
+         *  \see maintainAspectRatio
+         */
         double aspectRatio;
 
-        /** \brief indicates whether the axes should maintain an aspect ratio */
+        /** \brief indicates whether the axes should maintain an aspect ratio
+         *
+         *  When the axis aspect ratio is to be maintained and new axis ranges are set (e.g. when calling setXY() ),
+         *  the given axis ranges are modified, so
+         *    \f[ \mbox{axisAspectRatio}=\frac{\left|x_\text{max}-x_\text{min}\right|}{\left|y_\text{max}-y_\text{min}\right|} \f]
+         *
+         *  \note An axis aspect ratio is only well defined for linear axes (if both axes are linear).
+         *        If both axes a logarithmic, the axis ration is defined for log(axismax)-log(axismin).
+         *        For other combinations of axes, this function is deactivated
+         *
+         *  \see axisAspectRatio
+         */
         bool maintainAxisAspectRatio;
-        /** \brief the aspect ratio of axis widths to maintain, if \c maintainAxisAspectRatio==true */
+        /** \brief the aspect ratio of axis widths to maintain, if \c maintainAxisAspectRatio==true
+         *
+         *  When the axis aspect ratio is to be maintained and new axis ranges are set (e.g. when calling setXY() ),
+         *  the given axis ranges are modified, so
+         *    \f[ \mbox{axisAspectRatio}=\frac{\left|x_\text{max}-x_\text{min}\right|}{\left|y_\text{max}-y_\text{min}\right|} \f]
+         *
+         *  \note An axis aspect ratio is only well defined for linear axes (if both axes are linear).
+         *        If both axes a logarithmic, the axis ration is defined for log(axismax)-log(axismin).
+         *        For other combinations of axes, this function is deactivated
+         *
+         *  \see maintainAxisAspectRatio
+         */
         double axisAspectRatio;
 
 
@@ -2058,10 +2031,6 @@ class JKQTPLOTTER_LIB_EXPORT JKQTBasePlotter: public QObject {
         QList<JKQTPPlotElement*> graphs;
 
 
-        QList<JKQTPOverlayElement*> overlays;
-
-
-
 
 
         /** \brief indicates whether to use clipping (hack for printing, see print() ) */
@@ -2082,10 +2051,6 @@ class JKQTPLOTTER_LIB_EXPORT JKQTBasePlotter: public QObject {
         QAction* actCopyMatlab;
         /** \brief QAction which triggers the saving as PDF */
         QAction* actSavePDF;
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-        /** \brief QAction which triggers the saving as PostScript */
-        QAction* actSavePS;
-#endif
         /** \brief QAction which triggers the saving as pixel image */
         QAction* actSavePix;
         /** \brief QAction which triggers the saving as Scalable Vector Graphics (SVG) */
@@ -2123,7 +2088,7 @@ class JKQTPLOTTER_LIB_EXPORT JKQTBasePlotter: public QObject {
         bool masterSynchronizeHeight;
 
 
-        /** \brief controls, whether the signals plotUpdated() and overlaysUpdated() are emitted */
+        /** \brief controls, whether the signals plotUpdated() are emitted */
         bool emitPlotSignals;
 
 

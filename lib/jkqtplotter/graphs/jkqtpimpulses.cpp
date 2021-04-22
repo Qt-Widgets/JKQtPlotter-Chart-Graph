@@ -34,14 +34,42 @@
 
 
 
-JKQTPImpulsesHorizontalGraph::JKQTPImpulsesHorizontalGraph(JKQTBasePlotter* parent):
-    JKQTPXYGraph(parent)
+
+JKQTPImpulsesGraphBase::JKQTPImpulsesGraphBase(JKQTBasePlotter* parent):
+    JKQTPXYBaselineGraph(parent), drawSymbols(false)
 {
-    baseline=0;
-    drawSymbols=false;
-    initLineStyle(parent, parentPlotStyle);
-    initSymbolStyle(parent, parentPlotStyle);
-    setLineWidth(3);
+    initLineStyle(parent, parentPlotStyle, JKQTPPlotStyleType::Impulses);
+    initSymbolStyle(parent, parentPlotStyle, JKQTPPlotStyleType::Impulses);
+}
+
+QColor JKQTPImpulsesGraphBase::getKeyLabelColor() const {
+    return getLineColor();
+}
+
+void JKQTPImpulsesGraphBase::setColor(QColor c)
+{
+    setLineColor(c);
+    setSymbolColor(c);
+    setSymbolFillColor(JKQTPGetDerivedColor(parent->getCurrentPlotterStyle().graphsStyle.impulseStyle.fillColorDerivationMode, c));
+    c.setAlphaF(0.5);
+    setHighlightingLineColor(c);
+}
+
+void JKQTPImpulsesGraphBase::setDrawSymbols(bool __value)
+{
+    drawSymbols=__value;
+}
+
+bool JKQTPImpulsesGraphBase::getDrawSymbols() const
+{
+    return drawSymbols;
+}
+
+
+JKQTPImpulsesHorizontalGraph::JKQTPImpulsesHorizontalGraph(JKQTBasePlotter* parent):
+    JKQTPImpulsesGraphBase(parent)
+{
+
 }
 
 JKQTPImpulsesHorizontalGraph::JKQTPImpulsesHorizontalGraph(JKQTPlotter* parent):
@@ -64,55 +92,39 @@ void JKQTPImpulsesHorizontalGraph::draw(JKQTPEnhancedPainter& painter) {
         QPen p=getLinePen(painter, parent);
         p.setCapStyle(Qt::FlatCap);
 
-        int imax=static_cast<int>(qMin(datastore->getRows(static_cast<size_t>(xColumn)), datastore->getRows(static_cast<size_t>(yColumn))));
+        int imax=0;
         int imin=0;
-        if (imax<imin) {
-            int h=imin;
-            imin=imax;
-            imax=h;
-        }
-        if (imin<0) imin=0;
-        if (imax<0) imax=0;
+        if (getIndexRange(imin, imax)) {
 
-        //double xold=-1;
-        //double yold=-1;
-        double x0=transformX(baseline);
-        if (parent->getXAxis()->isLogAxis()) {
-            if (baseline>0 && baseline>parent->getXAxis()->getMin()) x0=transformX(baseline);
-            else x0=transformX(parent->getXAxis()->getMin());
-        }
-    //    double y0=transformY(baseline);
-    //    if (parent->getYAxis()->isLogAxis()) {
-    //        y0=transformY(parent->getYAxis()->getMin());
-    //        if (baseline>0 && baseline>parent->getYAxis()->getMin()) y0=transformY(baseline);
-    //        else y0=transformY(parent->getYAxis()->getMin());
-    //    }
-        //bool first=false;
-        QVector<QLineF> lines;
-        QVector<QPointF> points;
-        intSortData();
-        for (int iii=imin; iii<imax; iii++) {
-            int i=qBound(imin, getDataIndex(iii), imax);
-            double xv=datastore->get(static_cast<size_t>(xColumn),static_cast<size_t>(i));
-            double yv=datastore->get(static_cast<size_t>(yColumn),static_cast<size_t>(i));
-            if (JKQTPIsOKFloat(xv) && JKQTPIsOKFloat(yv)) {
-                double x=transformX(xv);
-                double y=transformY(yv);
-
-
-                lines.append(QLineF(x0, y, x, y));
-                points.append(QPointF(x,y));
-    //            xold=x;
-    //            yold=y;
-                //first=true;
+            double x0=transformX(getBaseline());
+            if (parent->getXAxis()->isLogAxis()) {
+                if (getBaseline()>0 && getBaseline()>parent->getXAxis()->getMin()) x0=transformX(getBaseline());
+                else x0=transformX(parent->getXAxis()->getMin());
             }
-        }
-        painter.setPen(p);
-        if (lines.size()>0) painter.drawLines(lines);
-        if (drawSymbols && points.size()>0) {
-            painter.save(); auto __finalpaintsym=JKQTPFinally([&painter]() {painter.restore();});
-            for (auto& p: points) {
-                plotStyledSymbol(parent, painter, p.x(), p.y());
+
+            QVector<QLineF> lines;
+            QVector<QPointF> points;
+            intSortData();
+            for (int iii=imin; iii<imax; iii++) {
+                const int i=qBound(imin, getDataIndex(iii), imax);
+                const double xv=datastore->get(static_cast<size_t>(xColumn),static_cast<size_t>(i));
+                const double yv=datastore->get(static_cast<size_t>(yColumn),static_cast<size_t>(i));
+                if (JKQTPIsOKFloat(xv) && JKQTPIsOKFloat(yv)) {
+                    const double x=transformX(xv);
+                    const double y=transformY(yv);
+
+                    lines.append(QLineF(x0, y, x, y));
+                    points.append(QPointF(x,y));
+
+                }
+            }
+            painter.setPen(p);
+            if (lines.size()>0) painter.drawLines(lines);
+            if (drawSymbols && points.size()>0) {
+                painter.save(); auto __finalpaintsym=JKQTPFinally([&painter]() {painter.restore();});
+                for (auto& p: points) {
+                    plotStyledSymbol(parent, painter, p.x(), p.y());
+                }
             }
         }
 
@@ -127,43 +139,11 @@ void JKQTPImpulsesHorizontalGraph::drawKeyMarker(JKQTPEnhancedPainter& painter, 
     QPen p=getLinePen(painter, parent);
     p.setCapStyle(Qt::FlatCap);
     painter.setPen(p);
-    int y=rect.top()+rect.height()/2.0;
+
+    const int y=rect.top()+rect.height()/2.0;
     painter.drawLine(rect.left(), y, rect.right(), y);
-
 }
 
-QColor JKQTPImpulsesHorizontalGraph::getKeyLabelColor() const {
-    return getLineColor();
-}
-
-void JKQTPImpulsesHorizontalGraph::setColor(QColor c)
-{
-    setLineColor(c);
-    setSymbolColor(c);
-    setSymbolFillColor(JKQTPGetDerivedColor(parent->getCurrentPlotterStyle().graphFillColorDerivationMode, c));
-    c.setAlphaF(0.5);
-    setHighlightingLineColor(c);
-}
-
-void JKQTPImpulsesHorizontalGraph::setBaseline(double __value)
-{
-    this->baseline = __value;
-}
-
-double JKQTPImpulsesHorizontalGraph::getBaseline() const
-{
-    return this->baseline;
-}
-
-void JKQTPImpulsesHorizontalGraph::setDrawSymbols(bool __value)
-{
-    drawSymbols=__value;
-}
-
-bool JKQTPImpulsesHorizontalGraph::getDrawSymbols() const
-{
-    return drawSymbols;
-}
 
 
 
@@ -176,13 +156,25 @@ bool JKQTPImpulsesHorizontalGraph::getDrawSymbols() const
 
 
 JKQTPImpulsesVerticalGraph::JKQTPImpulsesVerticalGraph(JKQTBasePlotter* parent):
-    JKQTPImpulsesHorizontalGraph(parent)
+    JKQTPImpulsesGraphBase(parent)
 {
 }
 
 JKQTPImpulsesVerticalGraph::JKQTPImpulsesVerticalGraph(JKQTPlotter *parent):
-    JKQTPImpulsesHorizontalGraph(parent)
+    JKQTPImpulsesVerticalGraph(parent->getPlotter())
 {
+
+}
+
+void JKQTPImpulsesVerticalGraph::drawKeyMarker(JKQTPEnhancedPainter& painter, QRectF& rect) {
+
+
+    painter.save(); auto __finalpaint=JKQTPFinally([&painter]() {painter.restore();});
+    QPen p=getLinePen(painter, parent);
+    p.setCapStyle(Qt::FlatCap);
+    painter.setPen(p);
+    const int x=rect.left()+rect.width()/2.0;
+    painter.drawLine(x, rect.bottom(), x, rect.top());
 
 }
 
@@ -201,55 +193,42 @@ void JKQTPImpulsesVerticalGraph::draw(JKQTPEnhancedPainter& painter) {
         QPen p=getLinePen(painter, parent);
         p.setCapStyle(Qt::FlatCap);
 
-        int imax=static_cast<int>(qMin(datastore->getRows(static_cast<size_t>(xColumn)), datastore->getRows(static_cast<size_t>(yColumn))));
+        int imax=0;
         int imin=0;
-        if (imax<imin) {
-            int h=imin;
-            imin=imax;
-            imax=h;
-        }
-        if (imin<0) imin=0;
-        if (imax<0) imax=0;
-
-        //double xold=-1;
-        //double yold=-1;
-        //bool first=false;
-    //    double x0=transformX(baseline);
-    //    if (parent->getXAxis()->isLogAxis()) {
-    //        if (baseline>0 && baseline>parent->getXAxis()->getMin()) x0=transformX(baseline);
-    //        else x0=transformX(parent->getXAxis()->getMin());
-    //    }
-        double y0=transformY(baseline);
-        if (parent->getYAxis()->isLogAxis()) {
-            y0=transformY(parent->getYAxis()->getMin());
-            if (baseline>0 && baseline>parent->getYAxis()->getMin()) y0=transformY(baseline);
-            else y0=transformY(parent->getYAxis()->getMin());
-        }
-        QVector<QLineF> lines;
-        QVector<QPointF> points;
-        intSortData();
-        for (int iii=imin; iii<imax; iii++) {
-            int i=qBound(imin, getDataIndex(iii), imax);
-            double xv=datastore->get(static_cast<size_t>(xColumn),static_cast<size_t>(i));
-            double yv=datastore->get(static_cast<size_t>(yColumn),static_cast<size_t>(i));
-            if (JKQTPIsOKFloat(xv) && JKQTPIsOKFloat(yv) ) {
-                double x=transformX(xv);
-                double y=transformY(yv);
+        if (getIndexRange(imin, imax)) {
 
 
-                lines.append(QLineF(x, y0, x, y));
-                points.append(QPointF(x,y));
-                //xold=x;
-                //yold=y;
-                //first=true;
+
+            double y0=transformY(getBaseline());
+            if (parent->getYAxis()->isLogAxis()) {
+                y0=transformY(parent->getYAxis()->getMin());
+                if (getBaseline()>0 && getBaseline()>parent->getYAxis()->getMin()) y0=transformY(getBaseline());
+                else y0=transformY(parent->getYAxis()->getMin());
             }
-        }
-        painter.setPen(p);
-        if (lines.size()>0) painter.drawLines(lines);
-        if (drawSymbols && points.size()>0) {
-            painter.save(); auto __finalpaintsym=JKQTPFinally([&painter]() {painter.restore();});
-            for (auto& p: points) {
-                plotStyledSymbol(parent, painter, p.x(), p.y());
+            QVector<QLineF> lines;
+            QVector<QPointF> points;
+            intSortData();
+            for (int iii=imin; iii<imax; iii++) {
+                const int i=qBound(imin, getDataIndex(iii), imax);
+                const double xv=datastore->get(static_cast<size_t>(xColumn),static_cast<size_t>(i));
+                const double yv=datastore->get(static_cast<size_t>(yColumn),static_cast<size_t>(i));
+                if (JKQTPIsOKFloat(xv) && JKQTPIsOKFloat(yv) ) {
+                    const double x=transformX(xv);
+                    const double y=transformY(yv);
+
+
+                    lines.append(QLineF(x, y0, x, y));
+                    points.append(QPointF(x,y));
+
+                }
+            }
+            painter.setPen(p);
+            if (lines.size()>0) painter.drawLines(lines);
+            if (drawSymbols && points.size()>0) {
+                painter.save(); auto __finalpaintsym=JKQTPFinally([&painter]() {painter.restore();});
+                for (auto& p: points) {
+                    plotStyledSymbol(parent, painter, p.x(), p.y());
+                }
             }
         }
     }
@@ -266,7 +245,7 @@ JKQTPImpulsesHorizontalErrorGraph::JKQTPImpulsesHorizontalErrorGraph(JKQTBasePlo
     JKQTPImpulsesHorizontalGraph(parent)
 {
     setErrorColorFromGraphColor(getLineColor());
-    initErrorStyle(parent, parentPlotStyle);
+    initErrorStyle(parent, parentPlotStyle, JKQTPPlotStyleType::Impulses);
 }
 
 JKQTPImpulsesHorizontalErrorGraph::JKQTPImpulsesHorizontalErrorGraph(JKQTPlotter *parent):
@@ -290,7 +269,7 @@ JKQTPImpulsesVerticalErrorGraph::JKQTPImpulsesVerticalErrorGraph(JKQTBasePlotter
     JKQTPImpulsesVerticalGraph(parent)
 {
     setErrorColorFromGraphColor(getLineColor());
-    initErrorStyle(parent, parentPlotStyle);
+    initErrorStyle(parent, parentPlotStyle, JKQTPPlotStyleType::Impulses);
 }
 
 JKQTPImpulsesVerticalErrorGraph::JKQTPImpulsesVerticalErrorGraph(JKQTPlotter *parent):
